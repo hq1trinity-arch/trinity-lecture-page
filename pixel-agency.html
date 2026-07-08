@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TRINITY AI AGENCY — 픽셀 오피스 데모</title>
+  <meta name="description" content="AI 에이전트 직원들이 픽셀 오피스에서 의뢰를 접수하고, 배분하고, 작업하고, 결재받는 과정을 보여주는 데모 (1단계 MVP)">
+
+  <style>
+    @font-face {
+      font-family: "DungGeunMo";
+      src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/DungGeunMo.woff") format("woff");
+      font-display: swap;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+
+    :root {
+      --bg: #12121c;
+      --panel: #1c1c2b;
+      --panel2: #232338;
+      --line: #34344f;
+      --text: #e8e8f0;
+      --dim: #9a9ab5;
+      --accent: #ffd23f;
+      --green: #7cfc9b;
+      --red: #ff6b6b;
+      --blue: #6bb7ff;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: "DungGeunMo", "Courier New", monospace;
+      min-height: 100vh;
+    }
+
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 20px 14px 60px; }
+
+    /* ── Header ── */
+    header { text-align: center; padding: 18px 0 6px; }
+    header h1 {
+      margin: 0;
+      font-size: 30px;
+      letter-spacing: 3px;
+      color: var(--accent);
+      text-shadow: 3px 3px 0 #7a5a00, 6px 6px 0 rgba(0,0,0,.45);
+    }
+    header p { margin: 10px 0 0; color: var(--dim); font-size: 14px; }
+    .badge {
+      display: inline-block; margin-top: 10px; padding: 4px 10px;
+      border: 2px solid var(--green); color: var(--green); font-size: 12px;
+    }
+
+    /* ── Layout ── */
+    .game-area { display: flex; gap: 14px; margin-top: 20px; align-items: stretch; }
+    @media (max-width: 900px) { .game-area { flex-direction: column; } }
+
+    .screen {
+      flex: 1 1 auto; min-width: 0;
+      background: var(--panel);
+      border: 3px solid var(--line);
+      padding: 10px;
+    }
+    canvas {
+      display: block; width: 100%;
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+      background: #0c0c14;
+    }
+
+    /* ── Controls ── */
+    .controls { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    button {
+      font-family: inherit; font-size: 13px; cursor: pointer;
+      background: var(--panel2); color: var(--text);
+      border: 2px solid var(--line); padding: 8px 12px;
+    }
+    button:hover { border-color: var(--accent); color: var(--accent); }
+    button.primary { background: var(--accent); color: #1a1400; border-color: var(--accent); font-weight: bold; }
+    button.primary:hover { background: #ffe27a; color: #1a1400; }
+    button.active { border-color: var(--green); color: var(--green); }
+
+    /* ── Side panel ── */
+    .side {
+      flex: 0 0 300px; display: flex; flex-direction: column; gap: 12px;
+    }
+    @media (max-width: 900px) { .side { flex: 1 1 auto; } }
+
+    .card { background: var(--panel); border: 3px solid var(--line); padding: 12px; }
+    .card h2 {
+      margin: 0 0 10px; font-size: 13px; letter-spacing: 1px;
+      color: var(--accent); border-bottom: 2px solid var(--line); padding-bottom: 8px;
+    }
+
+    .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+    .kpi { background: var(--panel2); padding: 8px 4px; text-align: center; }
+    .kpi b { display: block; font-size: 20px; color: var(--green); }
+    .kpi span { font-size: 10px; color: var(--dim); }
+
+    .agent-row { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 1px dashed #2c2c44; font-size: 12px; }
+    .agent-row:last-child { border-bottom: none; }
+    .chip { width: 12px; height: 12px; flex: 0 0 12px; image-rendering: pixelated; }
+    .agent-name { flex: 0 0 78px; color: var(--text); }
+    .agent-status { color: var(--dim); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .agent-status.busy { color: var(--blue); }
+    .agent-status.approval { color: var(--accent); }
+
+    #log { max-height: 260px; overflow-y: auto; font-size: 12px; line-height: 1.7; }
+    #log div { border-bottom: 1px dashed #2c2c44; padding: 3px 0; }
+    #log time { color: #6a6a8a; margin-right: 6px; font-size: 10px; }
+    .lg-in { color: var(--blue); }
+    .lg-assign { color: var(--text); }
+    .lg-work { color: var(--dim); }
+    .lg-approve { color: var(--accent); }
+    .lg-done { color: var(--green); }
+
+    /* ── Explainer ── */
+    .explain { margin-top: 34px; }
+    .explain h2 { font-size: 18px; color: var(--accent); letter-spacing: 1px; }
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 14px; }
+    @media (max-width: 800px) { .steps { grid-template-columns: 1fr; } }
+    .step { background: var(--panel); border: 3px solid var(--line); padding: 16px; }
+    .step .n { color: var(--green); font-size: 13px; }
+    .step h3 { margin: 8px 0; font-size: 15px; }
+    .step p { margin: 0; font-size: 13px; color: var(--dim); line-height: 1.8; }
+    .step .now { display: inline-block; margin-top: 10px; padding: 2px 8px; font-size: 11px; border: 1px solid var(--green); color: var(--green); }
+
+    footer { margin-top: 40px; text-align: center; color: #55556f; font-size: 12px; line-height: 1.8; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>TRINITY AI AGENCY</h1>
+    <p>AI 에이전트 직원들이 일하는 픽셀 오피스</p>
+    <span class="badge">1단계 MVP · 시뮬레이션 데모</span>
+  </header>
+
+  <div class="game-area">
+    <div class="screen">
+      <canvas id="game" width="640" height="352"></canvas>
+      <div class="controls">
+        <button class="primary" id="btnNewTask">＋ 새 의뢰 접수</button>
+        <button id="spd1" class="active">▶ 1x</button>
+        <button id="spd2">▶▶ 2x</button>
+        <button id="spd4">▶▶▶ 4x</button>
+        <button id="btnPause">⏸ 일시정지</button>
+      </div>
+    </div>
+
+    <div class="side">
+      <div class="card">
+        <h2>AGENCY STATUS</h2>
+        <div class="kpis">
+          <div class="kpi"><b id="kInbox">0</b><span>접수</span></div>
+          <div class="kpi"><b id="kWork">0</b><span>진행중</span></div>
+          <div class="kpi"><b id="kApproval">0</b><span>결재대기</span></div>
+          <div class="kpi"><b id="kDone">0</b><span>완료</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>AI 직원</h2>
+        <div id="roster"></div>
+      </div>
+
+      <div class="card">
+        <h2>업무 로그</h2>
+        <div id="log"></div>
+      </div>
+    </div>
+  </div>
+
+  <section class="explain">
+    <h2>■ 이 데모는 어떻게 진짜 AI 에이전시가 되나?</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="n">STEP 1</div>
+        <h3>픽셀 오피스 (시각화 레이어)</h3>
+        <p>지금 보고 계신 화면입니다. 캐릭터의 이동·작업·결재는 모두 "이벤트"로 움직입니다. 지금은 시뮬레이터가 이벤트를 만들어내고 있습니다.</p>
+        <span class="now">← 지금 여기</span>
+      </div>
+      <div class="step">
+        <div class="n">STEP 2</div>
+        <h3>진짜 AI 에이전트 연결</h3>
+        <p>시뮬레이터를 Claude API 기반 에이전트(카피라이터·디자이너·CS·리서처)로 교체합니다. 에이전트가 실제 작업을 시작/완료할 때마다 같은 이벤트를 쏘면, 화면은 그대로 살아 움직입니다.</p>
+      </div>
+      <div class="step">
+        <div class="n">STEP 3</div>
+        <h3>자동화 + 사장실 결재</h3>
+        <p>문의 폼·이메일·스케줄(cron)이 트리거가 되어 사람 없이 업무가 시작됩니다. 단, 외부로 나가는 결과물은 반드시 사장실 결재(사람 승인)를 거칩니다 — 화면 속 사장실이 바로 그 장치입니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    TRINITY AI AGENCY · PIXEL OFFICE DEMO<br>
+    본 페이지는 정적 데모이며, 실제 AI 호출 없이 브라우저에서 시뮬레이션으로 동작합니다.
+  </footer>
+</div>
+
+<script>
+"use strict";
+
+/* ══════════════════════════════════════════════
+   MAP  (40 x 22 tiles, 16px each = 640 x 352)
+   # wall  . wood  , carpet  d desk  b bookshelf
+   P plant S sofa  t table   W coffee I inbox
+══════════════════════════════════════════════ */
+const TILE = 16, COLS = 40, ROWS = 22;
+const MAP = [
+  "########################################",
+  "#.bbbb.......bbbb...........#..bbbb....#",
+  "#...........................#.........P#",
+  "#...........................#..dddd....#",
+  "#..dd....dd....dd....dd.....#..........#",
+  "#......................................#",
+  "#...........................#..........#",
+  "#...........................#.........P#",
+  "#...........................############",
+  "#......................................#",
+  "#..dd..................................#",
+  "#......................................#",
+  "#P.....................................#",
+  "#......................................#",
+  "#......................................#",
+  "#..........................,,,,,,,,,,,,#",
+  "#..II.......................,,,,,,,,,,W#",
+  "#...........................,,SSS,,,,,,#",
+  "#...........................,,ttt,,,,,,#",
+  "#...........................,,,,,,,,,,,#",
+  "#..........................,,,,,,,,,,,P#",
+  "########################################",
+];
+MAP.forEach((r, i) => { if (r.length !== COLS) console.error("map row " + i + " length " + r.length); });
+
+const tileAt = (x, y) => (x < 0 || y < 0 || x >= COLS || y >= ROWS) ? "#" : MAP[y][x];
+const walkable = (x, y) => { const t = tileAt(x, y); return t === "." || t === ","; };
+
+/* BFS pathfinding */
+function findPath(sx, sy, tx, ty) {
+  if (sx === tx && sy === ty) return [];
+  const prev = new Map(), key = (x, y) => x + y * COLS;
+  const q = [[sx, sy]];
+  prev.set(key(sx, sy), null);
+  while (q.length) {
+    const [x, y] = q.shift();
+    if (x === tx && y === ty) {
+      const path = [];
+      let k = key(tx, ty);
+      while (k !== null && prev.get(k) !== null) {
+        path.push([k % COLS, Math.floor(k / COLS)]);
+        k = prev.get(k);
+      }
+      return path.reverse();
+    }
+    for (const [dx, dy] of [[1,0],[-1,0],[0,1],[0,-1]]) {
+      const nx = x + dx, ny = y + dy, k = key(nx, ny);
+      if (walkable(nx, ny) && !prev.has(k)) { prev.set(k, key(x, y)); q.push([nx, ny]); }
+    }
+  }
+  return null;
+}
+
+/* ══════════════ AGENTS ══════════════ */
+const ROLE_META = {
+  manager:  { name: "매니저",    label: "업무 배분",  shirt: "#3d6bd6", hair: "#2b2b2b" },
+  copy:     { name: "카피라이터", label: "글쓰기",    shirt: "#d65a5a", hair: "#5a3a1e" },
+  design:   { name: "디자이너",   label: "디자인",    shirt: "#8a5ad6", hair: "#1e1e1e" },
+  cs:       { name: "CS 담당",   label: "고객 응대",  shirt: "#3aa66a", hair: "#6b4226" },
+  research: { name: "리서처",    label: "리서치",    shirt: "#d6a23a", hair: "#333" },
+  boss:     { name: "사장",      label: "최종 결재",  shirt: "#444455", hair: "#888" },
+};
+
+function makeAgent(role, deskX, deskY, chairX, chairY) {
+  return {
+    role, ...ROLE_META[role],
+    desk: { x: deskX, y: deskY }, chair: { x: chairX, y: chairY },
+    px: chairX * TILE + 8, py: chairY * TILE + 8,
+    path: [], onArrive: null,
+    state: "idle",          // idle | walking | working | delivering
+    statusText: "대기중",
+    task: null, workT: 0, workDur: 0,
+    bubble: "", bubbleT: 0, idleT: 2 + Math.random() * 5,
+    walkFrame: 0,
+  };
+}
+
+const agents = [
+  makeAgent("manager",  3, 10, 3, 11),
+  makeAgent("copy",     3,  4, 3,  5),
+  makeAgent("design",   9,  4, 9,  5),
+  makeAgent("cs",      15,  4, 15,  5),
+  makeAgent("research",21,  4, 21,  5),
+];
+const boss = makeAgent("boss", 32, 3, 32, 2);
+boss.statusText = "결재 대기중";
+
+const INBOX_SPOT   = { x: 5,  y: 16 };
+const APPROVAL_SPOT= { x: 32, y: 4 };
+const COFFEE_SPOT  = { x: 36, y: 16 };
+
+/* ══════════════ TASKS ══════════════ */
+const TASK_TEMPLATES = [
+  { role: "copy",     title: "블로그 초안 작성" },
+  { role: "copy",     title: "뉴스레터 문구 작성" },
+  { role: "copy",     title: "상세페이지 카피 작성" },
+  { role: "design",   title: "SNS 썸네일 디자인" },
+  { role: "design",   title: "배너 시안 제작" },
+  { role: "design",   title: "카드뉴스 제작" },
+  { role: "cs",       title: "고객 문의 답변" },
+  { role: "cs",       title: "환불 요청 처리" },
+  { role: "cs",       title: "리뷰 답글 작성" },
+  { role: "research", title: "경쟁사 리서치" },
+  { role: "research", title: "키워드 트렌드 분석" },
+  { role: "research", title: "시장 조사 요약" },
+];
+const WORK_CHATTER = ["타닥타닥...", "음... 좋은데?", "거의 다 됐다!", "자료 확인 중...", "한 번만 더 다듬자"];
+const IDLE_CHATTER = ["☕ 커피 타임", "다음 의뢰 대기중", "에셋 정리 중...", "흠~♪"];
+
+let tasks = [];            // {id, role, title, state, progress, agent}
+let taskSeq = 0;
+let approvalQueue = [];
+let bossStampT = 0;
+let spawnT = 6;            // first auto task after 6s
+let elapsed = 0;
+let speed = 1, paused = false;
+
+function spawnTask(manual) {
+  const pending = tasks.filter(t => t.state !== "done").length;
+  if (!manual && pending >= 6) return;
+  const tpl = TASK_TEMPLATES[Math.floor(Math.random() * TASK_TEMPLATES.length)];
+  const task = { id: ++taskSeq, role: tpl.role, title: tpl.title, state: "inbox", progress: 0, agent: null };
+  tasks.push(task);
+  log("lg-in", "📥 새 의뢰 접수 — " + task.title);
+}
+
+/* dispatch queued tasks to idle agents */
+function tryDispatch() {
+  for (const task of tasks) {
+    if (task.state !== "queued") continue;
+    const ag = agents.find(a => a.role === task.role && a.state === "idle" && !a.task);
+    if (!ag) continue;
+    task.state = "working";
+    task.agent = ag;
+    ag.task = task;
+    ag.bubble = "접수! " + task.title; ag.bubbleT = 2.5;
+    const mgr = agents[0];
+    if (mgr.state === "idle") { mgr.bubble = ag.name + "님, 부탁해요!"; mgr.bubbleT = 2; }
+    log("lg-assign", "📋 매니저 → " + ag.name + " : " + task.title);
+    walkTo(ag, ag.chair.x, ag.chair.y, () => {
+      ag.state = "working";
+      ag.workT = 0;
+      ag.workDur = 9 + Math.random() * 7;
+    });
+  }
+}
+
+/* ══════════════ MOVEMENT ══════════════ */
+function walkTo(ag, tx, ty, onArrive) {
+  const sx = Math.round((ag.px - 8) / TILE), sy = Math.round((ag.py - 8) / TILE);
+  const path = findPath(sx, sy, tx, ty);
+  if (path === null) { if (onArrive) onArrive(); return; }
+  ag.path = path;
+  ag.onArrive = onArrive || null;
+  if (path.length) ag.state = "walking";
+  else { ag.state = "idle"; if (onArrive) onArrive(); }
+}
+
+function updateAgent(ag, dt) {
+  if (ag.bubbleT > 0) { ag.bubbleT -= dt; if (ag.bubbleT <= 0) ag.bubble = ""; }
+
+  /* walking along path */
+  if (ag.path.length) {
+    const [tx, ty] = ag.path[0];
+    const gx = tx * TILE + 8, gy = ty * TILE + 8;
+    const sp = 55 * dt;
+    const dx = gx - ag.px, dy = gy - ag.py;
+    const d = Math.hypot(dx, dy);
+    if (d <= sp) { ag.px = gx; ag.py = gy; ag.path.shift(); }
+    else { ag.px += dx / d * sp; ag.py += dy / d * sp; }
+    ag.walkFrame += dt * 10;
+    if (!ag.path.length) {
+      const cb = ag.onArrive; ag.onArrive = null;
+      if (ag.state === "walking") ag.state = "idle";
+      if (cb) cb();
+    }
+    return;
+  }
+
+  /* working at desk */
+  if (ag.state === "working" && ag.task) {
+    ag.workT += dt;
+    ag.task.progress = Math.min(100, Math.round(ag.workT / ag.workDur * 100));
+    if (Math.random() < dt * 0.25) { ag.bubble = WORK_CHATTER[Math.floor(Math.random() * WORK_CHATTER.length)]; ag.bubbleT = 1.8; }
+    if (ag.workT >= ag.workDur) {
+      const task = ag.task;
+      ag.state = "delivering";
+      log("lg-work", "📝 " + ag.name + " 작업 완료 — " + task.title);
+      walkTo(ag, APPROVAL_SPOT.x, APPROVAL_SPOT.y, () => {
+        ag.bubble = "결재 부탁드립니다!"; ag.bubbleT = 2.2;
+        task.state = "approval";
+        approvalQueue.push(task);
+        ag.task = null;
+        setTimeoutSim(1.2, () => walkTo(ag, ag.chair.x, ag.chair.y, () => { ag.state = "idle"; tryDispatch(); }));
+      });
+    }
+    return;
+  }
+
+  /* idle behaviour */
+  if (ag.state === "idle") {
+    ag.idleT -= dt;
+    if (ag.idleT <= 0) {
+      ag.idleT = 4 + Math.random() * 6;
+      const r = Math.random();
+      if (ag.role === "manager") {
+        /* manager: check inbox if new tasks exist */
+        return;
+      }
+      if (r < 0.25) {
+        walkTo(ag, COFFEE_SPOT.x, COFFEE_SPOT.y, () => {
+          ag.bubble = "☕"; ag.bubbleT = 2;
+          setTimeoutSim(2.5, () => { if (ag.state === "idle" && !ag.task) walkTo(ag, ag.chair.x, ag.chair.y); });
+        });
+      } else if (r < 0.5) {
+        ag.bubble = IDLE_CHATTER[Math.floor(Math.random() * IDLE_CHATTER.length)];
+        ag.bubbleT = 2;
+      } else if (r < 0.7) {
+        const wx = ag.chair.x + Math.floor(Math.random() * 7) - 3;
+        const wy = ag.chair.y + Math.floor(Math.random() * 5) + 1;
+        if (walkable(wx, wy)) walkTo(ag, wx, wy);
+      }
+    }
+  }
+}
+
+/* manager inbox loop */
+let managerBusy = false;
+function updateManager(dt) {
+  const mgr = agents[0];
+  const inboxTasks = tasks.filter(t => t.state === "inbox");
+  if (!managerBusy && inboxTasks.length && mgr.state === "idle" && !mgr.path.length) {
+    managerBusy = true;
+    walkTo(mgr, INBOX_SPOT.x, INBOX_SPOT.y, () => {
+      mgr.bubble = "의뢰 분류 중..."; mgr.bubbleT = 2;
+      setTimeoutSim(1.6, () => {
+        tasks.filter(t => t.state === "inbox").forEach(t => { t.state = "queued"; });
+        tryDispatch();
+        walkTo(mgr, mgr.chair.x, mgr.chair.y, () => { managerBusy = false; });
+      });
+    });
+  }
+}
+
+/* boss approval loop */
+function updateBoss(dt) {
+  if (boss.bubbleT > 0) { boss.bubbleT -= dt; if (boss.bubbleT <= 0) boss.bubble = ""; }
+  if (approvalQueue.length) {
+    bossStampT += dt;
+    boss.statusText = "결재 검토중...";
+    if (bossStampT > 3) {
+      bossStampT = 0;
+      const task = approvalQueue.shift();
+      task.state = "done";
+      boss.bubble = "승인! ✔"; boss.bubbleT = 2;
+      stampFx = 0.6;
+      log("lg-done", "✅ 사장 승인 완료 — " + task.title);
+    }
+  } else {
+    bossStampT = 0;
+    boss.statusText = "결재 대기중";
+    if (Math.random() < dt * 0.05) { boss.bubble = "☕ 흠..."; boss.bubbleT = 2; }
+  }
+}
+
+/* sim timers (respect speed/pause) */
+let simTimers = [];
+function setTimeoutSim(sec, fn) { simTimers.push({ t: sec, fn }); }
+function updateSimTimers(dt) {
+  for (const tm of simTimers) tm.t -= dt;
+  const fire = simTimers.filter(tm => tm.t <= 0);
+  simTimers = simTimers.filter(tm => tm.t > 0);
+  fire.forEach(tm => tm.fn());
+}
+
+/* ══════════════ RENDERING ══════════════ */
+const cv = document.getElementById("game");
+const ctx = cv.getContext("2d");
+ctx.imageSmoothingEnabled = false;
+let stampFx = 0;
+
+function px(x, y, w, h, c) { ctx.fillStyle = c; ctx.fillRect(x, y, w, h); }
+
+function drawTiles(t) {
+  for (let y = 0; y < ROWS; y++) {
+    for (let x = 0; x < COLS; x++) {
+      const ch = MAP[y][x], X = x * TILE, Y = y * TILE;
+      /* floor under everything */
+      if (ch === ",") {
+        px(X, Y, TILE, TILE, (x + y) % 2 ? "#4e6a7a" : "#547181");
+        px(X + 6, Y + 6, 2, 2, "#5f7f91");
+      } else if (ch !== "#") {
+        px(X, Y, TILE, TILE, y % 2 ? "#c49a6c" : "#bd9265");
+        px(X, Y + TILE - 1, TILE, 1, "#a87f52");
+        if ((x * 7 + y * 13) % 5 === 0) px(X + 3, Y + 5, 2, 1, "#a87f52");
+      }
+      switch (ch) {
+        case "#":
+          px(X, Y, TILE, TILE, "#2b2b3d");
+          px(X, Y, TILE, 3, "#3c3c55");
+          break;
+        case "d":
+          px(X, Y + 2, TILE, 12, "#8a5a33");
+          px(X, Y + 2, TILE, 2, "#a5713f");
+          px(X, Y + 13, TILE, 1, "#5f3c1e");
+          break;
+        case "b":
+          px(X, Y - 2, TILE, 16, "#6b4226");
+          px(X + 1, Y, 4, 5, "#d65a5a"); px(X + 6, Y, 4, 5, "#3aa66a"); px(X + 11, Y, 4, 5, "#3d6bd6");
+          px(X + 1, Y + 7, 4, 5, "#d6a23a"); px(X + 6, Y + 7, 4, 5, "#8a5ad6"); px(X + 11, Y + 7, 4, 5, "#d65a5a");
+          break;
+        case "P":
+          px(X + 5, Y + 9, 6, 5, "#a5713f");
+          px(X + 4, Y + 2, 8, 7, "#2e8b57");
+          px(X + 6, Y, 4, 4, "#3aa66a");
+          break;
+        case "S":
+          px(X, Y + 3, TILE, 10, "#b04a4a");
+          px(X, Y + 1, TILE, 4, "#c95f5f");
+          px(X, Y + 12, TILE, 2, "#7e3333");
+          break;
+        case "t":
+          px(X + 1, Y + 5, 14, 7, "#8a5a33");
+          px(X + 1, Y + 5, 14, 2, "#a5713f");
+          break;
+        case "W":
+          px(X + 3, Y + 1, 10, 13, "#777788");
+          px(X + 5, Y + 3, 6, 4, "#333344");
+          px(X + 6, Y + 9, 4, 2, Math.sin(t * 4) > 0 ? "#ff5555" : "#802020");
+          break;
+        case "I":
+          px(X, Y + 3, TILE, 11, "#8a5a33");
+          px(X + 2, Y + 1, 12, 4, "#eeeeee");
+          px(X + 3, Y + 2, 10, 1, "#aaaaaa");
+          break;
+      }
+    }
+  }
+
+  /* zone labels */
+  ctx.font = "8px DungGeunMo, monospace";
+  ctx.fillStyle = "rgba(255,255,255,.35)";
+  ctx.fillText("사장실", 33 * TILE - 4, 1.7 * TILE);
+  ctx.fillText("접수함", 3 * TILE - 4, 15.6 * TILE);
+  ctx.fillText("휴게실", 33 * TILE, 15.7 * TILE - 2);
+
+  /* monitors on staff desks */
+  for (const ag of agents) {
+    const X = ag.desk.x * TILE, Y = ag.desk.y * TILE;
+    px(X + 4, Y - 3, 10, 8, "#222233");
+    const on = ag.state === "working";
+    px(X + 5, Y - 2, 8, 6, on ? (Math.sin(t * 8) > 0 ? "#5fb3ff" : "#4a9be0") : "#111120");
+    if (on) px(X + 6, Y - 1 + Math.floor((t * 6) % 3), 5, 1, "#cfe9ff");
+  }
+  /* boss monitor + stack of papers when approvals pending */
+  px(31 * TILE + 8, 3 * TILE - 3, 10, 8, "#222233");
+  px(31 * TILE + 9, 3 * TILE - 2, 8, 6, "#1a1a2e");
+  if (approvalQueue.length) {
+    const blink = Math.sin(t * 6) > 0;
+    px(33 * TILE + 4, 3 * TILE + 1, 10, 8, blink ? "#ffffff" : "#dddddd");
+    px(33 * TILE + 5, 3 * TILE + 3, 8, 1, "#999");
+    px(33 * TILE + 5, 3 * TILE + 5, 8, 1, "#999");
+    ctx.fillStyle = "#ff6b6b"; ctx.font = "8px DungGeunMo, monospace";
+    ctx.fillText("x" + approvalQueue.length, 34 * TILE + 2, 3 * TILE);
+  }
+  if (stampFx > 0) {
+    ctx.fillStyle = "rgba(255,80,80," + (stampFx / 0.6) + ")";
+    ctx.font = "10px DungGeunMo, monospace";
+    ctx.fillText("승인", 33 * TILE + 3, 3 * TILE + 8);
+  }
+  /* inbox papers when tasks waiting */
+  const inboxN = tasks.filter(tk => tk.state === "inbox").length;
+  if (inboxN) {
+    const blink = Math.sin(t * 5) > 0;
+    ctx.fillStyle = blink ? "#ffd23f" : "#c9a52f";
+    ctx.font = "8px DungGeunMo, monospace";
+    ctx.fillText("!", 4 * TILE + 6, 15 * TILE + 6);
+  }
+}
+
+function drawChar(ag, t) {
+  const x = Math.round(ag.px) - 6, y = Math.round(ag.py) - 12;
+  const walking = ag.path.length > 0;
+  const bob = walking ? Math.floor(ag.walkFrame) % 2 : 0;
+
+  /* shadow */
+  px(x + 2, y + 13, 8, 2, "rgba(0,0,0,.25)");
+  /* legs */
+  if (walking && bob) { px(x + 3, y + 10, 2, 3, "#33334a"); px(x + 7, y + 11, 2, 2, "#33334a"); }
+  else { px(x + 3, y + 10, 2, 3, "#33334a"); px(x + 7, y + 10, 2, 3, "#33334a"); }
+  /* body */
+  px(x + 2, y + 5, 8, 5, ag.shirt);
+  /* arms (typing animation while working) */
+  if (ag.state === "working") {
+    const k = Math.floor(t * 8) % 2;
+    px(x + 1, y + 6 + k, 1, 2, "#f1c27d");
+    px(x + 10, y + 7 - k, 1, 2, "#f1c27d");
+  } else {
+    px(x + 1, y + 6, 1, 3, ag.shirt);
+    px(x + 10, y + 6, 1, 3, ag.shirt);
+  }
+  /* head */
+  px(x + 3, y + 1, 6, 4, "#f1c27d");
+  px(x + 3, y, 6, 2, ag.hair);
+  /* facing up while working → show back of head, otherwise eyes */
+  if (ag.state === "working") px(x + 3, y + 1, 6, 3, ag.hair);
+  else { px(x + 4, y + 2, 1, 1, "#222"); px(x + 7, y + 2, 1, 1, "#222"); }
+
+  /* progress bar */
+  if (ag.state === "working" && ag.task) {
+    const bx = ag.desk.x * TILE - 4, by = ag.desk.y * TILE - 9;
+    px(bx, by, 24, 4, "#111");
+    px(bx + 1, by + 1, Math.round(22 * ag.task.progress / 100), 2, "#7cfc9b");
+  }
+}
+
+function drawBubble(ag) {
+  if (!ag.bubble) return;
+  ctx.font = "8px DungGeunMo, monospace";
+  const w = ctx.measureText(ag.bubble).width + 8;
+  let bx = Math.round(ag.px) - w / 2, by = Math.round(ag.py) - 26;
+  bx = Math.max(2, Math.min(cv.width - w - 2, bx));
+  if (by < 2) by = 2;
+  ctx.fillStyle = "#fff"; ctx.fillRect(bx, by, w, 12);
+  ctx.strokeStyle = "#222"; ctx.lineWidth = 1; ctx.strokeRect(bx + .5, by + .5, w - 1, 11);
+  px(Math.round(ag.px) - 1, by + 12, 2, 2, "#fff");
+  ctx.fillStyle = "#222";
+  ctx.fillText(ag.bubble, bx + 4, by + 9);
+}
+
+function render(t) {
+  ctx.clearRect(0, 0, cv.width, cv.height);
+  drawTiles(t);
+  const all = [...agents, boss].sort((a, b) => a.py - b.py);
+  for (const ag of all) drawChar(ag, t);
+  for (const ag of all) drawBubble(ag);
+}
+
+/* ══════════════ UI PANEL ══════════════ */
+const logEl = document.getElementById("log");
+function log(cls, msg) {
+  const d = document.createElement("div");
+  const now = new Date();
+  const hh = String(now.getHours()).padStart(2, "0"),
+        mm = String(now.getMinutes()).padStart(2, "0"),
+        ss = String(now.getSeconds()).padStart(2, "0");
+  d.innerHTML = "<time>" + hh + ":" + mm + ":" + ss + "</time><span class='" + cls + "'>" + msg + "</span>";
+  logEl.prepend(d);
+  while (logEl.children.length > 40) logEl.removeChild(logEl.lastChild);
+}
+
+const rosterEl = document.getElementById("roster");
+function chipSvg(color) {
+  return "data:image/svg+xml," + encodeURIComponent(
+    "<svg xmlns='http://www.w3.org/2000/svg' width='6' height='6'>" +
+    "<rect x='1' y='3' width='4' height='3' fill='" + color + "'/>" +
+    "<rect x='1.5' y='0.5' width='3' height='2.5' fill='#f1c27d'/></svg>");
+}
+function buildRoster() {
+  rosterEl.innerHTML = "";
+  for (const ag of [...agents, boss]) {
+    const row = document.createElement("div");
+    row.className = "agent-row";
+    row.innerHTML = "<img class='chip' src='" + chipSvg(ag.shirt) + "' alt=''>" +
+      "<span class='agent-name'>" + ag.name + "</span>" +
+      "<span class='agent-status' id='st-" + ag.role + "'></span>";
+    rosterEl.appendChild(row);
+  }
+}
+buildRoster();
+
+function updatePanel() {
+  document.getElementById("kInbox").textContent    = tasks.filter(t => t.state === "inbox" || t.state === "queued").length;
+  document.getElementById("kWork").textContent     = tasks.filter(t => t.state === "working").length;
+  document.getElementById("kApproval").textContent = tasks.filter(t => t.state === "approval").length;
+  document.getElementById("kDone").textContent     = tasks.filter(t => t.state === "done").length;
+  for (const ag of [...agents, boss]) {
+    const el = document.getElementById("st-" + ag.role);
+    if (!el) continue;
+    let txt = "대기중", cls = "agent-status";
+    if (ag.role === "boss") { txt = boss.statusText; if (approvalQueue.length) cls += " approval"; }
+    else if (ag.state === "working" && ag.task) { txt = ag.task.title + " " + ag.task.progress + "%"; cls += " busy"; }
+    else if (ag.state === "delivering") { txt = "결재 요청 중"; cls += " approval"; }
+    else if (ag.path.length) { txt = "이동중"; }
+    else if (ag.role === "manager" && managerBusy) { txt = "의뢰 분류중"; cls += " busy"; }
+    el.textContent = txt; el.className = cls;
+  }
+}
+
+/* ══════════════ CONTROLS ══════════════ */
+document.getElementById("btnNewTask").addEventListener("click", () => spawnTask(true));
+const spdBtns = { 1: document.getElementById("spd1"), 2: document.getElementById("spd2"), 4: document.getElementById("spd4") };
+for (const [s, btn] of Object.entries(spdBtns)) {
+  btn.addEventListener("click", () => {
+    speed = Number(s);
+    Object.values(spdBtns).forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+  });
+}
+const pauseBtn = document.getElementById("btnPause");
+pauseBtn.addEventListener("click", () => {
+  paused = !paused;
+  pauseBtn.textContent = paused ? "▶ 재개" : "⏸ 일시정지";
+});
+
+/* ══════════════ MAIN LOOP ══════════════ */
+let last = performance.now();
+let panelT = 0;
+function frame(now) {
+  let dt = Math.min(0.1, (now - last) / 1000);
+  last = now;
+  if (!paused) {
+    dt *= speed;
+    elapsed += dt;
+    spawnT -= dt;
+    if (spawnT <= 0) { spawnTask(false); spawnT = 10 + Math.random() * 8; }
+    updateSimTimers(dt);
+    for (const ag of agents) updateAgent(ag, dt);
+    updateManager(dt);
+    updateBoss(dt);
+    if (stampFx > 0) stampFx -= dt;
+    tryDispatch();
+  }
+  render(elapsed);
+  panelT += dt;
+  if (panelT > 0.3) { panelT = 0; updatePanel(); }
+  requestAnimationFrame(frame);
+}
+log("lg-assign", "🏢 TRINITY AI AGENCY 오픈 — 에이전트 5명 출근 완료");
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>
