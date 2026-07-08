@@ -6,6 +6,13 @@
   <title>TRINITY AI AGENCY — 픽셀 오피스</title>
   <meta name="description" content="사장님의 지시를 받으면 AI 직원이 채용되고, 실제 Claude API로 일하고, 결재를 받는 픽셀 오피스 AI 에이전시">
 
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="TRINITY AI AGENCY — 픽셀 오피스">
+  <meta property="og:description" content="지시를 내리면 AI 직원이 채용되어 일하는 픽셀 오피스. Claude API 연동 데모.">
+  <meta property="og:url" content="https://hq1trinity-arch.github.io/trinity-lecture-page/pixel-agency.html">
+  <meta property="og:locale" content="ko_KR">
+
   <style>
     @font-face {
       font-family: "DungGeunMo";
@@ -57,11 +64,11 @@
 
     /* ── Command bar ── */
     .command-bar {
-      display: flex; gap: 8px; margin-top: 18px;
+      display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px;
       background: var(--panel); border: 3px solid var(--line); padding: 10px;
     }
     .command-bar input {
-      flex: 1; min-width: 0;
+      flex: 1 1 220px; min-width: 0;
       font-family: inherit; font-size: 14px;
       background: var(--panel2); color: var(--text);
       border: 2px solid var(--line); padding: 10px 12px;
@@ -122,6 +129,12 @@
     .agent-status { color: var(--dim); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .agent-status.busy { color: var(--blue); }
     .agent-status.approval { color: var(--accent); }
+    .agent-status { flex: 1; }
+    button.fire {
+      flex: 0 0 auto; font-size: 10px; padding: 1px 5px;
+      background: transparent; border: 1px solid #3a3a55; color: #55556f;
+    }
+    button.fire:hover { border-color: var(--red); color: var(--red); }
 
     /* approval inbox */
     .appr-item {
@@ -237,6 +250,11 @@
       </div>
 
       <div class="card">
+        <h2>📁 완료 보관함 <span class="count" id="archCount"></span></h2>
+        <div id="archList"><div class="appr-empty">승인된 결과물이 여기 보관됩니다.</div></div>
+      </div>
+
+      <div class="card">
         <h2>업무 로그</h2>
         <div id="log"></div>
       </div>
@@ -283,6 +301,7 @@
     </div>
     <div class="btns">
       <button id="btnCopy">복사</button>
+      <button id="btnDownload">.md 다운로드</button>
       <button class="bad" id="btnReject">반려·재작업</button>
       <button class="good" id="btnApprove">✔ 승인</button>
       <button id="btnApprClose">닫기</button>
@@ -309,6 +328,7 @@
     </select>
     <div class="note" id="setStatus"></div>
     <div class="btns">
+      <button class="bad" id="btnReset">오피스 초기화</button>
       <button class="bad" id="btnKeyDelete">키 삭제</button>
       <button id="btnKeyTest">연결 테스트</button>
       <button class="good" id="btnKeySave">저장</button>
@@ -394,11 +414,25 @@ const DOOR_SPAWN   = { x: 6,  y: 20 };
 
 /* ══════════════ SETTINGS / MODE ══════════════ */
 const LS_KEY = "trinity_agency_api_key", LS_MODEL = "trinity_agency_model";
+const LS_EMP = "trinity_agency_employees", LS_ARC = "trinity_agency_archive";
 const settings = {
   key: localStorage.getItem(LS_KEY) || "",
   model: localStorage.getItem(LS_MODEL) || "claude-opus-4-8",
 };
 const aiMode = () => !!settings.key;
+
+/* persistent state */
+let archive = [];
+try { archive = JSON.parse(localStorage.getItem(LS_ARC) || "[]"); } catch (_) { archive = []; }
+function saveArchive() {
+  archive = archive.slice(0, 30);
+  try { localStorage.setItem(LS_ARC, JSON.stringify(archive)); } catch (_) {}
+}
+function saveEmployees() {
+  try {
+    localStorage.setItem(LS_EMP, JSON.stringify(employees.map(e => ({ roleName: e.roleName, look: e.look }))));
+  } catch (_) {}
+}
 
 /* ══════════════ CHARACTERS ══════════════ */
 const SHIRTS = ["#d65a5a","#8a5ad6","#3aa66a","#d6a23a","#4a9be0","#d65aa0","#5ad6c8","#a0d65a"];
@@ -451,13 +485,39 @@ function hireEmployee(roleName) {
   log("lg-hire", "🎉 신규 채용 — " + roleName + " 출근!");
   emp.bubble = "안녕하세요! " + roleName + "입니다"; emp.bubbleT = 3;
   walkTo(emp, emp.chair.x, emp.chair.y, () => { tryStartNext(emp); });
+  saveEmployees();
   buildRoster();
   return emp;
 }
 
+function restoreEmployees() {
+  let list = [];
+  try { list = JSON.parse(localStorage.getItem(LS_EMP) || "[]"); } catch (_) {}
+  for (const it of list.slice(0, DESK_SLOTS.length)) {
+    if (!it || !it.roleName) continue;
+    const desk = freeDesk();
+    if (!desk) break;
+    const emp = makeAgent(it.roleName, it.roleName, desk.x, desk.y + 1, desk.x, desk.y, it.look || null);
+    employees.push(emp);
+  }
+  if (list.length) log("lg-hire", "🏢 직원 " + employees.length + "명 출근 완료 (명단 복원)");
+}
+
+function fireEmployee(emp) {
+  if (emp.task || emp.queue.length || emp.state === "working" || emp.state === "delivering") {
+    log("lg-err", "⚠ 작업 중인 직원은 내보낼 수 없습니다 — " + emp.roleName);
+    return;
+  }
+  employees = employees.filter(e => e !== emp);
+  saveEmployees();
+  buildRoster();
+  updatePanel();
+  log("lg-work", "👋 " + emp.roleName + " 퇴사");
+}
+
 /* ══════════════ TASKS ══════════════ */
 let tasks = [], taskSeq = 0;
-let doneCount = 0;
+let doneCount = archive.length;   /* restored from previous sessions */
 
 function newTask(instruction) {
   const task = {
@@ -632,14 +692,16 @@ function assignTask(task) {
 function tryStartNext(emp) {
   if (emp.state !== "idle" || emp.task || !emp.queue.length) return;
   const task = emp.queue.shift();
+  const feedback = task._feedback;   /* queued rework carries the boss feedback */
+  delete task._feedback;
   emp.task = task;
   task.state = "working";
   task.progress = 0;
-  emp.bubble = "접수! " + task.title; emp.bubbleT = 2.5;
+  emp.bubble = (feedback ? "다시 해보겠습니다!" : "접수! " + task.title); emp.bubbleT = 2.5;
   walkTo(emp, emp.chair.x, emp.chair.y, () => {
     emp.state = "working";
     emp.workT = 0;
-    runWork(emp, task);
+    runWork(emp, task, feedback);
   });
 }
 
@@ -681,8 +743,15 @@ function finishWork(emp, task) {
 }
 
 function approveTask(task) {
+  if (task.state !== "approval") return;
   task.state = "done";
   doneCount++;
+  archive.unshift({
+    title: task.title, roleName: task.roleName,
+    instruction: task.instruction, result: task.result, ts: Date.now(),
+  });
+  saveArchive();
+  renderArchive();
   boss.bubble = "승인! ✔"; boss.bubbleT = 2;
   stampFx = 0.7;
   spawnSparkles(BOSS_DESK.x * TILE + 24, BOSS_DESK.y * TILE, "#7cfc9b");
@@ -691,6 +760,7 @@ function approveTask(task) {
 }
 
 function rejectTask(task, feedback) {
+  if (task.state !== "approval") return;
   task.state = "revising";
   log("lg-work", "↩ 반려·재작업 — " + task.title + (feedback ? " (" + feedback.slice(0, 20) + "…)" : ""));
   renderApprovals(); updatePanel();
@@ -1095,6 +1165,12 @@ function buildRoster() {
     const st = document.createElement("span");
     st.className = "agent-status"; st.id = "st-" + ag.id;
     row.append(img, nm, st);
+    if (employees.includes(ag)) {
+      const fire = document.createElement("button");
+      fire.className = "fire"; fire.textContent = "✖"; fire.title = "퇴사시키기";
+      fire.addEventListener("click", () => fireEmployee(ag));
+      row.appendChild(fire);
+    }
     rosterEl.appendChild(row);
   }
 }
@@ -1138,15 +1214,34 @@ function renderApprovals() {
     d.innerHTML = "<div class='t'>📄 </div><div class='r'></div>";
     d.querySelector(".t").append(task.title);
     d.querySelector(".r").textContent = "담당: " + task.roleName + " · 클릭해서 검토";
-    d.addEventListener("click", () => openApproval(task));
+    d.addEventListener("click", () => openDoc(task, false));
     apprListEl.appendChild(d);
   }
 }
-function openApproval(task) {
-  openTask = task;
-  document.getElementById("apprTitle").textContent = "📄 " + task.title;
-  document.getElementById("apprSub").textContent = "담당: " + task.roleName + " · 지시: " + task.instruction;
-  document.getElementById("apprBody").textContent = task.result || "(내용 없음)";
+
+const archListEl = document.getElementById("archList");
+function renderArchive() {
+  document.getElementById("archCount").textContent = archive.length ? archive.length + "건" : "";
+  archListEl.innerHTML = "";
+  if (!archive.length) { archListEl.innerHTML = "<div class='appr-empty'>승인된 결과물이 여기 보관됩니다.</div>"; return; }
+  for (const item of archive.slice(0, 8)) {
+    const d = document.createElement("div");
+    d.className = "appr-item";
+    d.innerHTML = "<div class='t'>✅ </div><div class='r'></div>";
+    d.querySelector(".t").append(item.title);
+    d.querySelector(".r").textContent = "담당: " + item.roleName + " · " + new Date(item.ts).toLocaleDateString("ko-KR");
+    d.addEventListener("click", () => openDoc(item, true));
+    archListEl.appendChild(d);
+  }
+}
+
+function openDoc(doc, readonly) {
+  openTask = doc;
+  document.getElementById("apprTitle").textContent = (readonly ? "📁 " : "📄 ") + doc.title;
+  document.getElementById("apprSub").textContent = "담당: " + doc.roleName + " · 지시: " + doc.instruction;
+  document.getElementById("apprBody").textContent = doc.result || "(내용 없음)";
+  document.getElementById("btnApprove").style.display = readonly ? "none" : "";
+  document.getElementById("btnReject").style.display = readonly ? "none" : "";
   document.getElementById("rejectBox").style.display = "none";
   document.getElementById("rejectFeedback").value = "";
   document.getElementById("apprModalBg").classList.add("open");
@@ -1164,6 +1259,15 @@ document.getElementById("btnReject").addEventListener("click", () => {
 });
 document.getElementById("btnCopy").addEventListener("click", () => {
   if (openTask && openTask.result) navigator.clipboard.writeText(openTask.result).catch(() => {});
+});
+document.getElementById("btnDownload").addEventListener("click", () => {
+  if (!openTask || !openTask.result) return;
+  const blob = new Blob([openTask.result], { type: "text/markdown;charset=utf-8" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = (openTask.title || "결과물").replace(/[\\/:*?"<>|]/g, "_") + ".md";
+  a.click();
+  URL.revokeObjectURL(a.href);
 });
 document.getElementById("btnApprClose").addEventListener("click", () => document.getElementById("apprModalBg").classList.remove("open"));
 
@@ -1188,6 +1292,12 @@ document.getElementById("btnKeySave").addEventListener("click", () => {
   refreshModeBadge();
   document.getElementById("setStatus").textContent = settings.key ? "저장되었습니다. 이제 직원들이 실제 Claude API로 일합니다." : "키가 비어 있어 시뮬레이션 모드로 동작합니다.";
   log(settings.key ? "lg-hire" : "lg-work", settings.key ? "🤖 실제 AI 에이전트 연결됨 (" + settings.model + ")" : "시뮬레이션 모드로 전환");
+});
+document.getElementById("btnReset").addEventListener("click", () => {
+  if (!confirm("직원 명단과 완료 보관함을 모두 초기화할까요? (API 키는 유지됩니다)")) return;
+  localStorage.removeItem(LS_EMP);
+  localStorage.removeItem(LS_ARC);
+  location.reload();
 });
 document.getElementById("btnKeyDelete").addEventListener("click", () => {
   settings.key = "";
@@ -1214,7 +1324,10 @@ document.getElementById("btnKeyTest").addEventListener("click", async () => {
 /* ── command bar / controls ── */
 const cmdInput = document.getElementById("cmdInput");
 document.getElementById("btnCmd").addEventListener("click", () => { submitInstruction(cmdInput.value); cmdInput.value = ""; });
-cmdInput.addEventListener("keydown", e => { if (e.key === "Enter") { submitInstruction(cmdInput.value); cmdInput.value = ""; } });
+cmdInput.addEventListener("keydown", e => {
+  if (e.isComposing || e.keyCode === 229) return;   /* 한글 IME 조합 중 Enter 중복 방지 */
+  if (e.key === "Enter") { submitInstruction(cmdInput.value); cmdInput.value = ""; }
+});
 document.getElementById("btnDemo").addEventListener("click", () =>
   submitInstruction(DEMO_INSTRUCTIONS[Math.floor(Math.random() * DEMO_INSTRUCTIONS.length)]));
 
@@ -1268,9 +1381,11 @@ function frame(now) {
   requestAnimationFrame(frame);
 }
 
+restoreEmployees();
 buildRoster();
 refreshModeBadge();
 renderApprovals();
+renderArchive();
 log("lg-assign", "🏢 TRINITY AI AGENCY 오픈 — 지시를 내리면 직원이 채용됩니다");
 requestAnimationFrame(frame);
 </script>
