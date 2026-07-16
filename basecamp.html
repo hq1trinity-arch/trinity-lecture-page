@@ -76,7 +76,8 @@
       width: 100%;
       max-width: 440px;
       background: var(--page-bg);
-      overflow: hidden;
+      /* overflow:hidden 은 position:sticky(하단 고정 CTA)를 깨뜨리므로 clip 사용 */
+      overflow: clip;
       box-shadow: 0 0 80px rgba(0,0,0,0.45);
     }
 
