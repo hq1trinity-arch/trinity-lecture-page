@@ -153,6 +153,22 @@
     .speaker-name span { font-size: 12.5px; font-weight: 600; color: var(--ink-soft); margin-left: 3px; }
     .speaker-desc { margin: 6px 0 0; font-size: 12px; line-height: 1.55; color: var(--ink-soft); font-weight: 500; }
 
+    /* ── 미니 달력 (일시 체크 표시) ── */
+    .mini-cal { margin: 0 18px 18px; padding-top: 2px; }
+    .mini-cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .mini-cal-month { font-size: 13px; font-weight: 800; letter-spacing: 1.5px; color: var(--ink); }
+    .mini-cal-chip { font-size: 10.5px; font-weight: 800; letter-spacing: 1px; color: var(--violet-dark); background: var(--violet-bg); padding: 4px 9px; border-radius: 999px; }
+    .mini-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); row-gap: 5px; }
+    .mini-cal .dow { font-size: 10.5px; font-weight: 700; color: #968CB4; text-align: center; padding-bottom: 3px; }
+    .mini-cal .dow.sun { color: #D97A7A; }
+    .mini-cal .dow.sat { color: #7A93D9; }
+    .mini-cal .d { position: relative; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 12.5px; font-weight: 600; color: #A29BBE; }
+    .mini-cal .d b { position: relative; z-index: 1; font-weight: 600; }
+    .mini-cal .d.on { color: #FFFFFF; }
+    .mini-cal .d.on b { font-weight: 800; }
+    .mini-cal .d.on::before { content: ''; position: absolute; width: 30px; height: 30px; border-radius: 50%; background: linear-gradient(135deg, var(--violet), var(--violet-dark)); box-shadow: 0 4px 10px rgba(91,46,224,0.35); }
+    .mini-cal .d.on::after { content: '✓'; position: absolute; top: -3px; right: 50%; margin-right: -17px; width: 13px; height: 13px; border-radius: 50%; background: #FFD84D; color: #3A16B8; font-size: 9px; font-weight: 900; display: flex; align-items: center; justify-content: center; z-index: 2; box-shadow: 0 2px 5px rgba(0,0,0,0.18); }
+
     /* ── 스크롤 애니메이션 ── */
     .reveal {
       opacity: 0;
@@ -382,7 +398,7 @@
     <!-- ══════════ 강사 소개 ══════════ -->
     <section style="padding:46px 24px 18px;background:var(--page-bg);">
       <div style="font-size:12px;font-weight:800;letter-spacing:2px;color:var(--violet);text-transform:uppercase;">SPEAKERS</div>
-      <h2 style="margin:12px 0 0;font-size:26px;font-weight:800;letter-spacing:-0.7px;color:var(--ink);line-height:1.3;">정상까지 함께할<br>강사진</h2>
+      <h2 style="margin:12px 0 0;font-size:26px;font-weight:800;letter-spacing:-0.7px;color:var(--ink);line-height:1.3;">정상까지 함께할 강사진</h2>
       <p style="margin:10px 0 0;font-size:14px;color:var(--ink-soft);font-weight:500;">각 분야 최전선의 전문가들이 5일을 이끕니다</p>
 
       <!--
@@ -491,7 +507,7 @@
       <h2 style="margin:12px 0 0;font-size:26px;font-weight:800;letter-spacing:-0.7px;color:var(--ink);line-height:1.3;">일시 · 장소 · 오시는 길</h2>
 
       <div style="margin-top:22px;border-radius:20px;overflow:hidden;background:#FFFFFF;border:1px solid var(--card-border);">
-        <div style="display:flex;gap:13px;align-items:flex-start;padding:18px;border-bottom:1px solid rgba(91,46,224,0.08);">
+        <div style="display:flex;gap:13px;align-items:flex-start;padding:18px 18px 6px;">
           <span style="flex:none;width:40px;height:40px;border-radius:11px;background:var(--hero-bg);display:flex;align-items:center;justify-content:center;">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#A98BFF" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
           </span>
@@ -499,6 +515,23 @@
             <div style="font-size:12px;font-weight:700;color:#968CB4;letter-spacing:0.5px;">일시 · 5-DAYS 집중과정</div>
             <div style="margin-top:3px;font-size:16px;font-weight:700;color:var(--ink);line-height:1.5;">2026년 8월 20(목) · 21(금) · 25(화) · 27(목) · 31(월)</div>
             <div style="margin-top:2px;font-size:13.5px;color:var(--ink-soft);">매일 오후 1:00 – 6:00</div>
+          </div>
+        </div>
+
+        <!-- 8월 미니 달력 — 강의일 5일 체크 표시 -->
+        <div class="mini-cal">
+          <div class="mini-cal-head">
+            <span class="mini-cal-month">2026 · AUGUST</span>
+            <span class="mini-cal-chip">5-DAYS ✓</span>
+          </div>
+          <div class="mini-cal-grid">
+            <span class="dow sun">일</span><span class="dow">월</span><span class="dow">화</span><span class="dow">수</span><span class="dow">목</span><span class="dow">금</span><span class="dow sat">토</span>
+            <span class="d"></span><span class="d"></span><span class="d"></span><span class="d"></span><span class="d"></span><span class="d"></span><span class="d"><b>1</b></span>
+            <span class="d"><b>2</b></span><span class="d"><b>3</b></span><span class="d"><b>4</b></span><span class="d"><b>5</b></span><span class="d"><b>6</b></span><span class="d"><b>7</b></span><span class="d"><b>8</b></span>
+            <span class="d"><b>9</b></span><span class="d"><b>10</b></span><span class="d"><b>11</b></span><span class="d"><b>12</b></span><span class="d"><b>13</b></span><span class="d"><b>14</b></span><span class="d"><b>15</b></span>
+            <span class="d"><b>16</b></span><span class="d"><b>17</b></span><span class="d"><b>18</b></span><span class="d"><b>19</b></span><span class="d on"><b>20</b></span><span class="d on"><b>21</b></span><span class="d"><b>22</b></span>
+            <span class="d"><b>23</b></span><span class="d"><b>24</b></span><span class="d on"><b>25</b></span><span class="d"><b>26</b></span><span class="d on"><b>27</b></span><span class="d"><b>28</b></span><span class="d"><b>29</b></span>
+            <span class="d"><b>30</b></span><span class="d on"><b>31</b></span><span class="d"></span><span class="d"></span><span class="d"></span><span class="d"></span><span class="d"></span>
           </div>
         </div>
         <div style="display:flex;gap:13px;align-items:flex-start;padding:18px;">
