@@ -1509,8 +1509,11 @@ body {
     h1, h2, h3, p { text-wrap: pretty; }
     a { color: inherit; text-decoration: none; }
     a:hover { color: #7A5636; }
+    br.m-only { display: none; }
     @media (max-width: 860px) {
       .m-nav-links { display: none !important; }
+      br.m-only { display: inline; }
+      .m-hero-grid h1 { text-align: center; }
       .m-hero-grid { grid-template-columns: 1fr !important; gap: 20px !important; padding: 48px 22px 60px !important; }
       .m-hero-mark { order: -1; }
       .m-hero-mark img { width: 140px !important; }
@@ -1550,7 +1553,7 @@ body {
       <div>
         <span style="display: inline-flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 700; letter-spacing: 0.18em; color: #7A5636; padding: 8px 18px; border: 1.5px solid rgba(111,78,45,0.35); border-radius: 999px; margin-bottom: 30px; background: #fff;"><span style="width: 6px; height: 6px; border-radius: 50%; background: #6F4E2D;"></span>법인 컨설팅 · 전문가 그룹</span>
         <h1 style="font-weight: 800; font-size: clamp(38px, 4.8vw, 62px); line-height: 1.16; letter-spacing: -0.02em; margin: 0 0 24px; color: var(--trinity-ink);">보험을 넘어,<br>기업의 <em style="font-style: normal; color: #7A5636;">내일</em>을 설계합니다.</h1>
-        <p style="font-size: clamp(17px, 1.5vw, 19px); font-weight: 500; line-height: 1.65; color: rgba(38,31,24,0.72); max-width: 30em; margin: 0 0 36px;">세무사·회계사·노무사·변호사 등 각 분야의 전문가가 한 팀으로 움직이는 TRINITY ONE. 보험이라는 도구로 대표님의 자산과 기업의 리스크를 함께 설계합니다.</p>
+        <p style="font-size: clamp(17px, 1.5vw, 19px); font-weight: 500; line-height: 1.65; color: rgba(38,31,24,0.72); max-width: 30em; margin: 0 0 36px;">세무사·회계사·노무사·변호사 등 각 분야의 전문가가<br class="m-only"> 한 팀으로 움직이는 TRINITY ONE. 보험이라는 도구로 대표님의 자산과 기업의 리스크를 함께 설계합니다.</p>
         <div style="display: flex; gap: 14px; flex-wrap: wrap;">
           <a href="#contact" style="display: inline-flex; align-items: center; height: 50px; padding: 0 28px; border-radius: 999px; background: #6F4E2D; color: #fff; font-size: 15.5px; font-weight: 700; box-shadow: 0 12px 28px rgba(111,78,45,0.28);" style-hover="background: #55391E; color: #fff;">기업 진단 신청</a>
           <a href="#services" style="display: inline-flex; align-items: center; height: 50px; padding: 0 28px; border-radius: 999px; border: 1.5px solid rgba(111,78,45,0.4); color: #7A5636; font-size: 15.5px; font-weight: 700; background: #fff;" style-hover="background: rgba(111,78,45,0.06);">컨설팅 분야 보기</a>
