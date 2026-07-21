@@ -1508,11 +1508,13 @@ body {
     body { margin: 0; background: #fff; color: var(--trinity-ink); font-family: var(--font-system); font-weight: 500; -webkit-font-smoothing: antialiased; word-break: keep-all; }
     h1, h2, h3, p { text-wrap: pretty; }
     a { color: inherit; text-decoration: none; }
-    a:hover { color: #7A5636; }
+    a:hover { color: #6E4527; }
     br.m-only { display: none; }
+    br.d-only { display: inline; }
     @media (max-width: 860px) {
       .m-nav-links { display: none !important; }
       br.m-only { display: inline; }
+      br.d-only { display: none; }
       .m-hero-grid h1 { text-align: center; }
       .m-hero-grid { grid-template-columns: 1fr !important; gap: 20px !important; padding: 48px 22px 60px !important; }
       .m-hero-mark { order: -1; }
@@ -1528,6 +1530,8 @@ body {
       .m-quote { padding-top: 44px !important; padding-bottom: 44px !important; }
       .m-contact h2 { text-align: center; }
       .m-fit { font-size: 12.8px !important; }
+      .m-eq { flex-direction: column; align-items: stretch !important; }
+      .m-backed { gap: 18px !important; }
       .m-footbase { flex-direction: column !important; align-items: flex-start !important; }
       .m-footbase span { max-width: 100% !important; }
     }
@@ -1538,33 +1542,34 @@ body {
   <div style="max-width: 1180px; margin: 0 auto; padding: 0 32px; display: flex; align-items: center; justify-content: space-between; height: 76px;">
     <a href="#top" style="display: flex; align-items: center; gap: 12px; flex-shrink: 0; white-space: nowrap;">
       <img src="../assets/trinity-one-logo.png" alt="TRINITY ONE" style="height: 38px; width: auto; display: block; flex-shrink: 0;">
-      <span style="font-size: 19px; font-weight: 800; letter-spacing: 0.06em; color: #40301C;">TRINITY ONE</span>
+      <span style="font-size: 19px; font-weight: 800; letter-spacing: 0.06em; color: #2B2522;">TRINITY ONE</span>
     </a>
     <nav class="m-nav-links" style="display: flex; gap: 34px;">
-      <a href="#experts" style="font-size: 15px; font-weight: 700; color: rgba(38,31,24,0.82);" style-hover="color: #7A5636;">전문가 그룹</a>
-      <a href="#services" style="font-size: 15px; font-weight: 700; color: rgba(38,31,24,0.82);" style-hover="color: #7A5636;">컨설팅 분야</a>
-      <a href="#process" style="font-size: 15px; font-weight: 700; color: rgba(38,31,24,0.82);" style-hover="color: #7A5636;">진행 절차</a>
-      <a href="#about" style="font-size: 15px; font-weight: 700; color: rgba(38,31,24,0.82);" style-hover="color: #7A5636;">회사 소개</a>
+      <a href="#philosophy" style="font-size: 15px; font-weight: 700; color: rgba(38,31,24,0.82);" style-hover="color: #8B5E3C;">브랜드 철학</a>
+      <a href="#experts" style="font-size: 15px; font-weight: 700; color: rgba(38,31,24,0.82);" style-hover="color: #8B5E3C;">전문가 그룹</a>
+      <a href="#services" style="font-size: 15px; font-weight: 700; color: rgba(38,31,24,0.82);" style-hover="color: #8B5E3C;">컨설팅 분야</a>
+      <a href="#process" style="font-size: 15px; font-weight: 700; color: rgba(38,31,24,0.82);" style-hover="color: #8B5E3C;">진행 절차</a>
+      <a href="#about" style="font-size: 15px; font-weight: 700; color: rgba(38,31,24,0.82);" style-hover="color: #8B5E3C;">회사 소개</a>
     </nav>
-    <a href="#contact" style="display: inline-flex; align-items: center; height: 42px; padding: 0 22px; border-radius: 999px; background: #6F4E2D; color: #fff; font-size: 14px; font-weight: 700;" style-hover="background: #55391E; color: #fff;">상담 신청</a>
+    <a href="#contact" style="display: inline-flex; align-items: center; height: 42px; padding: 0 22px; border-radius: 999px; background: #8B5E3C; color: #fff; font-size: 14px; font-weight: 700;" style-hover="background: #6E4527; color: #fff;">상담 신청</a>
   </div>
 </header>
 
 <main id="top">
-  <section data-screen-label="Hero" style="background: radial-gradient(70% 100% at 88% 0%, rgba(139,103,64,0.28), transparent 62%), radial-gradient(55% 80% at 0% 100%, rgba(111,78,45,0.14), transparent 60%), linear-gradient(180deg, #FFFFFF, #F5F1EA); overflow: hidden;">
+  <section data-screen-label="Hero" style="background: radial-gradient(70% 100% at 88% 0%, rgba(200,169,110,0.28), transparent 62%), radial-gradient(55% 80% at 0% 100%, rgba(139,94,60,0.14), transparent 60%), linear-gradient(180deg, #FFFFFF, #F7F4EE); overflow: hidden;">
     <div class="m-hero-grid" style="max-width: 1180px; margin: 0 auto; padding: 88px 32px 92px; display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 40px; align-items: center;">
       <div>
-        <span style="display: inline-flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 700; letter-spacing: 0.18em; color: #7A5636; padding: 8px 18px; border: 1.5px solid rgba(111,78,45,0.35); border-radius: 999px; margin-bottom: 30px; background: #fff;"><span style="width: 6px; height: 6px; border-radius: 50%; background: #6F4E2D;"></span>법인 컨설팅 · 전문가 그룹</span>
-        <h1 style="font-weight: 800; font-size: clamp(38px, 4.8vw, 62px); line-height: 1.16; letter-spacing: -0.02em; margin: 0 0 24px; color: var(--trinity-ink);">보험을 넘어,<br>기업의 <em style="font-style: normal; color: #7A5636;">내일</em>을 설계합니다.</h1>
-        <p style="font-size: clamp(17px, 1.5vw, 19px); font-weight: 500; line-height: 1.65; color: rgba(38,31,24,0.72); max-width: 30em; margin: 0 0 36px;">세무사·회계사·노무사·변호사 등 각 분야의 전문가가<br class="m-only"> 한 팀으로 움직이는 TRINITY ONE. 보험이라는 도구로 대표님의 자산과 기업의 리스크를 함께 설계합니다.</p>
+        <span style="display: inline-flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 700; letter-spacing: 0.18em; color: #8B5E3C; padding: 8px 18px; border: 1.5px solid rgba(139,94,60,0.35); border-radius: 999px; margin-bottom: 30px; background: #fff;"><span style="width: 6px; height: 6px; border-radius: 50%; background: #8B5E3C;"></span>THE ONLY STRATEGY FOR THE 0.1%</span>
+        <h1 style="font-weight: 800; font-size: clamp(38px, 4.8vw, 62px); line-height: 1.16; letter-spacing: -0.02em; margin: 0 0 24px; color: var(--trinity-ink);">보험을 넘어,<br>기업의 <em style="font-style: normal; color: #8B5E3C;">내일</em>을 설계합니다.</h1>
+        <p style="font-size: clamp(17px, 1.5vw, 19px); font-weight: 500; line-height: 1.65; color: rgba(38,31,24,0.72); max-width: 30em; margin: 0 0 36px;">세무사·회계사·노무사·변호사 등 각 분야의 전문가가<br class="m-only"> 한 팀으로 움직이는 TRINITY ONE.<br class="m-only"> 보험이라는 도구로 대표님의 자산과<br class="m-only"> 기업의 리스크를 함께 설계합니다.</p>
         <div style="display: flex; gap: 14px; flex-wrap: wrap;">
-          <a href="#contact" style="display: inline-flex; align-items: center; height: 50px; padding: 0 28px; border-radius: 999px; background: #6F4E2D; color: #fff; font-size: 15.5px; font-weight: 700; box-shadow: 0 12px 28px rgba(111,78,45,0.28);" style-hover="background: #55391E; color: #fff;">기업 진단 신청</a>
-          <a href="#services" style="display: inline-flex; align-items: center; height: 50px; padding: 0 28px; border-radius: 999px; border: 1.5px solid rgba(111,78,45,0.4); color: #7A5636; font-size: 15.5px; font-weight: 700; background: #fff;" style-hover="background: rgba(111,78,45,0.06);">컨설팅 분야 보기</a>
+          <a href="#contact" style="display: inline-flex; align-items: center; height: 50px; padding: 0 28px; border-radius: 999px; background: #8B5E3C; color: #fff; font-size: 15.5px; font-weight: 700; box-shadow: 0 12px 28px rgba(139,94,60,0.28);" style-hover="background: #6E4527; color: #fff;">기업 진단 신청</a>
+          <a href="#services" style="display: inline-flex; align-items: center; height: 50px; padding: 0 28px; border-radius: 999px; border: 1.5px solid rgba(139,94,60,0.4); color: #8B5E3C; font-size: 15.5px; font-weight: 700; background: #fff;" style-hover="background: rgba(139,94,60,0.06);">컨설팅 분야 보기</a>
         </div>
         <div style="margin-top: 30px; font-size: 14px; font-weight: 500; color: rgba(38,31,24,0.55); display: flex; align-items: center; gap: 10px;"><span style="width: 28px; height: 1.5px; background: #A9825A;"></span>모든 상담 내용은 철저히 비밀이 보장됩니다.</div>
       </div>
       <div class="m-hero-mark" style="display: flex; align-items: center; justify-content: center;">
-        <img src="../assets/trinity-one-logo.png" alt="" style="width: min(80%, 360px); height: auto; filter: drop-shadow(0 30px 60px rgba(111,78,45,0.28));">
+        <img src="../assets/trinity-one-logo.png" alt="" style="width: min(80%, 360px); height: auto; filter: drop-shadow(0 30px 60px rgba(139,94,60,0.28));">
       </div>
     </div>
   </section>
@@ -1572,57 +1577,89 @@ body {
   <div style="border-top: 1px solid #E6E0D5; border-bottom: 1px solid #E6E0D5; background: #fff;" data-screen-label="Figures">
     <div class="m-figures" style="max-width: 1180px; margin: 0 auto; padding: 0 32px; display: grid; grid-template-columns: repeat(4, 1fr);">
       <div style="padding: 44px 24px; text-align: center;">
-        <div style="font-weight: 800; font-size: clamp(26px, 2.6vw, 34px); letter-spacing: -0.01em; color: #7A5636; margin-bottom: 10px;">전문 자격 보유</div>
+        <div style="font-weight: 800; font-size: clamp(26px, 2.6vw, 34px); letter-spacing: -0.01em; color: #8B5E3C; margin-bottom: 10px;">전문 자격 보유</div>
         <div style="font-size: 14px; font-weight: 500; line-height: 1.5; color: rgba(38,31,24,0.65);">세무·회계·노무·법률 등<br class="m-only"> 각 분야 전문가</div>
       </div>
       <div style="padding: 44px 24px; text-align: center; border-left: 1px solid #E6E0D5;">
-        <div style="font-weight: 800; font-size: clamp(26px, 2.6vw, 34px); letter-spacing: -0.01em; color: #7A5636; margin-bottom: 10px;">전 보험사 비교</div>
+        <div style="font-weight: 800; font-size: clamp(26px, 2.6vw, 34px); letter-spacing: -0.01em; color: #8B5E3C; margin-bottom: 10px;">전 보험사 비교</div>
         <div style="font-size: 14px; font-weight: 500; line-height: 1.5; color: rgba(38,31,24,0.65);">특정 보험사에 속하지 않는 법인보험대리점</div>
       </div>
       <div style="padding: 44px 24px; text-align: center; border-left: 1px solid #E6E0D5;">
-        <div style="font-weight: 800; font-size: clamp(26px, 2.6vw, 34px); letter-spacing: -0.01em; color: #7A5636; margin-bottom: 10px;">One-Stop</div>
+        <div style="font-weight: 800; font-size: clamp(26px, 2.6vw, 34px); letter-spacing: -0.01em; color: #8B5E3C; margin-bottom: 10px;">One-Stop</div>
         <div style="font-size: 14px; font-weight: 500; line-height: 1.5; color: rgba(38,31,24,0.65);">진단부터 실행·사후관리까지 한 곳에서</div>
       </div>
       <div style="padding: 44px 24px; text-align: center; border-left: 1px solid #E6E0D5;">
-        <div style="font-weight: 800; font-size: clamp(26px, 2.6vw, 34px); letter-spacing: -0.01em; color: #7A5636; margin-bottom: 10px;">1:1 전담</div>
+        <div style="font-weight: 800; font-size: clamp(26px, 2.6vw, 34px); letter-spacing: -0.01em; color: #8B5E3C; margin-bottom: 10px;">1:1 전담</div>
         <div style="font-size: 14px; font-weight: 500; line-height: 1.5; color: rgba(38,31,24,0.65);">기업마다 전담 컨설턴트 배정</div>
       </div>
     </div>
   </div>
 
+  <section id="philosophy" class="m-pad m-sec" data-screen-label="Philosophy" style="max-width: 1180px; margin: 0 auto; padding: 100px 32px;">
+    <div style="max-width: 720px; margin-bottom: 52px;">
+      <div style="font-size: 13px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; color: #8B5E3C; margin-bottom: 16px;">Brand Philosophy</div>
+      <h2 style="font-weight: 800; font-size: clamp(28px, 3.2vw, 42px); line-height: 1.22; letter-spacing: -0.02em; margin: 0 0 18px;">셋이 하나가 될 때,<br>비로소 0.1%의 전략이 완성됩니다.</h2>
+      <p style="font-size: 17px; font-weight: 500; line-height: 1.65; color: rgba(38,31,24,0.7); margin: 0;">TRINITY가 ‘셋(三)’을 말한다면,<br class="m-only"> ONE은 그 셋이 왜 ‘하나’인지에 답합니다.<br>세 개의 철학을 하나로 융합한<br class="m-only"> 프리미엄 자산전략, TRINITY ONE입니다.</p>
+    </div>
+    <div class="m-grid3" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px;">
+      <div style="padding: 32px 28px 36px; border: 1px solid #E6E0D5; border-radius: 18px; background: #fff; transition: transform .25s var(--ease-standard), box-shadow .25s;" style-hover="transform: translateY(-4px); box-shadow: 0 24px 50px rgba(139,94,60,0.12);">
+        <div style="font-size: 13px; font-weight: 800; letter-spacing: 0.14em; color: #A9825A; margin-bottom: 18px;">THREE PILLARS</div>
+        <h3 style="font-size: 20px; font-weight: 800; margin: 0 0 6px;">세 개의 기둥</h3>
+        <div style="font-size: 15px; font-weight: 700; color: #8B5E3C; margin-bottom: 12px;">사람 · 돈 · 지식</div>
+        <p style="font-size: 15px; font-weight: 500; line-height: 1.65; color: rgba(38,31,24,0.68); margin: 0;">전략의 근원이 되는 세 가지 토대.<br class="m-only"> 사람에서 출발해<br class="d-only"> 돈의 흐름을 설계하고<br class="m-only"> 지식으로 완성합니다.</p>
+      </div>
+      <div style="padding: 32px 28px 36px; border: 1px solid #E6E0D5; border-radius: 18px; background: #fff; transition: transform .25s var(--ease-standard), box-shadow .25s;" style-hover="transform: translateY(-4px); box-shadow: 0 24px 50px rgba(139,94,60,0.12);">
+        <div style="font-size: 13px; font-weight: 800; letter-spacing: 0.14em; color: #A9825A; margin-bottom: 18px;">THREE EXPERTS</div>
+        <h3 style="font-size: 20px; font-weight: 800; margin: 0 0 6px;">세 전문 영역</h3>
+        <div style="font-size: 15px; font-weight: 700; color: #8B5E3C; margin-bottom: 12px;">법률 · 세무 · 금융</div>
+        <p style="font-size: 15px; font-weight: 500; line-height: 1.65; color: rgba(38,31,24,0.68); margin: 0;">전략을 실행하는 세 영역의 협업.<br class="m-only"> 리스크 차단과 절세 설계,<br class="m-only"> 종합 금융 설계가 하나로 맞물립니다.</p>
+      </div>
+      <div style="padding: 32px 28px 36px; border: 1px solid #E6E0D5; border-radius: 18px; background: #fff; transition: transform .25s var(--ease-standard), box-shadow .25s;" style-hover="transform: translateY(-4px); box-shadow: 0 24px 50px rgba(139,94,60,0.12);">
+        <div style="font-size: 13px; font-weight: 800; letter-spacing: 0.14em; color: #A9825A; margin-bottom: 18px;">THREE VALUES</div>
+        <h3 style="font-size: 20px; font-weight: 800; margin: 0 0 6px;">세 개의 가치</h3>
+        <div style="font-size: 15px; font-weight: 700; color: #8B5E3C; margin-bottom: 12px;">보호 · 증식 · 영속</div>
+        <p style="font-size: 15px; font-weight: 500; line-height: 1.65; color: rgba(38,31,24,0.68); margin: 0;">고객에게 약속하는 세 가지 결과.<br class="m-only"> 지키고, 불리고,<br class="m-only"> 세대를 넘어 잇습니다.</p>
+      </div>
+    </div>
+    <div class="m-eq" style="margin-top: 28px; padding: 34px 36px; border: 1px solid rgba(139,94,60,0.3); border-radius: 18px; background: linear-gradient(120deg, #fff, rgba(200,169,110,0.14)); display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap;">
+      <div style="flex: 1; text-align: center; font-weight: 800; font-size: clamp(36px, 4.8vw, 60px); letter-spacing: 0.04em; color: #8B5E3C; white-space: nowrap;">3 × 3 × 3 = ONE</div>
+      <p style="font-size: 15.5px; font-weight: 500; line-height: 1.6; color: rgba(38,31,24,0.72); margin: 0; max-width: 34em;">9개 요소, 27가지 조합이 충돌 없이 맞물려<br class="m-only"> 단 하나의 전략으로 수렴합니다.<br> That is TRINITY ONE.</p>
+    </div>
+  </section>
+
   <section id="experts" class="m-pad m-sec" data-screen-label="Experts" style="max-width: 1180px; margin: 0 auto; padding: 100px 32px;">
     <div style="max-width: 680px; margin-bottom: 52px;">
-      <div style="font-size: 13px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; color: #7A5636; margin-bottom: 16px;">전문가 그룹</div>
+      <div style="font-size: 13px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; color: #8B5E3C; margin-bottom: 16px;">전문가 그룹</div>
       <h2 style="font-weight: 800; font-size: clamp(28px, 3.2vw, 42px); line-height: 1.22; letter-spacing: -0.02em; margin: 0 0 18px;">한 분의 대표님을 위해,<br>모든 분야의 전문가가 함께합니다.</h2>
       <p style="font-size: 17px; font-weight: 500; line-height: 1.65; color: rgba(38,31,24,0.7); margin: 0;">보험 설계 이전에 기업의 상황을<br class="m-only"> 정확히 진단하는 것이 먼저입니다.<br>국가 전문자격과 실무 경험을 갖춘 파트너들이<br class="m-only"> 하나의 팀으로 답을 만듭니다.</p>
     </div>
     <div class="m-grid3" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px;">
-      <div style="padding: 32px 28px 36px; border: 1px solid #E6E0D5; border-radius: 18px; background: #fff; transition: transform .25s var(--ease-standard), box-shadow .25s;" style-hover="transform: translateY(-4px); box-shadow: 0 24px 50px rgba(111,78,45,0.12);">
+      <div style="padding: 32px 28px 36px; border: 1px solid #E6E0D5; border-radius: 18px; background: #fff; transition: transform .25s var(--ease-standard), box-shadow .25s;" style-hover="transform: translateY(-4px); box-shadow: 0 24px 50px rgba(139,94,60,0.12);">
         <div style="font-size: 13px; font-weight: 800; letter-spacing: 0.14em; color: #A9825A; margin-bottom: 18px;">TAX</div>
         <h3 style="font-size: 20px; font-weight: 800; margin: 0 0 10px;">세무사</h3>
-        <p style="font-size: 15px; font-weight: 500; line-height: 1.65; color: rgba(38,31,24,0.68); margin: 0;">법인세·상속세·증여세 진단, 가지급금 정리,<br class="m-only"> 배당·보수 설계 등 세무 관점의 구조를 설계합니다.</p>
+        <p style="font-size: 15px; font-weight: 500; line-height: 1.65; color: rgba(38,31,24,0.68); margin: 0;">법인세·상속세·증여세 진단, 가지급금 정리,<br class="m-only"> 배당·보수 설계 등<br class="m-only"> 세무 관점의 구조를 설계합니다.</p>
       </div>
-      <div style="padding: 32px 28px 36px; border: 1px solid #E6E0D5; border-radius: 18px; background: #fff; transition: transform .25s var(--ease-standard), box-shadow .25s;" style-hover="transform: translateY(-4px); box-shadow: 0 24px 50px rgba(111,78,45,0.12);">
+      <div style="padding: 32px 28px 36px; border: 1px solid #E6E0D5; border-radius: 18px; background: #fff; transition: transform .25s var(--ease-standard), box-shadow .25s;" style-hover="transform: translateY(-4px); box-shadow: 0 24px 50px rgba(139,94,60,0.12);">
         <div style="font-size: 13px; font-weight: 800; letter-spacing: 0.14em; color: #A9825A; margin-bottom: 18px;">AUDIT</div>
         <h3 style="font-size: 20px; font-weight: 800; margin: 0 0 10px;">회계사</h3>
         <p class="m-fit" style="font-size: 15px; font-weight: 500; line-height: 1.65; color: rgba(38,31,24,0.68); margin: 0;">재무제표 분석, 기업가치 평가, 법인 전환과 지분 구조까지<br class="m-only"> 숫자로 회사의 현재를 진단합니다.</p>
       </div>
-      <div style="padding: 32px 28px 36px; border: 1px solid #E6E0D5; border-radius: 18px; background: #fff; transition: transform .25s var(--ease-standard), box-shadow .25s;" style-hover="transform: translateY(-4px); box-shadow: 0 24px 50px rgba(111,78,45,0.12);">
+      <div style="padding: 32px 28px 36px; border: 1px solid #E6E0D5; border-radius: 18px; background: #fff; transition: transform .25s var(--ease-standard), box-shadow .25s;" style-hover="transform: translateY(-4px); box-shadow: 0 24px 50px rgba(139,94,60,0.12);">
         <div style="font-size: 13px; font-weight: 800; letter-spacing: 0.14em; color: #A9825A; margin-bottom: 18px;">LABOR</div>
         <h3 style="font-size: 20px; font-weight: 800; margin: 0 0 10px;">노무사</h3>
-        <p style="font-size: 15px; font-weight: 500; line-height: 1.65; color: rgba(38,31,24,0.68); margin: 0;">4대보험·급여·취업규칙 정비, 단체보험과 임직원 복리후생 제도를 노무 리스크 없이 설계합니다.</p>
+        <p style="font-size: 15px; font-weight: 500; line-height: 1.65; color: rgba(38,31,24,0.68); margin: 0;">4대보험·급여·취업규칙 정비,<br class="m-only"> 단체보험과 임직원 복리후생 제도를<br class="m-only"> 노무 리스크 없이 설계합니다.</p>
       </div>
-      <div style="padding: 32px 28px 36px; border: 1px solid #E6E0D5; border-radius: 18px; background: #fff; transition: transform .25s var(--ease-standard), box-shadow .25s;" style-hover="transform: translateY(-4px); box-shadow: 0 24px 50px rgba(111,78,45,0.12);">
+      <div style="padding: 32px 28px 36px; border: 1px solid #E6E0D5; border-radius: 18px; background: #fff; transition: transform .25s var(--ease-standard), box-shadow .25s;" style-hover="transform: translateY(-4px); box-shadow: 0 24px 50px rgba(139,94,60,0.12);">
         <div style="font-size: 13px; font-weight: 800; letter-spacing: 0.14em; color: #A9825A; margin-bottom: 18px;">LEGAL</div>
         <h3 style="font-size: 20px; font-weight: 800; margin: 0 0 10px;">변호사</h3>
         <p style="font-size: 15px; font-weight: 500; line-height: 1.65; color: rgba(38,31,24,0.68); margin: 0;">정관 정비, 주주간 계약, 가업승계와 유류분 등 법률 관점에서 실행의 안전장치를 만듭니다.</p>
       </div>
-      <div style="padding: 32px 28px 36px; border: 1px solid #E6E0D5; border-radius: 18px; background: #fff; transition: transform .25s var(--ease-standard), box-shadow .25s;" style-hover="transform: translateY(-4px); box-shadow: 0 24px 50px rgba(111,78,45,0.12);">
+      <div style="padding: 32px 28px 36px; border: 1px solid #E6E0D5; border-radius: 18px; background: #fff; transition: transform .25s var(--ease-standard), box-shadow .25s;" style-hover="transform: translateY(-4px); box-shadow: 0 24px 50px rgba(139,94,60,0.12);">
         <div style="font-size: 13px; font-weight: 800; letter-spacing: 0.14em; color: #A9825A; margin-bottom: 18px;">REGISTRY</div>
         <h3 style="font-size: 20px; font-weight: 800; margin: 0 0 10px;">법무사</h3>
         <p style="font-size: 15px; font-weight: 500; line-height: 1.65; color: rgba(38,31,24,0.68); margin: 0;">법인 설립·정관 변경·임원 등기 등 실행 단계의 등기 업무를 빠짐없이 처리합니다.</p>
       </div>
-      <div style="padding: 32px 28px 36px; border: 1px solid #E6E0D5; border-radius: 18px; background: #fff; transition: transform .25s var(--ease-standard), box-shadow .25s;" style-hover="transform: translateY(-4px); box-shadow: 0 24px 50px rgba(111,78,45,0.12);">
+      <div style="padding: 32px 28px 36px; border: 1px solid #E6E0D5; border-radius: 18px; background: #fff; transition: transform .25s var(--ease-standard), box-shadow .25s;" style-hover="transform: translateY(-4px); box-shadow: 0 24px 50px rgba(139,94,60,0.12);">
         <div style="font-size: 13px; font-weight: 800; letter-spacing: 0.14em; color: #A9825A; margin-bottom: 18px;">WEALTH</div>
         <h3 style="font-size: 20px; font-weight: 800; margin: 0 0 10px;">보험 · 자산관리 전문가</h3>
         <p style="font-size: 15px; font-weight: 500; line-height: 1.65; color: rgba(38,31,24,0.68); margin: 0;">전 보험사 상품 비교와 자산 포트폴리오 설계로 진단 결과를 실행 가능한 플랜으로 완성합니다.</p>
@@ -1631,8 +1668,9 @@ body {
     <p style="margin: 28px 0 0; font-size: 14.5px; font-weight: 500; color: rgba(38,31,24,0.55);">이 외에도 감정평가·부동산 등 사안에 따라 필요한 분야의 전문가가 함께 참여합니다.</p>
   </section>
 
-  <div id="about" data-screen-label="Statement" style="background: linear-gradient(135deg, #1F160D, #40301C); color: #fff;">
+  <div id="about" data-screen-label="Statement" style="background: linear-gradient(135deg, #241E19, #3B3128); color: #fff;">
     <div class="m-pad m-sec m-quote" style="max-width: 1180px; margin: 0 auto; padding: 100px 32px;">
+      <div style="font-size: 13px; font-weight: 800; letter-spacing: 0.24em; text-transform: uppercase; color: #C8A96E; margin-bottom: 26px;">The Only Strategy for the 0.1%</div>
       <blockquote style="margin: 0; max-width: 940px;">
         <p style="font-weight: 700; font-size: clamp(24px, 2.8vw, 38px); line-height: 1.4; letter-spacing: -0.01em; margin: 0 0 30px;">“좋은 보험은 상품이 아니라<br class="m-only"> 구조에서 나옵니다.<br>저희는 특정 보험사에 속하지 않은<br class="m-only"> 법인보험대리점으로서,<br>오직 대표님의 상황에 맞는<br class="m-only"> 답만을 설계합니다.”</p>
         <div style="font-size: 15px; font-weight: 600; color: rgba(255,255,255,0.75); letter-spacing: 0.02em;">— TRINITY ONE 대표</div>
@@ -1642,37 +1680,37 @@ body {
 
   <section id="services" class="m-pad m-sec" data-screen-label="Services" style="max-width: 1180px; margin: 0 auto; padding: 100px 32px;">
     <div style="max-width: 680px; margin-bottom: 52px;">
-      <div style="font-size: 13px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; color: #7A5636; margin-bottom: 16px;">컨설팅 분야</div>
+      <div style="font-size: 13px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; color: #8B5E3C; margin-bottom: 16px;">컨설팅 분야</div>
       <h2 style="font-weight: 800; font-size: clamp(28px, 3.2vw, 42px); line-height: 1.22; letter-spacing: -0.02em; margin: 0 0 18px;">설립부터 승계까지,<br>기업의 모든 리스크를 다룹니다.</h2>
       <p style="font-size: 17px; font-weight: 500; line-height: 1.65; color: rgba(38,31,24,0.7); margin: 0;">보험은 결론이지 시작이 아닙니다.<br>진단 결과에 따라 필요한 분야만 선택해<br class="m-only"> 진행하실 수 있습니다.</p>
     </div>
     <div class="m-grid3" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px;">
-      <div style="padding: 32px 30px 36px; border: 1px solid #E6E0D5; border-radius: 18px; background: #fff; transition: transform .25s var(--ease-standard), box-shadow .25s;" style-hover="transform: translateY(-4px); box-shadow: 0 24px 50px rgba(111,78,45,0.12);">
+      <div style="padding: 32px 30px 36px; border: 1px solid #E6E0D5; border-radius: 18px; background: #fff; transition: transform .25s var(--ease-standard), box-shadow .25s;" style-hover="transform: translateY(-4px); box-shadow: 0 24px 50px rgba(139,94,60,0.12);">
         <div style="font-size: 18px; font-weight: 800; color: #A9825A; margin-bottom: 18px;">01</div>
         <h3 style="font-size: 20px; font-weight: 800; margin: 0 0 10px;">CEO 플랜 · 유고 리스크</h3>
-        <p style="font-size: 15px; font-weight: 500; line-height: 1.65; color: rgba(38,31,24,0.68); margin: 0;">대표 유고 시 기업과 가족을 지키는 정관·퇴직금 규정 정비와 경영인정기보험 설계.</p>
+        <p style="font-size: 15px; font-weight: 500; line-height: 1.65; color: rgba(38,31,24,0.68); margin: 0;">대표 유고 시 기업과 가족을 지키는<br class="m-only"> 정관·퇴직금 규정 정비와<br class="m-only"> 경영인정기보험 설계.</p>
       </div>
-      <div style="padding: 32px 30px 36px; border: 1px solid #E6E0D5; border-radius: 18px; background: #fff; transition: transform .25s var(--ease-standard), box-shadow .25s;" style-hover="transform: translateY(-4px); box-shadow: 0 24px 50px rgba(111,78,45,0.12);">
+      <div style="padding: 32px 30px 36px; border: 1px solid #E6E0D5; border-radius: 18px; background: #fff; transition: transform .25s var(--ease-standard), box-shadow .25s;" style-hover="transform: translateY(-4px); box-shadow: 0 24px 50px rgba(139,94,60,0.12);">
         <div style="font-size: 18px; font-weight: 800; color: #A9825A; margin-bottom: 18px;">02</div>
         <h3 style="font-size: 20px; font-weight: 800; margin: 0 0 10px;">가업승계 · 상속 · 증여</h3>
         <p style="font-size: 15px; font-weight: 500; line-height: 1.65; color: rgba(38,31,24,0.68); margin: 0;">미리 설계할수록 세금이 줄어듭니다.<br>상속세 재원 마련과 지분 이전을 단계별로 준비합니다.</p>
       </div>
-      <div style="padding: 32px 30px 36px; border: 1px solid #E6E0D5; border-radius: 18px; background: #fff; transition: transform .25s var(--ease-standard), box-shadow .25s;" style-hover="transform: translateY(-4px); box-shadow: 0 24px 50px rgba(111,78,45,0.12);">
+      <div style="padding: 32px 30px 36px; border: 1px solid #E6E0D5; border-radius: 18px; background: #fff; transition: transform .25s var(--ease-standard), box-shadow .25s;" style-hover="transform: translateY(-4px); box-shadow: 0 24px 50px rgba(139,94,60,0.12);">
         <div style="font-size: 18px; font-weight: 800; color: #A9825A; margin-bottom: 18px;">03</div>
         <h3 style="font-size: 20px; font-weight: 800; margin: 0 0 10px;">법인 세무 리스크 진단</h3>
-        <p style="font-size: 15px; font-weight: 500; line-height: 1.65; color: rgba(38,31,24,0.68); margin: 0;">가지급금·미처분이익잉여금 정리, 임원 보수·배당 설계로 세무조사 리스크를 낮춥니다.</p>
+        <p style="font-size: 15px; font-weight: 500; line-height: 1.65; color: rgba(38,31,24,0.68); margin: 0;">가지급금·미처분이익잉여금 정리,<br class="m-only"> 임원 보수·배당 설계로<br class="m-only"> 세무조사 리스크를 낮춥니다.</p>
       </div>
-      <div style="padding: 32px 30px 36px; border: 1px solid #E6E0D5; border-radius: 18px; background: #fff; transition: transform .25s var(--ease-standard), box-shadow .25s;" style-hover="transform: translateY(-4px); box-shadow: 0 24px 50px rgba(111,78,45,0.12);">
+      <div style="padding: 32px 30px 36px; border: 1px solid #E6E0D5; border-radius: 18px; background: #fff; transition: transform .25s var(--ease-standard), box-shadow .25s;" style-hover="transform: translateY(-4px); box-shadow: 0 24px 50px rgba(139,94,60,0.12);">
         <div style="font-size: 18px; font-weight: 800; color: #A9825A; margin-bottom: 18px;">04</div>
         <h3 style="font-size: 20px; font-weight: 800; margin: 0 0 10px;">노무 · 복리후생 설계</h3>
         <p class="m-fit" style="font-size: 15px; font-weight: 500; line-height: 1.65; color: rgba(38,31,24,0.68); margin: 0;">취업규칙·급여체계 정비와 함께 단체보험, 퇴직연금 등<br class="m-only"> 임직원 보장 제도를 설계합니다.</p>
       </div>
-      <div style="padding: 32px 30px 36px; border: 1px solid #E6E0D5; border-radius: 18px; background: #fff; transition: transform .25s var(--ease-standard), box-shadow .25s;" style-hover="transform: translateY(-4px); box-shadow: 0 24px 50px rgba(111,78,45,0.12);">
+      <div style="padding: 32px 30px 36px; border: 1px solid #E6E0D5; border-radius: 18px; background: #fff; transition: transform .25s var(--ease-standard), box-shadow .25s;" style-hover="transform: translateY(-4px); box-shadow: 0 24px 50px rgba(139,94,60,0.12);">
         <div style="font-size: 18px; font-weight: 800; color: #A9825A; margin-bottom: 18px;">05</div>
         <h3 style="font-size: 20px; font-weight: 800; margin: 0 0 10px;">법인 · 개인 보장 분석</h3>
         <p style="font-size: 15px; font-weight: 500; line-height: 1.65; color: rgba(38,31,24,0.68); margin: 0;">기존 계약을 전 보험사 기준으로 비교 분석해 중복은 덜고 비어 있는 보장을 채웁니다.</p>
       </div>
-      <div style="padding: 32px 30px 36px; border: 1px solid #E6E0D5; border-radius: 18px; background: #fff; transition: transform .25s var(--ease-standard), box-shadow .25s;" style-hover="transform: translateY(-4px); box-shadow: 0 24px 50px rgba(111,78,45,0.12);">
+      <div style="padding: 32px 30px 36px; border: 1px solid #E6E0D5; border-radius: 18px; background: #fff; transition: transform .25s var(--ease-standard), box-shadow .25s;" style-hover="transform: translateY(-4px); box-shadow: 0 24px 50px rgba(139,94,60,0.12);">
         <div style="font-size: 18px; font-weight: 800; color: #A9825A; margin-bottom: 18px;">06</div>
         <h3 style="font-size: 20px; font-weight: 800; margin: 0 0 10px;">자산 이전 · 은퇴 설계</h3>
         <p class="m-fit" style="font-size: 15px; font-weight: 500; line-height: 1.65; color: rgba(38,31,24,0.68); margin: 0;">법인 자산을 개인 자산으로 옮기는 가장 효율적인 경로와<br class="m-only"> 대표님의 은퇴 이후를 설계합니다.</p>
@@ -1680,30 +1718,100 @@ body {
     </div>
   </section>
 
-  <section id="process" data-screen-label="Process" style="border-top: 1px solid #E6E0D5; background: #F7F4EF;">
+  <section id="market" data-screen-label="Market" style="border-top: 1px solid #E6E0D5; background: #fff;">
+    <div class="m-pad m-sec" style="max-width: 1180px; margin: 0 auto; padding: 100px 32px 56px;">
+      <div style="max-width: 720px;">
+        <div style="font-size: 13px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; color: #8B5E3C; margin-bottom: 16px;">Market</div>
+        <h2 style="font-weight: 800; font-size: clamp(28px, 3.2vw, 42px); line-height: 1.22; letter-spacing: -0.02em; margin: 0 0 18px;">왜 지금, TRINITY ONE인가?</h2>
+        <p style="font-size: 17px; font-weight: 500; line-height: 1.65; color: rgba(38,31,24,0.7); margin: 0;">0.1% 시장은 빠르게 커지고,<br class="m-only"> 통합 자산전략의 수요는 폭발하고 있습니다.</p>
+      </div>
+    </div>
+    <div style="border-top: 1px solid #E6E0D5; border-bottom: 1px solid #E6E0D5;">
+      <div class="m-figures" style="max-width: 1180px; margin: 0 auto; padding: 0 32px; display: grid; grid-template-columns: repeat(4, 1fr);">
+        <div style="padding: 44px 24px; text-align: center;">
+          <div style="font-weight: 800; font-size: clamp(26px, 2.6vw, 34px); letter-spacing: -0.01em; color: #8B5E3C; margin-bottom: 10px;">47.6만 명</div>
+          <div style="font-size: 14px; font-weight: 500; line-height: 1.5; color: rgba(38,31,24,0.65);">한국 부자 수<br class="m-only"> (금융자산 10억 원 이상)</div>
+        </div>
+        <div style="padding: 44px 24px; text-align: center; border-left: 1px solid #E6E0D5;">
+          <div style="font-weight: 800; font-size: clamp(26px, 2.6vw, 34px); letter-spacing: -0.01em; color: #8B5E3C; margin-bottom: 10px;">3,066조 원</div>
+          <div style="font-size: 14px; font-weight: 500; line-height: 1.5; color: rgba(38,31,24,0.65);">부자 총 금융자산<br class="m-only"> 사상 첫 3,000조 돌파</div>
+        </div>
+        <div style="padding: 44px 24px; text-align: center; border-left: 1px solid #E6E0D5;">
+          <div style="font-weight: 800; font-size: clamp(26px, 2.6vw, 34px); letter-spacing: -0.01em; color: #8B5E3C; margin-bottom: 10px;">0.92%</div>
+          <div style="font-size: 14px; font-weight: 500; line-height: 1.5; color: rgba(38,31,24,0.65);">전 인구 중 부자 비중<br class="m-only"> 희소한 최상위 시장</div>
+        </div>
+        <div style="padding: 44px 24px; text-align: center; border-left: 1px solid #E6E0D5;">
+          <div style="font-weight: 800; font-size: clamp(26px, 2.6vw, 34px); letter-spacing: -0.01em; color: #8B5E3C; margin-bottom: 10px;">4.4조 원</div>
+          <div style="font-size: 14px; font-weight: 500; line-height: 1.5; color: rgba(38,31,24,0.65);">서울 주택 증여·상속 자금<br class="m-only"> 부의 대이전 본격화 (’25)</div>
+        </div>
+      </div>
+    </div>
+    <div class="m-pad" style="max-width: 1180px; margin: 0 auto; padding: 20px 32px 0;">
+      <p style="font-size: 13px; font-weight: 500; color: rgba(38,31,24,0.45); margin: 0;">출처: KB금융그룹 「2025 한국 부자 보고서」(2025.12) ·<br class="m-only"> 국토교통부 주택자금조달계획서 분석(2025)</p>
+    </div>
+    <div class="m-pad m-sec" style="max-width: 1180px; margin: 0 auto; padding: 80px 32px 100px;">
+      <div style="max-width: 720px; margin-bottom: 44px;">
+        <div style="font-size: 13px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; color: #8B5E3C; margin-bottom: 16px;">Network</div>
+        <h2 style="font-weight: 800; font-size: clamp(28px, 3.2vw, 42px); line-height: 1.22; letter-spacing: -0.02em; margin: 0 0 18px;">전문가가 하나로 모이는 곳</h2>
+        <p style="font-size: 17px; font-weight: 500; line-height: 1.65; color: rgba(38,31,24,0.7); margin: 0;">‘We Are One’ — 전문직 FP와 일반 FP가<br class="m-only"> 하나의 팀으로 움직입니다.<br>고액자산가(HNWI)·법인 CEO·병의원 원장을 위한<br class="m-only"> 통합 설계를 완성합니다.</p>
+      </div>
+      <div class="m-grid3" style="display: grid; grid-template-columns: 1fr 1fr; gap: 22px;">
+        <div style="padding: 32px 28px 36px; border: 1px solid #E6E0D5; border-radius: 18px; background: #fff;">
+          <div style="font-size: 13px; font-weight: 800; letter-spacing: 0.14em; color: #A9825A; margin-bottom: 18px;">TRACK 01 · 전문직 FP</div>
+          <h3 style="font-size: 20px; font-weight: 800; margin: 0 0 10px;">국가전문자격 전문가 그룹</h3>
+          <p style="font-size: 15px; font-weight: 500; line-height: 1.65; color: rgba(38,31,24,0.68); margin: 0 0 18px;">각 분야 정상에 선 전문가들이<br class="m-only"> 전략의 설계자로 직접 참여합니다.</p>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+            <span style="font-size: 13.5px; font-weight: 700; color: #8B5E3C; padding: 7px 14px; border: 1px solid rgba(139,94,60,0.35); border-radius: 999px; background: #fff;">세무사</span>
+            <span style="font-size: 13.5px; font-weight: 700; color: #8B5E3C; padding: 7px 14px; border: 1px solid rgba(139,94,60,0.35); border-radius: 999px; background: #fff;">회계사</span>
+            <span style="font-size: 13.5px; font-weight: 700; color: #8B5E3C; padding: 7px 14px; border: 1px solid rgba(139,94,60,0.35); border-radius: 999px; background: #fff;">변호사</span>
+            <span style="font-size: 13.5px; font-weight: 700; color: #8B5E3C; padding: 7px 14px; border: 1px solid rgba(139,94,60,0.35); border-radius: 999px; background: #fff;">변리사</span>
+            <span style="font-size: 13.5px; font-weight: 700; color: #8B5E3C; padding: 7px 14px; border: 1px solid rgba(139,94,60,0.35); border-radius: 999px; background: #fff;">노무사</span>
+          </div>
+        </div>
+        <div style="padding: 32px 28px 36px; border: 1px solid #E6E0D5; border-radius: 18px; background: #fff;">
+          <div style="font-size: 13px; font-weight: 800; letter-spacing: 0.14em; color: #A9825A; margin-bottom: 18px;">TRACK 02 · 일반 FP</div>
+          <h3 style="font-size: 20px; font-weight: 800; margin: 0 0 10px;">종합 자산설계 전문가</h3>
+          <p style="font-size: 15px; font-weight: 500; line-height: 1.65; color: rgba(38,31,24,0.68); margin: 0;">고객 접점에서 니즈를 발굴하고,<br class="m-only"> 전문직 FP와 연결해<br class="m-only"> 통합 솔루션으로 완성합니다.</p>
+        </div>
+      </div>
+      <div class="m-eq" style="margin-top: 22px; padding: 30px 34px; border: 1px solid rgba(139,94,60,0.3); border-radius: 18px; background: linear-gradient(120deg, #fff, rgba(200,169,110,0.14)); display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap;">
+        <div>
+          <div style="font-size: 12.5px; font-weight: 800; letter-spacing: 0.18em; color: #A9825A; margin-bottom: 6px;">BACKED BY</div>
+          <div style="font-size: 19px; font-weight: 800; color: #2B2522;">인카금융서비스(주)</div>
+        </div>
+        <div class="m-backed" style="display: flex; gap: 40px; flex-wrap: wrap;">
+          <div><div style="font-weight: 800; font-size: 21px; color: #8B5E3C;">2022</div><div style="font-size: 13.5px; font-weight: 500; color: rgba(38,31,24,0.62);">코스닥 상장 GA · 업계 최초</div></div>
+          <div><div style="font-weight: 800; font-size: 21px; color: #8B5E3C;">22,637명+</div><div style="font-size: 13.5px; font-weight: 500; color: rgba(38,31,24,0.62);">소속 설계사 · 독립 GA 최초 2만 명</div></div>
+          <div><div style="font-weight: 800; font-size: 21px; color: #8B5E3C;">0.00%</div><div style="font-size: 13.5px; font-weight: 500; color: rgba(38,31,24,0.62);">불완전판매율 · 업계 최저 수준</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="process" data-screen-label="Process" style="border-top: 1px solid #E6E0D5; background: #F7F4EE;">
     <div class="m-pad m-sec" style="max-width: 1180px; margin: 0 auto; padding: 100px 32px;">
       <div style="max-width: 680px; margin-bottom: 52px;">
-        <div style="font-size: 13px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; color: #7A5636; margin-bottom: 16px;">진행 절차</div>
+        <div style="font-size: 13px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; color: #8B5E3C; margin-bottom: 16px;">진행 절차</div>
         <h2 style="font-weight: 800; font-size: clamp(28px, 3.2vw, 42px); line-height: 1.22; letter-spacing: -0.02em; margin: 0;">네 단계로, 조용하고 정확하게.</h2>
       </div>
       <div class="m-grid4" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;">
-        <div style="display: flex; flex-direction: column; gap: 12px; padding: 26px 0 0; border-top: 3px solid #6F4E2D;">
-          <div style="font-size: 13px; font-weight: 800; letter-spacing: 0.12em; color: #7A5636;">STEP 1</div>
+        <div style="display: flex; flex-direction: column; gap: 12px; padding: 26px 0 0; border-top: 3px solid #8B5E3C;">
+          <div style="font-size: 13px; font-weight: 800; letter-spacing: 0.12em; color: #8B5E3C;">STEP 1</div>
           <h3 style="font-size: 19px; font-weight: 800; margin: 0;">첫 상담</h3>
           <p style="font-size: 15px; font-weight: 500; line-height: 1.62; color: rgba(38,31,24,0.68); margin: 0;">대표님의 고민을 먼저 듣습니다.<br>방문·유선·화상 모두 가능합니다.</p>
         </div>
-        <div style="display: flex; flex-direction: column; gap: 12px; padding: 26px 0 0; border-top: 3px solid rgba(111,78,45,0.25);">
-          <div style="font-size: 13px; font-weight: 800; letter-spacing: 0.12em; color: #7A5636;">STEP 2</div>
+        <div style="display: flex; flex-direction: column; gap: 12px; padding: 26px 0 0; border-top: 3px solid rgba(139,94,60,0.25);">
+          <div style="font-size: 13px; font-weight: 800; letter-spacing: 0.12em; color: #8B5E3C;">STEP 2</div>
           <h3 style="font-size: 19px; font-weight: 800; margin: 0;">기업 진단</h3>
           <p style="font-size: 15px; font-weight: 500; line-height: 1.62; color: rgba(38,31,24,0.68); margin: 0;">재무제표·정관·기존 계약을 전문가팀이 함께 분석해<br class="m-only"> 리스크 보고서를 드립니다.</p>
         </div>
-        <div style="display: flex; flex-direction: column; gap: 12px; padding: 26px 0 0; border-top: 3px solid rgba(111,78,45,0.25);">
-          <div style="font-size: 13px; font-weight: 800; letter-spacing: 0.12em; color: #7A5636;">STEP 3</div>
+        <div style="display: flex; flex-direction: column; gap: 12px; padding: 26px 0 0; border-top: 3px solid rgba(139,94,60,0.25);">
+          <div style="font-size: 13px; font-weight: 800; letter-spacing: 0.12em; color: #8B5E3C;">STEP 3</div>
           <h3 style="font-size: 19px; font-weight: 800; margin: 0;">맞춤 설계</h3>
           <p style="font-size: 15px; font-weight: 500; line-height: 1.62; color: rgba(38,31,24,0.68); margin: 0;">세무·노무·법률 정비와 전 보험사 비교 설계를<br class="m-only"> 하나의 플랜으로 제안합니다.</p>
         </div>
-        <div style="display: flex; flex-direction: column; gap: 12px; padding: 26px 0 0; border-top: 3px solid rgba(111,78,45,0.25);">
-          <div style="font-size: 13px; font-weight: 800; letter-spacing: 0.12em; color: #7A5636;">STEP 4</div>
+        <div style="display: flex; flex-direction: column; gap: 12px; padding: 26px 0 0; border-top: 3px solid rgba(139,94,60,0.25);">
+          <div style="font-size: 13px; font-weight: 800; letter-spacing: 0.12em; color: #8B5E3C;">STEP 4</div>
           <h3 style="font-size: 19px; font-weight: 800; margin: 0;">실행 · 사후관리</h3>
           <p style="font-size: 15px; font-weight: 500; line-height: 1.62; color: rgba(38,31,24,0.68); margin: 0;">실행 이후에도 담당 컨설턴트가 정기 리뷰로 계약과 제도를 계속 관리합니다.</p>
         </div>
@@ -1712,14 +1820,14 @@ body {
   </section>
 
   <section id="contact" class="m-pad m-sec" data-screen-label="Contact" style="max-width: 1180px; margin: 0 auto; padding: 100px 32px;">
-    <div class="m-contact" style="display: grid; grid-template-columns: 1fr auto; gap: 40px; align-items: center; padding: 76px 48px; border: 1px solid rgba(111,78,45,0.25); border-radius: 28px; background: linear-gradient(120deg, #fff, rgba(139,103,64,0.16));">
+    <div class="m-contact" style="display: grid; grid-template-columns: 1fr auto; gap: 40px; align-items: center; padding: 76px 48px; border: 1px solid rgba(139,94,60,0.25); border-radius: 28px; background: linear-gradient(120deg, #fff, rgba(200,169,110,0.16));">
       <div>
         <h2 style="font-weight: 800; font-size: clamp(26px, 2.8vw, 38px); letter-spacing: -0.02em; line-height: 1.25; margin: 0 0 14px;">지금, 기업의 리스크를 진단받아 보세요.</h2>
         <p style="font-size: 16.5px; font-weight: 500; color: rgba(38,31,24,0.7); margin: 0; line-height: 1.6;">회사의 상황을 간단히 알려주시면 담당 컨설턴트가 영업일 기준 1일 이내에 직접 연락드립니다.<br>필요한 분야만 부담 없이 문의하셔도 됩니다.</p>
       </div>
       <div style="display: flex; flex-direction: column; gap: 12px;">
-        <a href="{{ kakaoUrl }}" style="display: inline-flex; align-items: center; justify-content: center; height: 54px; padding: 0 32px; border-radius: 999px; background: #6F4E2D; color: #fff; font-size: 16px; font-weight: 700; box-shadow: 0 12px 28px rgba(111,78,45,0.28);" style-hover="background: #55391E; color: #fff;">카카오톡으로 상담하기</a>
-        <a href="{{ telHref }}" style="display: inline-flex; align-items: center; justify-content: center; height: 54px; padding: 0 32px; border-radius: 999px; border: 1.5px solid rgba(111,78,45,0.4); color: #7A5636; font-size: 16px; font-weight: 700; background: #fff;" style-hover="background: rgba(111,78,45,0.06);">{{ phone }}</a>
+        <a href="{{ kakaoUrl }}" style="display: inline-flex; align-items: center; justify-content: center; height: 54px; padding: 0 32px; border-radius: 999px; background: #8B5E3C; color: #fff; font-size: 16px; font-weight: 700; box-shadow: 0 12px 28px rgba(139,94,60,0.28);" style-hover="background: #6E4527; color: #fff;">카카오톡으로 상담하기</a>
+        <a href="{{ telHref }}" style="display: inline-flex; align-items: center; justify-content: center; height: 54px; padding: 0 32px; border-radius: 999px; border: 1.5px solid rgba(139,94,60,0.4); color: #8B5E3C; font-size: 16px; font-weight: 700; background: #fff;" style-hover="background: rgba(139,94,60,0.06);">{{ phone }}</a>
       </div>
     </div>
   </section>
@@ -1731,20 +1839,20 @@ body {
       <div>
         <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 18px;">
           <img src="../assets/trinity-one-logo.png" alt="TRINITY ONE" style="height: 30px; width: auto; flex-shrink: 0;">
-          <span style="font-size: 16px; font-weight: 800; letter-spacing: 0.06em; color: #40301C; white-space: nowrap;">TRINITY ONE</span>
+          <span style="font-size: 16px; font-weight: 800; letter-spacing: 0.06em; color: #2B2522; white-space: nowrap;">TRINITY ONE</span>
         </div>
-        <p style="font-size: 14.5px; font-weight: 500; line-height: 1.65; color: rgba(38,31,24,0.6); max-width: 28em; margin: 0;">법인 컨설팅 전문가 그룹.<br>세무·회계·노무·법률 등 각 분야의 전문가가 기업의 리스크를 하나의 팀으로 설계합니다.</p>
+        <p style="font-size: 14.5px; font-weight: 500; line-height: 1.65; color: rgba(38,31,24,0.6); max-width: 28em; margin: 0;"><span style="display:block; font-size: 12.5px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; color: #A9825A; margin-bottom: 10px;">The Only Strategy for the 0.1%</span>법인 컨설팅 전문가 그룹.<br>세무·회계·노무·법률 등 각 분야의 전문가가<br class="m-only"> 기업의 리스크를 하나의 팀으로 설계합니다.</p>
       </div>
       <div style="display: flex; flex-direction: column; gap: 11px;">
-        <h4 style="font-size: 13px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: #7A5636; margin: 0 0 5px;">바로가기</h4>
-        <a href="#experts" style="font-size: 15px; font-weight: 500; color: rgba(38,31,24,0.72);" style-hover="color: #7A5636;">전문가 그룹</a>
-        <a href="#services" style="font-size: 15px; font-weight: 500; color: rgba(38,31,24,0.72);" style-hover="color: #7A5636;">컨설팅 분야</a>
-        <a href="#process" style="font-size: 15px; font-weight: 500; color: rgba(38,31,24,0.72);" style-hover="color: #7A5636;">진행 절차</a>
+        <h4 style="font-size: 13px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: #8B5E3C; margin: 0 0 5px;">바로가기</h4>
+        <a href="#experts" style="font-size: 15px; font-weight: 500; color: rgba(38,31,24,0.72);" style-hover="color: #8B5E3C;">전문가 그룹</a>
+        <a href="#services" style="font-size: 15px; font-weight: 500; color: rgba(38,31,24,0.72);" style-hover="color: #8B5E3C;">컨설팅 분야</a>
+        <a href="#process" style="font-size: 15px; font-weight: 500; color: rgba(38,31,24,0.72);" style-hover="color: #8B5E3C;">진행 절차</a>
       </div>
       <div style="display: flex; flex-direction: column; gap: 11px;">
-        <h4 style="font-size: 13px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: #7A5636; margin: 0 0 5px;">문의</h4>
-        <a href="{{ telHref }}" style="font-size: 15px; font-weight: 500; color: rgba(38,31,24,0.72);" style-hover="color: #7A5636;">{{ phone }}</a>
-        <a href="mailto:contact@trinity.kr" style="font-size: 15px; font-weight: 500; color: rgba(38,31,24,0.72);" style-hover="color: #7A5636;">contact@trinity.kr</a>
+        <h4 style="font-size: 13px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: #8B5E3C; margin: 0 0 5px;">문의</h4>
+        <a href="{{ telHref }}" style="font-size: 15px; font-weight: 500; color: rgba(38,31,24,0.72);" style-hover="color: #8B5E3C;">{{ phone }}</a>
+        <a href="mailto:hello@trinity.co.kr" style="font-size: 15px; font-weight: 500; color: rgba(38,31,24,0.72);" style-hover="color: #8B5E3C;">hello@trinity.co.kr</a>
         <span style="font-size: 15px; font-weight: 500; color: rgba(38,31,24,0.72);">서울특별시 강남구 ○○로 00, 0층</span>
       </div>
     </div>
