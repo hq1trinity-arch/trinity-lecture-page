@@ -1511,6 +1511,10 @@ body {
     a:hover { color: #6E4527; }
     br.m-only { display: none; }
     br.d-only { display: inline; }
+    @media (prefers-reduced-motion: no-preference) {
+      .reveal { opacity: 0; transform: translateY(30px); transition: opacity .7s cubic-bezier(.22,.61,.36,1), transform .7s cubic-bezier(.22,.61,.36,1); }
+      .reveal.on { opacity: 1; transform: none; }
+    }
     @media (max-width: 860px) {
       .m-nav-links { display: none !important; }
       br.m-only { display: inline; }
@@ -1864,6 +1868,50 @@ body {
 
 
 </x-dc>
+<script>
+(function () {
+  function init() {
+    var root = document.querySelector('#philosophy');
+    if (!root) return false;
+    if (!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return true;
+    var sels = [
+      '[data-screen-label="Figures"] .m-figures > div',
+      '#philosophy > *',
+      '#experts > *',
+      '#about .m-quote > *',
+      '#services > *',
+      '#market .m-pad.m-sec > *',
+      '#market .m-figures > div',
+      '#market > .m-pad > p',
+      '#process .m-pad > *',
+      '#contact > *'
+    ];
+    var els = document.querySelectorAll(sels.join(', '));
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          e.target.classList.add('on');
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -6% 0px' });
+    els.forEach(function (el, i) {
+      var r = el.getBoundingClientRect();
+      if (r.top < window.innerHeight * 0.92) { return; }
+      el.classList.add('reveal');
+      var prev = el.previousElementSibling, k = 0;
+      while (prev && k < 5) { k++; prev = prev.previousElementSibling; }
+      el.style.transitionDelay = (Math.min(k, 5) * 70) + 'ms';
+      io.observe(el);
+    });
+    return true;
+  }
+  var tries = 0;
+  var timer = setInterval(function () {
+    if (init() || ++tries > 100) clearInterval(timer);
+  }, 100);
+})();
+</script>
 <script type="text/x-dc" data-dc-script="" data-props="{&quot;phone&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;02-0000-0000&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;연락처&quot;},&quot;kakaoUrl&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;#contact&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;연락처&quot;}}">
 class Component extends DCLogic {
   renderVals() {
