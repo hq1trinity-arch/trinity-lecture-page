@@ -387,7 +387,7 @@ p.sec-lead { font-size: 17px; font-weight: 500; line-height: 1.65; color: var(--
   .figures > div { padding: 32px 12px; border-left: none; border-top: 1px solid var(--line); }
   .figures > div + div { border-left: none; }
   .figures > div:nth-child(-n+2) { border-top: none; }
-  .figures .fig-n { font-size: 19px; }
+  .figures .fig-n { font-size: 18px; white-space: nowrap; }
 
   .plist, .grid3, .grid4, .cases, .steps, .foot-grid,
   .check-list, .report { grid-template-columns: 1fr; }
@@ -427,6 +427,19 @@ p.sec-lead { font-size: 17px; font-weight: 500; line-height: 1.65; color: var(--
 
   .m-fit { font-size: 13.4px !important; }
 }
+
+/* 초소형 화면(≤359px) — 헤더 가로 넘침 방지 */
+@media (max-width: 359px) {
+  .wide-only { display: none; }
+  .brand img { height: 32px; }
+  .brand span { font-size: 16px; }
+  .btn-sm { padding: 0 18px; }
+
+  /* 2열로는 한 줄에 8자밖에 안 들어가 문구가 깨진다 — 1열로 전환 */
+  .figures { grid-template-columns: 1fr; }
+  .figures > div { padding: 26px 12px; }
+  .figures > div:nth-child(2) { border-top: 1px solid var(--line); }
+}
 </style>
 </head>
 
@@ -445,7 +458,7 @@ p.sec-lead { font-size: 17px; font-weight: 500; line-height: 1.65; color: var(--
       <a href="#report">받으시는 것</a>
       <a href="#faq">자주 묻는 질문</a>
     </nav>
-    <a class="btn btn-primary btn-sm" href="#contact">기존 보험 무료 진단</a>
+    <a class="btn btn-primary btn-sm" href="#contact"><span class="wide-only">기존 보험 </span>무료 진단</a>
   </div>
 </header>
 
@@ -492,7 +505,7 @@ p.sec-lead { font-size: 17px; font-weight: 500; line-height: 1.65; color: var(--
           <div class="fig-d">가입 의무 없이<br class="m-only"> 결과만 받으셔도 됩니다</div>
         </div>
         <div>
-          <div class="fig-n">코스닥 상장사 배경</div>
+          <div class="fig-n">코스닥 상장사</div>
           <div class="fig-d">인카금융서비스(주)<br class="m-only"> 소속 컨설턴트</div>
         </div>
       </div>
@@ -624,8 +637,8 @@ p.sec-lead { font-size: 17px; font-weight: 500; line-height: 1.65; color: var(--
               <h4>고객에게 남은 것</h4>
               <ul>
                 <li>상속세를 낼 재원이<br>회사 밖에 따로 마련된 상태</li>
-                <li>주식 평가액이<br>더 빠르게 오르지 않도록<br>이익 흐름 정리</li>
-                <li>대표 유고 시에도<br>급여·거래대금이<br>멈추지 않는 구조</li>
+                <li>주식 평가액 상승을 늦추는<br>이익 흐름 정리</li>
+                <li>대표 유고 시에도<br>급여·거래대금 지급 유지</li>
               </ul>
             </div>
           </div>
