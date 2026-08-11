@@ -171,6 +171,15 @@ p.sec-lead { font-size: 17px; font-weight: 500; line-height: 1.65; color: var(--
 .hero-mark { display: flex; align-items: center; justify-content: center; }
 .hero-mark img { width: min(80%, 340px); height: auto; filter: drop-shadow(0 30px 60px rgba(74,24,201,0.26)); }
 
+/* 안심 마이크로카피 (전화 영업 없음 / 카카오톡 / 소요 시간) */
+.assure { list-style: none; margin: 20px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 9px; }
+.assure li {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-size: 13.5px; font-weight: 700; color: var(--p);
+  background: #fff; border: 1px solid var(--p-tint); border-radius: 999px; padding: 7px 15px;
+}
+.assure li::before { content: "✓"; font-weight: 800; font-size: 12px; }
+
 /* ============================================================
    Figures strip
    ============================================================ */
@@ -193,6 +202,55 @@ p.sec-lead { font-size: 17px; font-weight: 500; line-height: 1.65; color: var(--
 .pitem .no { flex-shrink: 0; font-size: 13px; font-weight: 800; letter-spacing: 0.1em; color: var(--p-mid); padding-top: 3px; }
 .pitem h3 { font-size: 17.5px; font-weight: 800; margin-bottom: 8px; }
 .pitem p { font-size: 15px; font-weight: 500; line-height: 1.65; color: var(--ink-72); }
+
+/* ============================================================
+   자가진단 체크리스트
+   ============================================================ */
+.check-wrap {
+  padding: 46px 48px; border: 1px solid var(--p-tint); border-radius: 24px;
+  background: linear-gradient(140deg, #fff, var(--p-wash));
+}
+.check-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.check-list label {
+  display: flex; gap: 14px; align-items: flex-start; cursor: pointer;
+  padding: 17px 20px; background: #fff; border: 1px solid var(--line); border-radius: 14px;
+  transition: border-color .2s var(--ease), box-shadow .2s var(--ease);
+}
+.check-list label:hover { border-color: var(--p-tint); box-shadow: 0 10px 26px rgba(74,24,201,0.08); }
+.check-list input { position: absolute; opacity: 0; width: 0; height: 0; }
+.check-box {
+  flex-shrink: 0; width: 23px; height: 23px; margin-top: 1px;
+  border: 2px solid var(--line); border-radius: 7px;
+  display: grid; place-items: center; font-size: 13px; font-weight: 800; color: #fff;
+  transition: background .18s var(--ease), border-color .18s var(--ease);
+}
+.check-box::after { content: "✓"; opacity: 0; transition: opacity .18s var(--ease); }
+.check-list input:checked + .check-box { background: var(--p); border-color: var(--p); }
+.check-list input:checked + .check-box::after { opacity: 1; }
+.check-list .txt { font-size: 15.5px; font-weight: 600; line-height: 1.6; color: var(--ink-80); transition: color .2s var(--ease); }
+.check-list input:checked ~ .txt { color: var(--p); }
+.check-foot {
+  margin-top: 26px; padding-top: 26px; border-top: 1px solid var(--p-tint);
+  display: flex; align-items: center; gap: 22px; flex-wrap: wrap;
+}
+.check-foot p { flex: 1 1 320px; font-size: 15.5px; font-weight: 500; line-height: 1.65; color: var(--ink-72); }
+.check-foot strong { font-weight: 800; color: var(--p); }
+
+/* ============================================================
+   진단 리포트 미리보기
+   ============================================================ */
+.report { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.report-item {
+  display: flex; gap: 16px; align-items: flex-start;
+  padding: 26px 28px; background: #fff; border: 1px solid var(--line); border-radius: 16px;
+}
+.report-item .rn {
+  flex-shrink: 0; width: 34px; height: 34px; border-radius: 10px;
+  background: var(--p-wash); color: var(--p);
+  display: grid; place-items: center; font-size: 14px; font-weight: 800;
+}
+.report-item h3 { font-size: 17.5px; font-weight: 800; margin-bottom: 8px; }
+.report-item p { font-size: 15px; font-weight: 500; line-height: 1.65; color: var(--ink-72); }
 
 /* ============================================================
    Cases
@@ -278,6 +336,9 @@ p.sec-lead { font-size: 17px; font-weight: 500; line-height: 1.65; color: var(--
 .cta-actions { display: flex; flex-direction: column; gap: 12px; }
 .cta-actions small { font-size: 13px; font-weight: 600; color: var(--ink-50); text-align: center; line-height: 1.5; }
 
+/* 모바일 하단 고정 CTA 바 */
+.sticky-cta { display: none; }
+
 /* ============================================================
    Footer
    ============================================================ */
@@ -328,7 +389,27 @@ p.sec-lead { font-size: 17px; font-weight: 500; line-height: 1.65; color: var(--
   .figures > div:nth-child(-n+2) { border-top: none; }
   .figures .fig-n { font-size: 19px; }
 
-  .plist, .grid3, .grid4, .cases, .steps, .foot-grid { grid-template-columns: 1fr; }
+  .plist, .grid3, .grid4, .cases, .steps, .foot-grid,
+  .check-list, .report { grid-template-columns: 1fr; }
+
+  .check-wrap { padding: 30px 22px; border-radius: 20px; }
+  .check-list label { padding: 15px 17px; }
+  .check-list .txt { font-size: 15px; }
+  .check-foot { flex-direction: column; align-items: stretch; gap: 16px; }
+  .check-foot p { flex: none; }
+  .check-foot .btn { width: 100%; }
+  .report-item { padding: 22px 20px; }
+
+  /* 하단 고정 CTA 바 */
+  .sticky-cta {
+    display: flex; gap: 10px; position: fixed; left: 0; right: 0; bottom: 0; z-index: 60;
+    padding: 11px 16px calc(11px + env(safe-area-inset-bottom));
+    background: rgba(255,255,255,0.94); backdrop-filter: saturate(1.6) blur(18px);
+    border-top: 1px solid var(--line);
+  }
+  .sticky-cta .btn { flex: 1; height: 50px; padding: 0 16px; font-size: 15.5px; }
+  .sticky-cta .btn-ghost { flex: 0 0 auto; padding: 0 20px; }
+  body { padding-bottom: 84px; }
 
   .promise { flex-direction: column; align-items: flex-start; gap: 14px; padding: 26px 24px; }
   .promise p { flex: none; }
@@ -358,10 +439,10 @@ p.sec-lead { font-size: 17px; font-weight: 500; line-height: 1.65; color: var(--
       <span>TRINITY ONE</span>
     </a>
     <nav class="nav-links">
-      <a href="#why">왜 다시 봐야 하나</a>
+      <a href="#selfcheck">자가진단</a>
       <a href="#cases">사례</a>
       <a href="#trust">왜 TRINITY ONE</a>
-      <a href="#process">진행 절차</a>
+      <a href="#report">받으시는 것</a>
       <a href="#faq">자주 묻는 질문</a>
     </nav>
     <a class="btn btn-primary btn-sm" href="#contact">기존 보험 무료 진단</a>
@@ -381,7 +462,12 @@ p.sec-lead { font-size: 17px; font-weight: 500; line-height: 1.65; color: var(--
           <a class="btn btn-primary btn-lg" href="#contact">기존 보험 무료 진단 신청</a>
           <a class="btn btn-ghost btn-lg" href="#cases">진단 사례 먼저 보기</a>
         </div>
-        <p class="hero-note">진단은 무료이며,<br class="m-only"> 가입 없이 결과만 받아보셔도 됩니다.</p>
+        <ul class="assure">
+          <li>전화 영업 없음</li>
+          <li>카카오톡으로만 진행</li>
+          <li>신청 3분</li>
+        </ul>
+        <p class="hero-note">가입 없이 결과만 받아보셔도 됩니다.</p>
       </div>
       <div class="hero-mark">
         <img src="../assets/trinity-one-logo.png" alt="">
@@ -449,6 +535,59 @@ p.sec-lead { font-size: 17px; font-weight: 500; line-height: 1.65; color: var(--
             <h3>가입 이후 한 번도 다시 보지 않습니다</h3>
             <p>매출도, 지분도, 가족 구성도 바뀌는데<br class="m-only"> 계약만 처음 그대로 남아 있습니다.<br>지금 상황과 맞는지는<br class="m-only"> 다시 계산해 봐야 알 수 있습니다.</p>
           </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 자가진단 체크리스트 ========== -->
+  <section id="selfcheck">
+    <div class="wrap sec">
+      <div class="head">
+        <div class="eyebrow">Self Check</div>
+        <h2 class="sec-title">해당되는 항목이 있으신가요?</h2>
+        <p class="sec-lead">아래는 진단에서 실제로 문제가 발견되는<br class="m-only"> 대표적인 신호들입니다.<br>체크만 해보셔도<br class="m-only"> 지금 상태가 대략 보입니다.</p>
+      </div>
+
+      <div class="check-wrap">
+        <ul class="check-list">
+          <li><label>
+            <input type="checkbox"><span class="check-box"></span>
+            <span class="txt">지금 가입한 보험의 보장 내용을<br>정확히 설명하기 어렵다</span>
+          </label></li>
+          <li><label>
+            <input type="checkbox"><span class="check-box"></span>
+            <span class="txt">가입할 때 재무제표나 정관을<br>보여준 적이 없다</span>
+          </label></li>
+          <li><label>
+            <input type="checkbox"><span class="check-box"></span>
+            <span class="txt">계약이 여러 건인데<br>서로 겹치는지 확인해 본 적이 없다</span>
+          </label></li>
+          <li><label>
+            <input type="checkbox"><span class="check-box"></span>
+            <span class="txt">가입 이후 매출·지분·가족 구성이<br>한 번 이상 바뀌었다</span>
+          </label></li>
+          <li><label>
+            <input type="checkbox"><span class="check-box"></span>
+            <span class="txt">정관에 임원 퇴직금 규정이<br>있는지 모른다</span>
+          </label></li>
+          <li><label>
+            <input type="checkbox"><span class="check-box"></span>
+            <span class="txt">내가 3개월 자리를 비우면<br>회사가 어떻게 되는지<br>계산해 본 적 없다</span>
+          </label></li>
+          <li><label>
+            <input type="checkbox"><span class="check-box"></span>
+            <span class="txt">상속세를 낼 현금이<br>어디서 나오는지 모른다</span>
+          </label></li>
+          <li><label>
+            <input type="checkbox"><span class="check-box"></span>
+            <span class="txt">한 회사 상품 안에서만<br>비교하고 가입했다</span>
+          </label></li>
+        </ul>
+
+        <div class="check-foot">
+          <p><strong>3개 이상</strong> 해당되신다면<br class="m-only"> 진단을 받아보실 시점입니다.<br>하나도 없으시다면<br class="m-only"> 지금 계약은 잘 관리되고 있는 것입니다.</p>
+          <a class="btn btn-primary" href="#contact">기존 보험 무료 진단 신청</a>
         </div>
       </div>
     </div>
@@ -632,6 +771,47 @@ p.sec-lead { font-size: 17px; font-weight: 500; line-height: 1.65; color: var(--
     </div>
   </section>
 
+  <!-- ========== 진단 리포트 미리보기 ========== -->
+  <section id="report">
+    <div class="wrap sec">
+      <div class="head">
+        <div class="eyebrow">What You Get</div>
+        <h2 class="sec-title">말로 끝나지 않습니다.<br>문서로 받으십니다.</h2>
+        <p class="sec-lead">진단이 끝나면 아래 네 가지가 담긴<br class="m-only"> 보고서를 드립니다.<br>가입하지 않으셔도<br class="m-only"> 이 문서는 대표님 것입니다.</p>
+      </div>
+      <div class="report">
+        <div class="report-item">
+          <div class="rn">01</div>
+          <div>
+            <h3>기존 계약 정리표</h3>
+            <p>지금 어떤 계약이 몇 건 있고<br>무엇이 서로 겹치는지<br>한 장으로 정리해 드립니다.</p>
+          </div>
+        </div>
+        <div class="report-item">
+          <div class="rn">02</div>
+          <div>
+            <h3>비어 있는 구간</h3>
+            <p>회사와 가족의 상황에 비해<br>대비되지 않은 부분이<br>어디인지 짚어 드립니다.</p>
+          </div>
+        </div>
+        <div class="report-item">
+          <div class="rn">03</div>
+          <div>
+            <h3>세무·노무·법률 리스크</h3>
+            <p>정관·지분·규정에서<br>먼저 정리해야 할 항목을<br>전문가 의견으로 표시합니다.</p>
+          </div>
+        </div>
+        <div class="report-item">
+          <div class="rn">04</div>
+          <div>
+            <h3>우선순위 제안</h3>
+            <p>지금 해야 할 것과<br>나중에 해도 되는 것을<br>순서로 구분해 드립니다.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ========== 6. FAQ ========== -->
   <section id="faq">
     <div class="wrap sec">
@@ -647,32 +827,37 @@ p.sec-lead { font-size: 17px; font-weight: 500; line-height: 1.65; color: var(--
         </details>
 
         <details>
-          <summary><span class="q">Q2</span><span>어떤 자료를 준비해야 하나요?</span><span class="plus">+</span></summary>
+          <summary><span class="q">Q2</span><span>전화가 오나요?</span><span class="plus">+</span></summary>
+          <div class="a">먼저 전화드리지 않습니다.<br>모든 안내는 카카오톡으로 진행하고,<br class="m-only"> 통화를 원하실 때만<br class="m-only"> 시간을 정해 연락드립니다.<br>진단이 끝난 뒤에도<br class="m-only"> 따로 영업 전화를 드리지 않습니다.</div>
+        </details>
+
+        <details>
+          <summary><span class="q">Q3</span><span>어떤 자료를 준비해야 하나요?</span><span class="plus">+</span></summary>
           <div class="a">기존 증권(가입 내역)과<br class="m-only"> 최근 재무제표, 정관.<br>이 세 가지면 시작할 수 있습니다.<br>지금 당장 없으셔도 괜찮습니다.<br>어디서 어떻게 발급받는지부터<br class="m-only"> 순서대로 안내해 드립니다.</div>
         </details>
 
         <details>
-          <summary><span class="q">Q3</span><span>진단에는 비용이 드나요?</span><span class="plus">+</span></summary>
+          <summary><span class="q">Q4</span><span>진단에는 비용이 드나요?</span><span class="plus">+</span></summary>
           <div class="a">진단과 결과 설명까지 비용은 없습니다.<br>이후 실제로 정관 변경이나 등기처럼<br class="m-only"> 별도 절차가 필요한 경우에만<br class="m-only"> 해당 비용을 미리 안내해 드립니다.<br>모르는 비용이 생기는 일은 없습니다.</div>
         </details>
 
         <details>
-          <summary><span class="q">Q4</span><span>자료를 드리면 어디까지 공유되나요?</span><span class="plus">+</span></summary>
+          <summary><span class="q">Q5</span><span>자료를 드리면 어디까지 공유되나요?</span><span class="plus">+</span></summary>
           <div class="a">진단에 참여하는 전문가 외에는<br class="m-only"> 공유되지 않습니다.<br>회사명과 개인 정보는 사례로도<br class="m-only"> 사용하지 않으며,<br class="m-only"> 진단이 끝난 뒤 자료 파기를 원하시면<br class="m-only"> 그렇게 처리해 드립니다.</div>
         </details>
 
         <details>
-          <summary><span class="q">Q5</span><span>법인이 아니라 개인인데도 가능한가요?</span><span class="plus">+</span></summary>
+          <summary><span class="q">Q6</span><span>법인이 아니라 개인인데도 가능한가요?</span><span class="plus">+</span></summary>
           <div class="a">가능합니다.<br>법인 CEO뿐 아니라 병의원 원장님,<br class="m-only"> 개인 자산가분들도 진단 대상입니다.<br>상속·증여나 자산 이전이 고민이시라면<br class="m-only"> 법인 여부와 관계없이 도움이 됩니다.</div>
         </details>
 
         <details>
-          <summary><span class="q">Q6</span><span>지금 담당 설계사가 따로 있습니다.</span><span class="plus">+</span></summary>
+          <summary><span class="q">Q7</span><span>지금 담당 설계사가 따로 있습니다.</span><span class="plus">+</span></summary>
           <div class="a">그대로 두셔도 됩니다.<br>기존 담당자를 바꾸시라는 이야기가 아니라,<br class="m-only"> 다른 시각에서 한 번 더<br class="m-only"> 확인해 보시라는 제안입니다.<br>진단 결과는 대표님 것이니<br class="m-only"> 어떻게 쓰실지는 대표님이 정하시면 됩니다.</div>
         </details>
 
         <details>
-          <summary><span class="q">Q7</span><span>얼마나 걸리나요?</span><span class="plus">+</span></summary>
+          <summary><span class="q">Q8</span><span>얼마나 걸리나요?</span><span class="plus">+</span></summary>
           <div class="a">자료를 모두 받은 시점부터<br class="m-only"> 보통 영업일 기준 5일에서 7일 사이에<br class="m-only"> 결과를 정리해 드립니다.<br>사안이 복잡한 경우에는<br class="m-only"> 시작 전에 예상 기간을 먼저 말씀드립니다.</div>
         </details>
 
@@ -712,9 +897,9 @@ p.sec-lead { font-size: 17px; font-weight: 500; line-height: 1.65; color: var(--
       <div class="foot-col">
         <h4>바로가기</h4>
         <a href="#why">왜 다시 봐야 하나</a>
+        <a href="#selfcheck">자가진단 체크리스트</a>
         <a href="#cases">진단 사례</a>
-        <a href="#trust">왜 TRINITY ONE</a>
-        <a href="#process">진행 절차</a>
+        <a href="#report">받으시는 것</a>
         <a href="#faq">자주 묻는 질문</a>
       </div>
       <div class="foot-col">
@@ -731,6 +916,12 @@ p.sec-lead { font-size: 17px; font-weight: 500; line-height: 1.65; color: var(--
   </div>
 </footer>
 
+<!-- 모바일 하단 고정 CTA -->
+<div class="sticky-cta">
+  <a class="btn btn-primary" href="http://pf.kakao.com/_RilxnX/chat" target="_blank" rel="noopener">카카오톡 무료 진단 신청</a>
+  <a class="btn btn-ghost" href="#selfcheck">자가진단</a>
+</div>
+
 <script>
 (function () {
   if (!('IntersectionObserver' in window) ||
@@ -739,7 +930,9 @@ p.sec-lead { font-size: 17px; font-weight: 500; line-height: 1.65; color: var(--
   var sels = [
     '#figures > div',
     '#why .head', '#why .pitem',
+    '#selfcheck .head', '#selfcheck .check-wrap',
     '#cases .head', '#cases .case', '#cases .promise',
+    '#report .head', '#report .report-item',
     '#statement > *',
     '#trust .head', '#trust .card', '#trust .promise',
     '#process .head', '#process .step', '#process .promise',
