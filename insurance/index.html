@@ -46,23 +46,23 @@
 :root {
   --font-system: "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 
-  --p:        #4A18C9;   /* 주색 — 버튼, 강조 텍스트, 수치 */
-  --p-deep:   #33108C;   /* 호버 / 프레스 */
-  --p-mid:    #7C57EE;   /* 라벤더 — 아이브로, 장식 */
-  --p-tint:   rgba(74,24,201,0.30);
-  --p-wash:   rgba(124,87,238,0.14);
+  --p:        #4A1BD0;   /* 주색 — 버튼, 강조 텍스트, 수치 */
+  --p-deep:   #2E0F9E;   /* 호버 / 프레스 */
+  --p-mid:    #6E4AE8;   /* 라벤더 — 아이브로, 장식 */
+  --p-tint:   rgba(74,27,208,0.30);
+  --p-wash:   rgba(110,74,232,0.14);
 
-  --ink:      #150C2E;   /* 텍스트 / 다크 배경 기준색 (쿨 톤) */
-  --ink-80:   rgba(21,12,46,0.80);
-  --ink-72:   rgba(21,12,46,0.72);
-  --ink-62:   rgba(21,12,46,0.62);
-  --ink-50:   rgba(21,12,46,0.50);
+  --ink:      #160E2E;   /* 텍스트 / 다크 배경 기준색 (쿨 톤) */
+  --ink-80:   rgba(22,14,46,0.80);
+  --ink-72:   rgba(22,14,46,0.72);
+  --ink-62:   rgba(22,14,46,0.62);
+  --ink-50:   rgba(22,14,46,0.50);
 
-  --wash:     #F4F1FD;   /* 밝은 배경 */
-  --line:     #E3DDF6;   /* 헤어라인 */
-  --dark-1:   #0A0220;   /* 다크 섹션 그라디언트 시작 */
-  --dark-2:   #2A0C7C;   /* 다크 섹션 그라디언트 끝 */
-  --on-dark:  #B79EFF;   /* 다크 배경 위 강조 */
+  --wash:     #F2EFFE;   /* 밝은 배경 */
+  --line:     #E3DEF3;   /* 헤어라인 */
+  --dark-1:   #0B0320;   /* 다크 섹션 그라디언트 시작 */
+  --dark-2:   #260C6B;   /* 다크 섹션 그라디언트 끝 */
+  --on-dark:  #A78BFF;   /* 다크 배경 위 강조 */
 
   --ease: cubic-bezier(0.32, 0.72, 0, 1);
   --maxw: 1180px;
@@ -110,7 +110,7 @@ p.sec-lead { font-size: 17px; font-weight: 500; line-height: 1.65; color: var(--
   padding: 32px 28px 36px; border: 1px solid var(--line); border-radius: 18px; background: #fff;
   transition: transform .25s var(--ease), box-shadow .25s var(--ease);
 }
-.card:hover { transform: translateY(-4px); box-shadow: 0 24px 50px rgba(74,24,201,0.13); }
+.card:hover { transform: translateY(-4px); box-shadow: 0 24px 50px rgba(74,27,208,0.13); }
 .card .kicker { font-size: 13px; font-weight: 800; letter-spacing: 0.14em; color: var(--p-mid); margin-bottom: 18px; }
 .card h3 { font-size: 20px; font-weight: 800; margin-bottom: 10px; }
 .card p { font-size: 15px; font-weight: 500; line-height: 1.65; color: var(--ink-72); }
@@ -122,10 +122,10 @@ p.sec-lead { font-size: 17px; font-weight: 500; line-height: 1.65; color: var(--
   font-size: 15.5px; font-weight: 700; white-space: nowrap;
   transition: background .2s var(--ease), color .2s var(--ease), box-shadow .2s var(--ease);
 }
-.btn-primary { background: var(--p); color: #fff; box-shadow: 0 12px 28px rgba(74,24,201,0.28); }
+.btn-primary { background: var(--p); color: #fff; box-shadow: 0 12px 28px rgba(74,27,208,0.28); }
 .btn-primary:hover { background: var(--p-deep); color: #fff; }
 .btn-ghost { border: 1.5px solid var(--p-tint); color: var(--p); background: #fff; }
-.btn-ghost:hover { background: rgba(74,24,201,0.06); }
+.btn-ghost:hover { background: rgba(74,27,208,0.06); }
 .btn-sm { height: 42px; padding: 0 22px; font-size: 14px; }
 .btn-lg { height: 56px; padding: 0 34px; font-size: 16.5px; }
 
@@ -150,8 +150,8 @@ p.sec-lead { font-size: 17px; font-weight: 500; line-height: 1.65; color: var(--
    ============================================================ */
 .hero {
   background:
-    radial-gradient(70% 100% at 88% 0%, rgba(124,87,238,0.28), transparent 62%),
-    radial-gradient(55% 80% at 0% 100%, rgba(74,24,201,0.14), transparent 60%),
+    radial-gradient(70% 100% at 88% 0%, rgba(110,74,232,0.28), transparent 62%),
+    radial-gradient(55% 80% at 0% 100%, rgba(74,27,208,0.14), transparent 60%),
     linear-gradient(180deg, #FFFFFF, var(--wash));
   overflow: hidden;
 }
@@ -169,7 +169,7 @@ p.sec-lead { font-size: 17px; font-weight: 500; line-height: 1.65; color: var(--
 .hero-cta { display: flex; gap: 14px; flex-wrap: wrap; }
 .hero-note { margin-top: 20px; font-size: 14px; font-weight: 600; color: var(--ink-50); }
 .hero-mark { display: flex; align-items: center; justify-content: center; }
-.hero-mark img { width: min(80%, 340px); height: auto; filter: drop-shadow(0 30px 60px rgba(74,24,201,0.26)); }
+.hero-mark img { width: min(80%, 340px); height: auto; filter: drop-shadow(0 30px 60px rgba(74,27,208,0.26)); }
 
 /* 안심 마이크로카피 (전화 영업 없음 / 카카오톡 / 소요 시간) */
 .assure { list-style: none; margin: 20px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 9px; }
@@ -216,7 +216,7 @@ p.sec-lead { font-size: 17px; font-weight: 500; line-height: 1.65; color: var(--
   padding: 17px 20px; background: #fff; border: 1px solid var(--line); border-radius: 14px;
   transition: border-color .2s var(--ease), box-shadow .2s var(--ease);
 }
-.check-list label:hover { border-color: var(--p-tint); box-shadow: 0 10px 26px rgba(74,24,201,0.08); }
+.check-list label:hover { border-color: var(--p-tint); box-shadow: 0 10px 26px rgba(74,27,208,0.08); }
 .check-list input { position: absolute; opacity: 0; width: 0; height: 0; }
 .check-box {
   flex-shrink: 0; width: 23px; height: 23px; margin-top: 1px;
@@ -261,7 +261,7 @@ p.sec-lead { font-size: 17px; font-weight: 500; line-height: 1.65; color: var(--
   border: 1px solid var(--line); border-radius: 20px; background: #fff; overflow: hidden;
   transition: transform .25s var(--ease), box-shadow .25s var(--ease);
 }
-.case:hover { transform: translateY(-4px); box-shadow: 0 24px 50px rgba(74,24,201,0.13); }
+.case:hover { transform: translateY(-4px); box-shadow: 0 24px 50px rgba(74,27,208,0.13); }
 .case-top { padding: 26px 28px 22px; background: linear-gradient(140deg, #fff, var(--p-wash)); border-bottom: 1px solid var(--line); }
 .case-tag { font-size: 12.5px; font-weight: 800; letter-spacing: 0.16em; color: var(--p-mid); margin-bottom: 12px; }
 .case-who { font-size: 19px; font-weight: 800; line-height: 1.35; margin-bottom: 8px; }
@@ -309,7 +309,7 @@ p.sec-lead { font-size: 17px; font-weight: 500; line-height: 1.65; color: var(--
    ============================================================ */
 .faq { display: flex; flex-direction: column; gap: 12px; max-width: 900px; }
 .faq details { border: 1px solid var(--line); border-radius: 16px; background: #fff; overflow: hidden; }
-.faq details[open] { border-color: var(--p-tint); box-shadow: 0 14px 34px rgba(74,24,201,0.09); }
+.faq details[open] { border-color: var(--p-tint); box-shadow: 0 14px 34px rgba(74,27,208,0.09); }
 .faq summary {
   list-style: none; cursor: pointer; padding: 24px 28px;
   display: flex; align-items: flex-start; gap: 14px;
@@ -387,7 +387,7 @@ p.sec-lead { font-size: 17px; font-weight: 500; line-height: 1.65; color: var(--
   .figures > div { padding: 32px 12px; border-left: none; border-top: 1px solid var(--line); }
   .figures > div + div { border-left: none; }
   .figures > div:nth-child(-n+2) { border-top: none; }
-  .figures .fig-n { font-size: 19px; }
+  .figures .fig-n { font-size: 18px; white-space: nowrap; }
 
   .plist, .grid3, .grid4, .cases, .steps, .foot-grid,
   .check-list, .report { grid-template-columns: 1fr; }
@@ -427,6 +427,19 @@ p.sec-lead { font-size: 17px; font-weight: 500; line-height: 1.65; color: var(--
 
   .m-fit { font-size: 13.4px !important; }
 }
+
+/* 초소형 화면(≤359px) — 헤더 가로 넘침 방지 */
+@media (max-width: 359px) {
+  .wide-only { display: none; }
+  .brand img { height: 32px; }
+  .brand span { font-size: 16px; }
+  .btn-sm { padding: 0 18px; }
+
+  /* 2열로는 한 줄에 8자밖에 안 들어가 문구가 깨진다 — 1열로 전환 */
+  .figures { grid-template-columns: 1fr; }
+  .figures > div { padding: 26px 12px; }
+  .figures > div:nth-child(2) { border-top: 1px solid var(--line); }
+}
 </style>
 </head>
 
@@ -445,7 +458,7 @@ p.sec-lead { font-size: 17px; font-weight: 500; line-height: 1.65; color: var(--
       <a href="#report">받으시는 것</a>
       <a href="#faq">자주 묻는 질문</a>
     </nav>
-    <a class="btn btn-primary btn-sm" href="#contact">기존 보험 무료 진단</a>
+    <a class="btn btn-primary btn-sm" href="#contact"><span><span class="wide-only">기존 보험 </span>무료 진단</span></a>
   </div>
 </header>
 
@@ -492,7 +505,7 @@ p.sec-lead { font-size: 17px; font-weight: 500; line-height: 1.65; color: var(--
           <div class="fig-d">가입 의무 없이<br class="m-only"> 결과만 받으셔도 됩니다</div>
         </div>
         <div>
-          <div class="fig-n">코스닥 상장사 배경</div>
+          <div class="fig-n">코스닥 상장사</div>
           <div class="fig-d">인카금융서비스(주)<br class="m-only"> 소속 컨설턴트</div>
         </div>
       </div>
@@ -624,8 +637,8 @@ p.sec-lead { font-size: 17px; font-weight: 500; line-height: 1.65; color: var(--
               <h4>고객에게 남은 것</h4>
               <ul>
                 <li>상속세를 낼 재원이<br>회사 밖에 따로 마련된 상태</li>
-                <li>주식 평가액이<br>더 빠르게 오르지 않도록<br>이익 흐름 정리</li>
-                <li>대표 유고 시에도<br>급여·거래대금이<br>멈추지 않는 구조</li>
+                <li>주식 평가액 상승을 늦추는<br>이익 흐름 정리</li>
+                <li>대표 유고 시에도<br>급여·거래대금 지급 유지</li>
               </ul>
             </div>
           </div>
