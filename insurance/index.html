@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>기존 보험 무료 진단 — TRINITY ONE</title>
+<meta name="description" content="보험을 더 권해드리지 않습니다. 이미 가입하신 계약이 대표님의 상황에 맞게 설계된 것인지부터 확인합니다. 세무사·회계사·노무사·변호사가 한 팀으로 진단합니다.">
+
+<!-- Open Graph / KakaoTalk / iMessage -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://hq1trinity-arch.github.io/trinity-lecture-page/insurance/">
+<meta property="og:title" content="기존 보험 무료 진단 — TRINITY ONE">
+<meta property="og:description" content="지금 가입하신 보험, 누가 어떤 근거로 설계했습니까? 세무사·회계사·노무사·변호사가 한 팀으로 진단합니다.">
+<meta property="og:image" content="https://hq1trinity-arch.github.io/trinity-lecture-page/assets/og-trinity-one-v2.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="ko_KR">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="기존 보험 무료 진단 — TRINITY ONE">
+<meta name="twitter:description" content="지금 가입하신 보험, 누가 어떤 근거로 설계했습니까?">
+<meta name="twitter:image" content="https://hq1trinity-arch.github.io/trinity-lecture-page/assets/og-trinity-one-v2.png">
+
+<link rel="icon" type="image/png" href="../assets/trinity-one-logo.png">
+<link rel="apple-touch-icon" href="../assets/trinity-one-logo.png">
+
+<style>
+/* ============================================================
+   TRINITY ONE — Webfonts (Pretendard 9 weights, local)
+   ============================================================ */
+@font-face { font-family: "Pretendard"; font-weight: 100; font-style: normal; font-display: swap; src: url("../assets/fonts/Pretendard-Thin.otf") format("opentype"); }
+@font-face { font-family: "Pretendard"; font-weight: 200; font-style: normal; font-display: swap; src: url("../assets/fonts/Pretendard-ExtraLight.otf") format("opentype"); }
+@font-face { font-family: "Pretendard"; font-weight: 300; font-style: normal; font-display: swap; src: url("../assets/fonts/Pretendard-Light.otf") format("opentype"); }
+@font-face { font-family: "Pretendard"; font-weight: 400; font-style: normal; font-display: swap; src: url("../assets/fonts/Pretendard-Regular.otf") format("opentype"); }
+@font-face { font-family: "Pretendard"; font-weight: 500; font-style: normal; font-display: swap; src: url("../assets/fonts/Pretendard-Medium.otf") format("opentype"); }
+@font-face { font-family: "Pretendard"; font-weight: 600; font-style: normal; font-display: swap; src: url("../assets/fonts/Pretendard-SemiBold.otf") format("opentype"); }
+@font-face { font-family: "Pretendard"; font-weight: 700; font-style: normal; font-display: swap; src: url("../assets/fonts/Pretendard-Bold.otf") format("opentype"); }
+@font-face { font-family: "Pretendard"; font-weight: 800; font-style: normal; font-display: swap; src: url("../assets/fonts/Pretendard-ExtraBold.otf") format("opentype"); }
+@font-face { font-family: "Pretendard"; font-weight: 900; font-style: normal; font-display: swap; src: url("../assets/fonts/Pretendard-Black.otf") format("opentype"); }
+
+/* ============================================================
+   Color tokens — /trinity-one/ 퍼플 체계를 이어받되
+   웜(갈색) 뉘앙스를 제거하고 주색을 한 단계 더 깊게 조정.
+   ============================================================ */
+:root {
+  --font-system: "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  --p:        #4A18C9;   /* 주색 — 버튼, 강조 텍스트, 수치 */
+  --p-deep:   #33108C;   /* 호버 / 프레스 */
+  --p-mid:    #7C57EE;   /* 라벤더 — 아이브로, 장식 */
+  --p-tint:   rgba(74,24,201,0.30);
+  --p-wash:   rgba(124,87,238,0.14);
+
+  --ink:      #150C2E;   /* 텍스트 / 다크 배경 기준색 (쿨 톤) */
+  --ink-80:   rgba(21,12,46,0.80);
+  --ink-72:   rgba(21,12,46,0.72);
+  --ink-62:   rgba(21,12,46,0.62);
+  --ink-50:   rgba(21,12,46,0.50);
+
+  --wash:     #F4F1FD;   /* 밝은 배경 */
+  --line:     #E3DDF6;   /* 헤어라인 */
+  --dark-1:   #0A0220;   /* 다크 섹션 그라디언트 시작 */
+  --dark-2:   #2A0C7C;   /* 다크 섹션 그라디언트 끝 */
+  --on-dark:  #B79EFF;   /* 다크 배경 위 강조 */
+
+  --ease: cubic-bezier(0.32, 0.72, 0, 1);
+  --maxw: 1180px;
+}
+
+/* ============================================================
+   Base
+   ============================================================ */
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0; background: #fff; color: var(--ink);
+  font-family: var(--font-system); font-weight: 500;
+  -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+  word-break: keep-all;
+}
+h1, h2, h3, h4, p { text-wrap: pretty; margin: 0; }
+a { color: inherit; text-decoration: none; }
+img { display: block; }
+
+/* 모바일 줄바꿈 시스템 */
+br.m-only { display: none; }
+br.d-only { display: inline; }
+
+/* 스크롤 리빌 */
+@media (prefers-reduced-motion: no-preference) {
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity .7s cubic-bezier(.22,.61,.36,1), transform .7s cubic-bezier(.22,.61,.36,1); }
+  .reveal.on { opacity: 1; transform: none; }
+}
+
+/* ============================================================
+   Layout primitives
+   ============================================================ */
+.wrap { max-width: var(--maxw); margin: 0 auto; padding-left: 32px; padding-right: 32px; }
+.sec { padding-top: 100px; padding-bottom: 100px; }
+.head { max-width: 720px; margin-bottom: 52px; }
+.eyebrow { font-size: 13px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; color: var(--p); margin-bottom: 16px; }
+h2.sec-title { font-weight: 800; font-size: clamp(28px, 3.2vw, 42px); line-height: 1.22; letter-spacing: -0.02em; margin-bottom: 18px; }
+p.sec-lead { font-size: 17px; font-weight: 500; line-height: 1.65; color: var(--ink-72); }
+
+.grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+.grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; }
+
+.card {
+  padding: 32px 28px 36px; border: 1px solid var(--line); border-radius: 18px; background: #fff;
+  transition: transform .25s var(--ease), box-shadow .25s var(--ease);
+}
+.card:hover { transform: translateY(-4px); box-shadow: 0 24px 50px rgba(74,24,201,0.13); }
+.card .kicker { font-size: 13px; font-weight: 800; letter-spacing: 0.14em; color: var(--p-mid); margin-bottom: 18px; }
+.card h3 { font-size: 20px; font-weight: 800; margin-bottom: 10px; }
+.card p { font-size: 15px; font-weight: 500; line-height: 1.65; color: var(--ink-72); }
+
+/* Buttons */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  height: 52px; padding: 0 30px; border-radius: 999px;
+  font-size: 15.5px; font-weight: 700; white-space: nowrap;
+  transition: background .2s var(--ease), color .2s var(--ease), box-shadow .2s var(--ease);
+}
+.btn-primary { background: var(--p); color: #fff; box-shadow: 0 12px 28px rgba(74,24,201,0.28); }
+.btn-primary:hover { background: var(--p-deep); color: #fff; }
+.btn-ghost { border: 1.5px solid var(--p-tint); color: var(--p); background: #fff; }
+.btn-ghost:hover { background: rgba(74,24,201,0.06); }
+.btn-sm { height: 42px; padding: 0 22px; font-size: 14px; }
+.btn-lg { height: 56px; padding: 0 34px; font-size: 16.5px; }
+
+/* ============================================================
+   Header
+   ============================================================ */
+.site-head {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(255,255,255,0.86); backdrop-filter: saturate(1.6) blur(18px);
+  border-bottom: 1px solid var(--line);
+}
+.site-head .wrap { display: flex; align-items: center; justify-content: space-between; height: 76px; }
+.brand { display: flex; align-items: center; gap: 12px; flex-shrink: 0; white-space: nowrap; }
+.brand img { height: 38px; width: auto; flex-shrink: 0; }
+.brand span { font-size: 19px; font-weight: 800; letter-spacing: 0.06em; color: var(--ink); }
+.nav-links { display: flex; gap: 30px; }
+.nav-links a { font-size: 15px; font-weight: 700; color: var(--ink-80); transition: color .2s var(--ease); }
+.nav-links a:hover { color: var(--p); }
+
+/* ============================================================
+   Hero
+   ============================================================ */
+.hero {
+  background:
+    radial-gradient(70% 100% at 88% 0%, rgba(124,87,238,0.28), transparent 62%),
+    radial-gradient(55% 80% at 0% 100%, rgba(74,24,201,0.14), transparent 60%),
+    linear-gradient(180deg, #FFFFFF, var(--wash));
+  overflow: hidden;
+}
+.hero-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 40px; align-items: center; padding-top: 88px; padding-bottom: 92px; }
+.badge {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-size: 13px; font-weight: 700; letter-spacing: 0.18em; color: var(--p);
+  padding: 8px 18px; border: 1.5px solid var(--p-tint); border-radius: 999px;
+  margin-bottom: 30px; background: #fff;
+}
+.badge i { width: 6px; height: 6px; border-radius: 50%; background: var(--p); }
+.hero h1 { font-weight: 800; font-size: clamp(34px, 4.6vw, 60px); line-height: 1.18; letter-spacing: -0.025em; margin-bottom: 24px; }
+.hero h1 em { font-style: normal; color: var(--p); }
+.hero-lead { font-size: clamp(16.5px, 1.5vw, 19px); font-weight: 500; line-height: 1.68; color: var(--ink-72); max-width: 30em; margin-bottom: 34px; }
+.hero-cta { display: flex; gap: 14px; flex-wrap: wrap; }
+.hero-note { margin-top: 20px; font-size: 14px; font-weight: 600; color: var(--ink-50); }
+.hero-mark { display: flex; align-items: center; justify-content: center; }
+.hero-mark img { width: min(80%, 340px); height: auto; filter: drop-shadow(0 30px 60px rgba(74,24,201,0.26)); }
+
+/* ============================================================
+   Figures strip
+   ============================================================ */
+.figures-band { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: #fff; }
+.figures { display: grid; grid-template-columns: repeat(4, 1fr); }
+.figures > div { padding: 44px 24px; text-align: center; }
+.figures > div + div { border-left: 1px solid var(--line); }
+.figures .fig-n { font-weight: 800; font-size: clamp(24px, 2.4vw, 32px); letter-spacing: -0.01em; color: var(--p); margin-bottom: 10px; }
+.figures .fig-d { font-size: 14px; font-weight: 500; line-height: 1.5; color: var(--ink-62); }
+
+/* ============================================================
+   Problem list
+   ============================================================ */
+.problem { background: var(--wash); border-bottom: 1px solid var(--line); }
+.plist { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+.pitem {
+  display: flex; gap: 16px; align-items: flex-start;
+  padding: 26px 28px; background: #fff; border: 1px solid var(--line); border-radius: 16px;
+}
+.pitem .no { flex-shrink: 0; font-size: 13px; font-weight: 800; letter-spacing: 0.1em; color: var(--p-mid); padding-top: 3px; }
+.pitem h3 { font-size: 17.5px; font-weight: 800; margin-bottom: 8px; }
+.pitem p { font-size: 15px; font-weight: 500; line-height: 1.65; color: var(--ink-72); }
+
+/* ============================================================
+   Cases
+   ============================================================ */
+.cases { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; align-items: stretch; }
+.case {
+  display: flex; flex-direction: column;
+  border: 1px solid var(--line); border-radius: 20px; background: #fff; overflow: hidden;
+  transition: transform .25s var(--ease), box-shadow .25s var(--ease);
+}
+.case:hover { transform: translateY(-4px); box-shadow: 0 24px 50px rgba(74,24,201,0.13); }
+.case-top { padding: 26px 28px 22px; background: linear-gradient(140deg, #fff, var(--p-wash)); border-bottom: 1px solid var(--line); }
+.case-tag { font-size: 12.5px; font-weight: 800; letter-spacing: 0.16em; color: var(--p-mid); margin-bottom: 12px; }
+.case-who { font-size: 19px; font-weight: 800; line-height: 1.35; margin-bottom: 8px; }
+.case-meta { font-size: 14px; font-weight: 600; color: var(--ink-62); line-height: 1.5; }
+.case-body { padding: 24px 28px 28px; display: flex; flex-direction: column; gap: 20px; flex: 1; }
+.case-block h4 { font-size: 12.5px; font-weight: 800; letter-spacing: 0.14em; color: var(--p); margin-bottom: 8px; }
+.case-block p { font-size: 14.8px; font-weight: 500; line-height: 1.7; color: var(--ink-72); }
+.case-result { margin-top: auto; padding: 20px 22px; background: var(--wash); border-radius: 14px; }
+.case-result h4 { font-size: 12.5px; font-weight: 800; letter-spacing: 0.14em; color: var(--p); margin-bottom: 12px; }
+.case-result ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 9px; }
+.case-result li { position: relative; padding-left: 20px; font-size: 14.5px; font-weight: 600; line-height: 1.6; color: var(--ink-80); }
+.case-result li::before {
+  content: ""; position: absolute; left: 2px; top: 8px;
+  width: 8px; height: 8px; border-radius: 50%; background: var(--p);
+}
+
+/* ============================================================
+   Dark quote
+   ============================================================ */
+.dark-band { background: linear-gradient(135deg, var(--dark-1), var(--dark-2)); color: #fff; }
+.dark-band .eyebrow { color: var(--on-dark); letter-spacing: 0.24em; margin-bottom: 26px; }
+.dark-band blockquote { margin: 0; max-width: 940px; }
+.dark-band blockquote p { font-weight: 700; font-size: clamp(23px, 2.8vw, 38px); line-height: 1.42; letter-spacing: -0.015em; margin-bottom: 30px; }
+.dark-band cite { display: block; font-style: normal; font-size: 15px; font-weight: 600; color: rgba(255,255,255,0.75); letter-spacing: 0.02em; }
+
+/* ============================================================
+   Steps
+   ============================================================ */
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.step { display: flex; flex-direction: column; gap: 12px; padding: 26px 0 0; border-top: 3px solid var(--p); }
+.step .n { font-size: 13px; font-weight: 800; letter-spacing: 0.12em; color: var(--p); }
+.step h3 { font-size: 19px; font-weight: 800; }
+.step p { font-size: 15px; font-weight: 500; line-height: 1.65; color: var(--ink-72); }
+.promise {
+  margin-top: 30px; padding: 30px 34px; border: 1px solid var(--p-tint); border-radius: 18px;
+  background: linear-gradient(120deg, #fff, var(--p-wash));
+  display: flex; align-items: center; gap: 22px; flex-wrap: wrap;
+}
+.promise .mark { font-size: clamp(22px, 2.4vw, 30px); font-weight: 800; letter-spacing: -0.01em; color: var(--p); white-space: nowrap; }
+.promise p { flex: 1 1 300px; font-size: 15.5px; font-weight: 500; line-height: 1.65; color: var(--ink-72); }
+.promise .btn { margin-left: auto; }
+
+/* ============================================================
+   FAQ
+   ============================================================ */
+.faq { display: flex; flex-direction: column; gap: 12px; max-width: 900px; }
+.faq details { border: 1px solid var(--line); border-radius: 16px; background: #fff; overflow: hidden; }
+.faq details[open] { border-color: var(--p-tint); box-shadow: 0 14px 34px rgba(74,24,201,0.09); }
+.faq summary {
+  list-style: none; cursor: pointer; padding: 24px 28px;
+  display: flex; align-items: flex-start; gap: 14px;
+  font-size: 17px; font-weight: 700; line-height: 1.5; color: var(--ink);
+  transition: color .2s var(--ease);
+}
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary:hover { color: var(--p); }
+.faq summary .q { flex-shrink: 0; font-size: 15px; font-weight: 800; color: var(--p-mid); }
+.faq summary .plus { margin-left: auto; flex-shrink: 0; font-size: 22px; font-weight: 400; line-height: 1; color: var(--p); transition: transform .25s var(--ease); }
+.faq details[open] summary .plus { transform: rotate(45deg); }
+.faq .a { padding: 0 28px 26px 60px; font-size: 15.5px; font-weight: 500; line-height: 1.75; color: var(--ink-72); }
+
+/* ============================================================
+   Final CTA
+   ============================================================ */
+.cta-card {
+  display: grid; grid-template-columns: 1fr auto; gap: 40px; align-items: center;
+  padding: 72px 48px; border: 1px solid var(--p-tint); border-radius: 28px;
+  background: linear-gradient(120deg, #fff, var(--p-wash));
+}
+.cta-card h2 { font-weight: 800; font-size: clamp(26px, 2.8vw, 38px); letter-spacing: -0.02em; line-height: 1.28; margin-bottom: 14px; }
+.cta-card p { font-size: 16.5px; font-weight: 500; color: var(--ink-72); line-height: 1.65; }
+.cta-actions { display: flex; flex-direction: column; gap: 12px; }
+.cta-actions small { font-size: 13px; font-weight: 600; color: var(--ink-50); text-align: center; line-height: 1.5; }
+
+/* ============================================================
+   Footer
+   ============================================================ */
+.site-foot { border-top: 1px solid var(--line); padding: 60px 0 40px; background: #fff; }
+.foot-grid { display: grid; grid-template-columns: 1.6fr 1fr 1fr; gap: 36px; margin-bottom: 44px; }
+.foot-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
+.foot-brand img { height: 56px; width: auto; flex-shrink: 0; }
+.foot-brand span { font-size: 30px; font-weight: 800; letter-spacing: 0.06em; color: var(--ink); white-space: nowrap; }
+.foot-tag { display: block; font-size: 12.5px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; color: var(--p-mid); margin-bottom: 10px; }
+.foot-desc { font-size: 14.5px; font-weight: 500; line-height: 1.65; color: var(--ink-62); max-width: 28em; }
+.foot-col { display: flex; flex-direction: column; gap: 11px; }
+.foot-col h4 { font-size: 13px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--p); margin-bottom: 5px; }
+.foot-col a, .foot-col span { font-size: 15px; font-weight: 500; color: var(--ink-72); transition: color .2s var(--ease); }
+.foot-col a:hover { color: var(--p); }
+.foot-base {
+  display: flex; justify-content: space-between; align-items: center; gap: 20px;
+  padding-top: 28px; border-top: 1px solid var(--line);
+  font-size: 13px; font-weight: 500; color: var(--ink-50);
+}
+.foot-base span:first-child { max-width: 66%; line-height: 1.6; }
+
+/* ============================================================
+   Mobile (≤860px)
+   ============================================================ */
+@media (max-width: 860px) {
+  br.m-only { display: inline; }
+  br.d-only { display: none; }
+
+  .wrap { padding-left: 22px; padding-right: 22px; }
+  .sec { padding-top: 64px; padding-bottom: 64px; }
+  .head { margin-bottom: 36px; }
+
+  .nav-links { display: none; }
+
+  .hero-grid { grid-template-columns: 1fr; gap: 20px; padding-top: 44px; padding-bottom: 56px; }
+  .hero-mark { order: -1; }
+  .hero-mark img { width: 132px; }
+  .hero h1 { text-align: center; }
+  .badge { margin-bottom: 22px; }
+  .hero-lead { margin-bottom: 28px; }
+  .hero-cta { flex-direction: column; }
+  .hero-cta .btn { width: 100%; }
+  .hero-note { text-align: center; }
+
+  .figures { grid-template-columns: 1fr 1fr; }
+  .figures > div { padding: 32px 12px; border-left: none; border-top: 1px solid var(--line); }
+  .figures > div + div { border-left: none; }
+  .figures > div:nth-child(-n+2) { border-top: none; }
+  .figures .fig-n { font-size: 19px; }
+
+  .plist, .grid3, .grid4, .cases, .steps, .foot-grid { grid-template-columns: 1fr; }
+
+  .promise { flex-direction: column; align-items: flex-start; gap: 14px; padding: 26px 24px; }
+  .promise p { flex: none; }
+  .promise .btn { margin-left: 0; width: 100%; }
+
+  .faq summary { padding: 20px 22px; font-size: 16px; }
+  .faq .a { padding: 0 22px 22px 22px; font-size: 15px; }
+
+  .cta-card { grid-template-columns: 1fr; gap: 28px; padding: 44px 26px; }
+  .cta-card h2, .cta-card p { text-align: center; }
+  .cta-actions .btn { width: 100%; }
+
+  .foot-base { flex-direction: column; align-items: flex-start; }
+  .foot-base span:first-child { max-width: 100%; }
+
+  .m-fit { font-size: 13.4px !important; }
+}
+</style>
+</head>
+
+<body>
+
+<header class="site-head">
+  <div class="wrap">
+    <a class="brand" href="#top">
+      <img src="../assets/trinity-one-logo.png" alt="TRINITY ONE">
+      <span>TRINITY ONE</span>
+    </a>
+    <nav class="nav-links">
+      <a href="#why">왜 다시 봐야 하나</a>
+      <a href="#cases">사례</a>
+      <a href="#trust">왜 TRINITY ONE</a>
+      <a href="#process">진행 절차</a>
+      <a href="#faq">자주 묻는 질문</a>
+    </nav>
+    <a class="btn btn-primary btn-sm" href="#contact">기존 보험 무료 진단</a>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ========== 1. HERO ========== -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="badge"><i></i>THE ONLY STRATEGY FOR THE 0.1%</span>
+        <h1>지금 가입하신 보험,<br>누가 <em>어떤 근거로</em><br class="m-only"> 설계했습니까?</h1>
+        <p class="hero-lead">보험을 더 권해드리지 않습니다.<br>이미 가입하신 계약이<br class="m-only"> 지금의 상황에 맞게 설계된 것인지,<br>세무사·회계사·노무사·변호사가<br class="m-only"> 한 팀으로 먼저 확인해 드립니다.</p>
+        <div class="hero-cta">
+          <a class="btn btn-primary btn-lg" href="#contact">기존 보험 무료 진단 신청</a>
+          <a class="btn btn-ghost btn-lg" href="#cases">진단 사례 먼저 보기</a>
+        </div>
+        <p class="hero-note">진단은 무료이며,<br class="m-only"> 가입 없이 결과만 받아보셔도 됩니다.</p>
+      </div>
+      <div class="hero-mark">
+        <img src="../assets/trinity-one-logo.png" alt="">
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 지표 스트립 ========== -->
+  <div class="figures-band">
+    <div class="wrap">
+      <div class="figures" id="figures">
+        <div>
+          <div class="fig-n">전문가 팀 진단</div>
+          <div class="fig-d">세무·회계·노무·법률<br class="m-only"> 전문가가 함께 검토</div>
+        </div>
+        <div>
+          <div class="fig-n">34개+ 제휴사</div>
+          <div class="fig-d">한 회사에 얽매이지 않는<br class="m-only"> 독립 비교 설계</div>
+        </div>
+        <div>
+          <div class="fig-n">진단 비용 0원</div>
+          <div class="fig-d">가입 의무 없이<br class="m-only"> 결과만 받으셔도 됩니다</div>
+        </div>
+        <div>
+          <div class="fig-n">코스닥 상장사 배경</div>
+          <div class="fig-d">인카금융서비스(주)<br class="m-only"> 소속 컨설턴트</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 2. 문제 인식 ========== -->
+  <section class="problem" id="why">
+    <div class="wrap sec">
+      <div class="head">
+        <div class="eyebrow">Why Re-check</div>
+        <h2 class="sec-title">보험이 잘못된 게 아니라,<br>설계의 순서가 잘못된 것입니다.</h2>
+        <p class="sec-lead">대부분의 계약은 회사의 재무제표도, 정관도,<br class="m-only"> 세무 상황도 보지 않은 채 만들어집니다.<br>진단 없이 만들어진 설계는<br class="m-only"> 필요할 때 작동하지 않습니다.</p>
+      </div>
+      <div class="plist">
+        <div class="pitem">
+          <div class="no">01</div>
+          <div>
+            <h3>회사를 보지 않고 상품부터 정합니다</h3>
+            <p>재무제표와 정관을 확인하지 않은 상태에서<br class="m-only"> 상품이 먼저 결정됩니다.<br>회사의 상황이 아니라<br class="m-only"> 판매하기 좋은 순서로 설계된 것입니다.</p>
+          </div>
+        </div>
+        <div class="pitem">
+          <div class="no">02</div>
+          <div>
+            <h3>세무·노무·법률이 빠져 있습니다</h3>
+            <p>정관에 임원 퇴직금 규정이 없거나<br class="m-only"> 주주 구성이 정리되지 않은 채로 가입하면,<br>세무상 인정받지 못하거나<br class="m-only"> 실행 단계에서 막힙니다.</p>
+          </div>
+        </div>
+        <div class="pitem">
+          <div class="no">03</div>
+          <div>
+            <h3>한 회사 상품 안에서만 비교됩니다</h3>
+            <p>소속된 회사의 상품만<br class="m-only"> 제안할 수 있는 구조라면,<br>비교의 폭 자체가<br class="m-only"> 처음부터 제한됩니다.<br>더 나은 조건이 있어도<br class="m-only"> 테이블에 오르지 못합니다.</p>
+          </div>
+        </div>
+        <div class="pitem">
+          <div class="no">04</div>
+          <div>
+            <h3>가입 이후 한 번도 다시 보지 않습니다</h3>
+            <p>매출도, 지분도, 가족 구성도 바뀌는데<br class="m-only"> 계약만 처음 그대로 남아 있습니다.<br>지금 상황과 맞는지는<br class="m-only"> 다시 계산해 봐야 알 수 있습니다.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 3. 사례 ========== -->
+  <section id="cases">
+    <div class="wrap sec">
+      <div class="head">
+        <div class="eyebrow">Cases</div>
+        <h2 class="sec-title">이런 상황이라면,<br>한 번쯤 다시 보셔야 합니다.</h2>
+        <p class="sec-lead">실제 진행한 컨설팅을<br class="m-only"> 익명으로 정리한 사례입니다.<br>비슷한 상황이 보이신다면<br class="m-only"> 진단을 받아보실 시점입니다.</p>
+      </div>
+
+      <div class="cases">
+
+        <!-- CASE 01 -->
+        <article class="case">
+          <div class="case-top">
+            <div class="case-tag">CASE 01 · 법인 CEO</div>
+            <div class="case-who">이익은 쌓였는데,<br>세금 낼 현금이 없던 회사</div>
+            <div class="case-meta">수도권 제조업 법인<br>설립 17년차 · 임직원 40명</div>
+          </div>
+          <div class="case-body">
+            <div class="case-block">
+              <h4>무엇이 문제였나</h4>
+              <p>매년 이익은 났지만<br>배당 없이 사내에 쌓였습니다.<br>그사이 비상장주식 평가액이<br>설립 초기의 몇 배로 올라,<br>대표님 유고 시 가족이<br>감당해야 할 상속세가<br>회사가 가진 현금을<br>크게 넘어선 상태였습니다.<br>정관에는 임원 퇴직금<br>지급 규정조차 없었습니다.</p>
+            </div>
+            <div class="case-block">
+              <h4>무엇을 했나</h4>
+              <p>회계사가 주식가치를<br>다시 평가하고,<br>세무사가 배당·임원보수 설계로<br>잉여금의 흐름을 정리했습니다.<br>변호사와 법무사가<br>정관과 퇴직금 규정을 정비해<br>등기까지 마친 뒤,<br>그 위에 유고 상황의<br>자금 계획을 얹었습니다.</p>
+            </div>
+            <div class="case-result">
+              <h4>고객에게 남은 것</h4>
+              <ul>
+                <li>상속세를 낼 재원이<br>회사 밖에 따로 마련된 상태</li>
+                <li>주식 평가액이<br>더 빠르게 오르지 않도록<br>이익 흐름 정리</li>
+                <li>대표 유고 시에도<br>급여·거래대금이<br>멈추지 않는 구조</li>
+              </ul>
+            </div>
+          </div>
+        </article>
+
+        <!-- CASE 02 -->
+        <article class="case">
+          <div class="case-top">
+            <div class="case-tag">CASE 02 · 병의원 원장</div>
+            <div class="case-who">원장이 3개월 쉬면<br>멈추는 의원이었습니다</div>
+            <div class="case-meta">개원 9년차 의원<br>원장 1인 · 직원 12명</div>
+          </div>
+          <div class="case-body">
+            <div class="case-block">
+              <h4>무엇이 문제였나</h4>
+              <p>소득은 높은데 세율 구간은<br>최고치에 걸려 있었고,<br>개인 명의로 든 오래된 계약이<br>여러 건 서로 겹친 채<br>유지되고 있었습니다.<br>정작 원장님이<br>몇 달만 진료를 못 해도<br>직원 급여와 임차료를<br>감당할 방법은 없었습니다.</p>
+            </div>
+            <div class="case-block">
+              <h4>무엇을 했나</h4>
+              <p>세무사가 법인 전환의<br>실익을 계산하고,<br>노무사가 취업규칙과 급여체계,<br>사내근로복지기금을<br>함께 정비했습니다.<br>겹쳐 있던 기존 계약은<br>하나씩 뜯어보고<br>필요한 것만 남겼습니다.</p>
+            </div>
+            <div class="case-result">
+              <h4>고객에게 남은 것</h4>
+              <ul>
+                <li>중복되던 계약 정리로<br>매달 나가던 고정비 축소</li>
+                <li>원장 부재 기간에도<br>의원이 운영되는 자금 계획</li>
+                <li>소득이 한 곳에 몰리지 않는<br>세무 구조</li>
+              </ul>
+            </div>
+          </div>
+        </article>
+
+        <!-- CASE 03 -->
+        <article class="case">
+          <div class="case-top">
+            <div class="case-tag">CASE 03 · 개인 고액자산가</div>
+            <div class="case-who">건물은 있는데,<br>나눌 수도 팔 수도 없던 자산</div>
+            <div class="case-meta">부동산 임대 중심 자산가<br>60대 · 자녀 2인</div>
+          </div>
+          <div class="case-body">
+            <div class="case-block">
+              <h4>무엇이 문제였나</h4>
+              <p>자산의 대부분이 건물이라<br>상속이 열리면<br>나누기도, 팔기도 어려웠습니다.<br>자녀 두 분 사이의 지분 문제와<br>유류분 분쟁이 예상됐지만,<br>세금을 낼 현금은<br>어디에도 없었습니다.</p>
+            </div>
+            <div class="case-block">
+              <h4>무엇을 했나</h4>
+              <p>감정평가와 세무 진단으로<br>예상 상속세 규모를<br>먼저 계산했습니다.<br>변호사가 유언과<br>유류분 시나리오를 정리하고,<br>사전 증여 순서를<br>10년 단위로 나눈 뒤,<br>남는 세금은 현금으로<br>준비되도록 설계했습니다.</p>
+            </div>
+            <div class="case-result">
+              <h4>고객에게 남은 것</h4>
+              <ul>
+                <li>건물을 급하게 팔지 않고도<br>세금을 낼 수 있는 상태</li>
+                <li>자녀 간 분쟁 소지를<br>미리 정리한 승계 계획</li>
+                <li>증여 시점별 세 부담을<br>예측할 수 있는 로드맵</li>
+              </ul>
+            </div>
+          </div>
+        </article>
+
+      </div>
+
+      <div class="promise" style="margin-top: 34px;">
+        <div class="mark">비슷한 상황이신가요?</div>
+        <p>사례와 똑같지 않아도 괜찮습니다.<br class="m-only"> 지금 계약서와 재무제표만 있으면<br class="m-only"> 어디가 비어 있는지 확인해 드립니다.</p>
+        <a class="btn btn-primary" href="#contact">기존 보험 무료 진단 신청</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 다크 인용구 ========== -->
+  <div class="dark-band">
+    <div class="wrap sec" id="statement">
+      <div class="eyebrow">The Only Strategy for the 0.1%</div>
+      <blockquote>
+        <p>“좋은 설계는<br class="m-only"> 상품에서 나오지 않습니다.<br>회사의 숫자와 서류를 먼저 읽고,<br class="m-only"> 무엇이 비어 있는지<br>찾는 데서 시작합니다.<br>그래서 저희는<br class="m-only"> 파는 이야기보다<br class="m-only"> 묻는 이야기를 먼저 합니다.”</p>
+        <cite>— TRINITY ONE</cite>
+      </blockquote>
+    </div>
+  </div>
+
+  <!-- ========== 4. 왜 우리인가 ========== -->
+  <section id="trust">
+    <div class="wrap sec">
+      <div class="head">
+        <div class="eyebrow">Why TRINITY ONE</div>
+        <h2 class="sec-title">보험을 파는 사람이 아니라,<br>구조를 읽는 팀이 봅니다.</h2>
+        <p class="sec-lead">진단은 한 사람이 하지 않습니다.<br>세무·회계·노무·법률 전문가가<br class="m-only"> 같은 자료를 함께 보고<br class="m-only"> 하나의 결론을 만듭니다.</p>
+      </div>
+
+      <div class="grid3">
+        <div class="card">
+          <div class="kicker">EXPERT TEAM</div>
+          <h3>전문가 그룹이 함께 진단</h3>
+          <p>세무사·회계사·노무사·변호사·법무사가<br>한 팀으로 참여합니다.<br>보험은 진단의 결론이지,<br>출발점이 아닙니다.</p>
+        </div>
+        <div class="card">
+          <div class="kicker">INDEPENDENT</div>
+          <h3>34개+ 제휴사 독립 비교</h3>
+          <p>특정 회사에 얽매이지 않기 때문에<br>조건을 있는 그대로 비교해 드립니다.<br>남길 계약과 정리할 계약을<br>함께 판단합니다.</p>
+        </div>
+        <div class="card">
+          <div class="kicker">BACKED BY</div>
+          <h3>인카금융서비스(주) 소속</h3>
+          <p>2022년 코스닥에 상장한 GA로,<br>22,637명 이상의 설계사가<br>소속돼 있습니다.<br>불완전판매율 0.00%의<br>관리 체계 위에서 진행됩니다.</p>
+        </div>
+      </div>
+
+      <div class="promise">
+        <div class="mark">3 × 3 × 3 = ONE</div>
+        <p>세 기둥 — 사람·돈·지식<br>세 전문 영역 — 법률·세무·금융<br>세 가치 — 보호·증식·영속.<br>27가지 조합이 충돌 없이 맞물려<br class="m-only"> 단 하나의 답으로 수렴합니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 5. 진행 절차 ========== -->
+  <section id="process" style="background: var(--wash); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);">
+    <div class="wrap sec">
+      <div class="head">
+        <div class="eyebrow">Process</div>
+        <h2 class="sec-title">세 단계로 끝납니다.<br>가입은 그다음 문제입니다.</h2>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="n">STEP 1</div>
+          <h3>자료 전달</h3>
+          <p>기존 증권과 재무제표, 정관을 보내주시면 됩니다.<br>없으신 서류는<br class="m-only"> 찾는 방법부터 안내해 드립니다.</p>
+        </div>
+        <div class="step">
+          <div class="n">STEP 2</div>
+          <h3>전문가 팀 진단</h3>
+          <p>세무·회계·노무·법률 전문가가<br class="m-only"> 같은 자료를 함께 검토합니다.<br>중복된 부분과 비어 있는 부분을<br class="m-only"> 문서로 정리해 드립니다.</p>
+        </div>
+        <div class="step">
+          <div class="n">STEP 3</div>
+          <h3>결과 설명</h3>
+          <p>진단 결과를 직접 설명해 드립니다.<br>보완이 필요하다면<br>방법을 제안드리고,<br>필요 없다면 필요 없다고<br>말씀드립니다.</p>
+        </div>
+      </div>
+      <div class="promise">
+        <div class="mark">가입 안 하셔도 됩니다.</div>
+        <p>진단 결과만 받고 끝내셔도 괜찮습니다.<br>지금 계약이 잘 설계돼 있다면<br class="m-only"> 그대로 두시는 것이 맞다고 말씀드립니다.<br>저희가 드리는 건 판단할 근거이지,<br class="m-only"> 가입 권유가 아닙니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 6. FAQ ========== -->
+  <section id="faq">
+    <div class="wrap sec">
+      <div class="head">
+        <div class="eyebrow">FAQ</div>
+        <h2 class="sec-title">자주 묻는 질문</h2>
+      </div>
+      <div class="faq">
+
+        <details open>
+          <summary><span class="q">Q1</span><span>상담하면 보험에 가입해야 하나요?</span><span class="plus">+</span></summary>
+          <div class="a">아닙니다. 진단은 무료이고,<br class="m-only"> 결과만 받고 끝내셔도 됩니다.<br>검토 결과 지금 계약이<br class="m-only"> 잘 설계돼 있다고 판단되면<br class="m-only"> 그대로 두시라고 말씀드립니다.<br>실제로 아무것도 바꾸지 않고<br class="m-only"> 마무리되는 경우도 있습니다.</div>
+        </details>
+
+        <details>
+          <summary><span class="q">Q2</span><span>어떤 자료를 준비해야 하나요?</span><span class="plus">+</span></summary>
+          <div class="a">기존 증권(가입 내역)과<br class="m-only"> 최근 재무제표, 정관.<br>이 세 가지면 시작할 수 있습니다.<br>지금 당장 없으셔도 괜찮습니다.<br>어디서 어떻게 발급받는지부터<br class="m-only"> 순서대로 안내해 드립니다.</div>
+        </details>
+
+        <details>
+          <summary><span class="q">Q3</span><span>진단에는 비용이 드나요?</span><span class="plus">+</span></summary>
+          <div class="a">진단과 결과 설명까지 비용은 없습니다.<br>이후 실제로 정관 변경이나 등기처럼<br class="m-only"> 별도 절차가 필요한 경우에만<br class="m-only"> 해당 비용을 미리 안내해 드립니다.<br>모르는 비용이 생기는 일은 없습니다.</div>
+        </details>
+
+        <details>
+          <summary><span class="q">Q4</span><span>자료를 드리면 어디까지 공유되나요?</span><span class="plus">+</span></summary>
+          <div class="a">진단에 참여하는 전문가 외에는<br class="m-only"> 공유되지 않습니다.<br>회사명과 개인 정보는 사례로도<br class="m-only"> 사용하지 않으며,<br class="m-only"> 진단이 끝난 뒤 자료 파기를 원하시면<br class="m-only"> 그렇게 처리해 드립니다.</div>
+        </details>
+
+        <details>
+          <summary><span class="q">Q5</span><span>법인이 아니라 개인인데도 가능한가요?</span><span class="plus">+</span></summary>
+          <div class="a">가능합니다.<br>법인 CEO뿐 아니라 병의원 원장님,<br class="m-only"> 개인 자산가분들도 진단 대상입니다.<br>상속·증여나 자산 이전이 고민이시라면<br class="m-only"> 법인 여부와 관계없이 도움이 됩니다.</div>
+        </details>
+
+        <details>
+          <summary><span class="q">Q6</span><span>지금 담당 설계사가 따로 있습니다.</span><span class="plus">+</span></summary>
+          <div class="a">그대로 두셔도 됩니다.<br>기존 담당자를 바꾸시라는 이야기가 아니라,<br class="m-only"> 다른 시각에서 한 번 더<br class="m-only"> 확인해 보시라는 제안입니다.<br>진단 결과는 대표님 것이니<br class="m-only"> 어떻게 쓰실지는 대표님이 정하시면 됩니다.</div>
+        </details>
+
+        <details>
+          <summary><span class="q">Q7</span><span>얼마나 걸리나요?</span><span class="plus">+</span></summary>
+          <div class="a">자료를 모두 받은 시점부터<br class="m-only"> 보통 영업일 기준 5일에서 7일 사이에<br class="m-only"> 결과를 정리해 드립니다.<br>사안이 복잡한 경우에는<br class="m-only"> 시작 전에 예상 기간을 먼저 말씀드립니다.</div>
+        </details>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 7. 최종 CTA ========== -->
+  <section id="contact">
+    <div class="wrap sec" style="padding-top: 0;">
+      <div class="cta-card">
+        <div>
+          <h2>지금 든 보험이 맞는지,<br>먼저 확인부터 해보세요.</h2>
+          <p>카카오톡으로 편하게 문의하시면 됩니다.<br>어떤 서류가 필요한지부터<br class="m-only"> 순서대로 안내해 드리고,<br>진단 결과는 문서로 정리해 드립니다.</p>
+        </div>
+        <div class="cta-actions">
+          <a class="btn btn-primary btn-lg" href="http://pf.kakao.com/_RilxnX/chat" target="_blank" rel="noopener">카카오톡으로 무료 진단 신청</a>
+          <a class="btn btn-ghost btn-lg" href="mailto:hq1.trinity@gmail.com">이메일로 문의하기</a>
+          <small>가입 의무는 없습니다.<br class="m-only"> 결과만 받아보셔도 됩니다.</small>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-foot">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="foot-brand">
+          <img src="../assets/trinity-one-logo.png" alt="TRINITY ONE">
+          <span>TRINITY ONE</span>
+        </div>
+        <p class="foot-desc"><span class="foot-tag">The Only Strategy for the 0.1%</span>세무·회계·노무·법률 전문가가<br class="m-only"> 한 팀으로 움직이는 컨설팅 그룹.<br>파는 이야기보다<br class="m-only"> 묻는 이야기를 먼저 합니다.</p>
+      </div>
+      <div class="foot-col">
+        <h4>바로가기</h4>
+        <a href="#why">왜 다시 봐야 하나</a>
+        <a href="#cases">진단 사례</a>
+        <a href="#trust">왜 TRINITY ONE</a>
+        <a href="#process">진행 절차</a>
+        <a href="#faq">자주 묻는 질문</a>
+      </div>
+      <div class="foot-col">
+        <h4>문의</h4>
+        <a href="http://pf.kakao.com/_RilxnX/chat" target="_blank" rel="noopener">카카오톡 상담</a>
+        <a href="mailto:hq1.trinity@gmail.com">hq1.trinity@gmail.com</a>
+        <a href="../trinity-one/">회사 소개 보기</a>
+      </div>
+    </div>
+    <div class="foot-base">
+      <span>© 2026 TRINITY ONE.<br class="m-only"> 본 사이트는<br class="m-only"> 보험대리점의 일반 안내 자료이며,<br class="m-only"><br class="d-only"> 개별 상품의 가입 전에는<br class="m-only"> 상품설명서와 약관을<br class="m-only"> 반드시 확인하시기 바랍니다.</span>
+      <span>인카금융서비스(주) 소속</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  if (!('IntersectionObserver' in window) ||
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  var sels = [
+    '#figures > div',
+    '#why .head', '#why .pitem',
+    '#cases .head', '#cases .case', '#cases .promise',
+    '#statement > *',
+    '#trust .head', '#trust .card', '#trust .promise',
+    '#process .head', '#process .step', '#process .promise',
+    '#faq .head', '#faq details',
+    '#contact .cta-card'
+  ];
+  var els = document.querySelectorAll(sels.join(', '));
+  if (!els.length) return;
+
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add('on'); io.unobserve(e.target); }
+    });
+  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.06 });
+
+  els.forEach(function (el, i) {
+    el.classList.add('reveal');
+    el.style.transitionDelay = (Math.min(i % 4, 3) * 70) + 'ms';
+    io.observe(el);
+  });
+})();
+</script>
+
+</body>
+</html>
