@@ -14,16 +14,25 @@
 
 ## 브랜드 아이덴티티 (CI)
 
-- 컬러 시스템:
-  - Bronze `#8B5E3C` — 주색 (버튼, 강조 텍스트, 수치)
-  - Gold `#C8A96E` — 강조색 (다크 배경 위 태그라인, 장식 요소. 흰 배경 위 본문 텍스트로는 대비 부족이므로 금지)
-  - Charcoal `#2B2522` — 텍스트, 다크 섹션 배경
-  - Off-White `#F7F4EE` — 밝은 배경
-  - Gray `#8E8880` — 보조 설명
+- 컬러 시스템 — **웹사이트는 퍼플 팔레트를 쓴다.** 새 웹페이지도 아래 웹 팔레트를 기준으로 만든다.
+  - 웹 팔레트 (현재 `/trinity-one/` 적용 기준, basecamp.html 계열로 통일)
+    - Violet `#4A1BD0` — 주색 (버튼, 강조 텍스트, 수치)
+    - Violet Dark `#2E0F9E` — 호버·프레스
+    - Lavender `#6E4AE8` — 카드 라벨(THREE PILLARS 등), 보조 강조
+    - Light Lavender `#A78BFF` — 다크 배경 위 태그라인
+    - Ink `#160E2E` — 텍스트 (본문 반투명은 `rgba(22,14,46,...)`)
+    - Lavender Tint `#F2EFFE` — 밝은 배경
+    - Border `#E3DEF3` — 카드 테두리·구분선
+    - Deep Purple `#0B0320` → `#260C6B` — 다크 섹션 그라디언트
+  - 브랜드 가이드(PPT) 원본 CI — 인쇄물·PT 등 오프라인 자료용으로만 사용
+    - Bronze `#8B5E3C` / Gold `#C8A96E` / Charcoal `#2B2522` / Off-White `#F7F4EE` / Gray `#8E8880`
+  - 웹에서 갈색·금색 계열을 새로 쓰지 않는다 (`--trinity-brown` 계열 토큰도 퍼플로 정리 완료)
 - 서체: 국문 본문 Pretendard (`assets/fonts/`에 9종 웨이트 보유, 재다운로드 금지)
 - 태그라인: **"The Only Strategy for the 0.1%"** — 히어로 배지·다크 섹션·푸터에 사용
 - 브랜드 철학: 3×3×3 = ONE — 세 기둥(사람·돈·지식) × 세 전문 영역(법률·세무·금융) × 세 가치(보호·증식·영속)
-- 로고: `assets/trinity-one-logo.png` (임의 색상 변경·비율 왜곡·회전 금지, 주변 여백 확보)
+- 로고: `assets/trinity-one-logo.png` — **색상 변경 절대 금지** (비율 왜곡·회전도 금지, 주변 여백 확보)
+  - 퍼플 배경 위에서도 원본 브론즈 로고를 그대로 쓴다. CSS 필터로 색을 바꾸는 것도 금지.
+  - 브랜드 가이드가 인정하는 변형은 Bronze on Light / Reverse on Dark(흰색) 두 가지뿐이다.
 - 연락처 이메일: hq1.trinity@gmail.com (자체 도메인 확보 전 임시. trinityone.com은 타인 소유이므로 절대 사용 금지)
 - 카카오톡 상담·커피챗 링크: http://pf.kakao.com/_RilxnX/chat (CTA 버튼은 채널 홈이 아닌 이 채팅 링크로 연결)
 - 후원: 인카금융서비스(주) — 2022 코스닥 상장 GA, 22,637명+ 설계사, 0.00% 불완전판매율
