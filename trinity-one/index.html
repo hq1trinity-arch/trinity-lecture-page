@@ -1860,7 +1860,7 @@ body {
       </div>
       <div style="display: flex; flex-direction: column; gap: 12px;">
         <a href="{{ kakaoUrl }}" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; justify-content: center; height: 54px; padding: 0 32px; border-radius: 999px; background: #4A1BD0; color: #fff; font-size: 16px; font-weight: 700; box-shadow: 0 12px 28px rgba(74,27,208,0.28);" style-hover="background: #2E0F9E; color: #fff;">카카오톡으로 상담하기</a>
-        <a href="{{ telHref }}" style="display: inline-flex; align-items: center; justify-content: center; height: 54px; padding: 0 32px; border-radius: 999px; border: 1.5px solid rgba(74,27,208,0.4); color: #4A1BD0; font-size: 16px; font-weight: 700; background: #fff;" style-hover="background: rgba(74,27,208,0.06);">{{ phone }}</a>
+        <a href="tel:0221380797" style="display: inline-flex; align-items: center; justify-content: center; height: 54px; padding: 0 32px; border-radius: 999px; border: 1.5px solid rgba(74,27,208,0.4); color: #4A1BD0; font-size: 16px; font-weight: 700; background: #fff;" style-hover="background: rgba(74,27,208,0.06);">02-2138-0797</a>
       </div>
     </div>
   </section>
@@ -2019,7 +2019,7 @@ body {
       </div>
       <div style="display: flex; flex-direction: column; gap: 11px;">
         <h4 style="font-size: 13px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: #4A1BD0; margin: 0 0 5px;">문의</h4>
-        <a href="{{ telHref }}" style="font-size: 15px; font-weight: 500; color: rgba(22,14,46,0.72);" style-hover="color: #4A1BD0;">{{ phone }}</a>
+        <a href="tel:0221380797" style="font-size: 15px; font-weight: 500; color: rgba(22,14,46,0.72);" style-hover="color: #4A1BD0;">02-2138-0797</a>
         <a href="mailto:hq1.trinity@gmail.com" style="font-size: 15px; font-weight: 500; color: rgba(22,14,46,0.72);" style-hover="color: #4A1BD0;">hq1.trinity@gmail.com</a>
         <span style="font-size: 15px; font-weight: 500; color: rgba(22,14,46,0.72);">서울특별시 강남구 ○○로 00, 0층</span>
       </div>
@@ -2077,10 +2077,10 @@ body {
   }, 100);
 })();
 </script>
-<script type="text/x-dc" data-dc-script="" data-props="{&quot;phone&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;02-0000-0000&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;연락처&quot;},&quot;kakaoUrl&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;http://pf.kakao.com/_RilxnX/chat&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;연락처&quot;}}">
+<script type="text/x-dc" data-dc-script="" data-props="{&quot;phone&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;02-2138-0797&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;연락처&quot;},&quot;kakaoUrl&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;http://pf.kakao.com/_RilxnX/chat&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;연락처&quot;}}">
 class Component extends DCLogic {
   renderVals() {
-    const phone = this.props.phone ?? '02-0000-0000';
+    const phone = this.props.phone ?? '02-2138-0797';
     return {
       phone,
       telHref: 'tel:' + phone.replace(/[^0-9]/g, ''),
