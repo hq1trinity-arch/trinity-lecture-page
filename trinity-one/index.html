@@ -1510,12 +1510,12 @@ body {
     a { color: inherit; text-decoration: none; }
     a:hover { color: #2E0F9E; }
     /* 사진 밴드 — 흑백 변환 후 브랜드 퍼플 듀오톤 */
-    .pband { position: relative; overflow: hidden; height: 270px; background: #160E2E; }
+    .pband { position: relative; overflow: hidden; height: 400px; background: #160E2E; }
     .pband img { width: 100%; height: 100%; object-fit: cover; display: block;
                  filter: grayscale(1) contrast(1.08) brightness(0.52); }
     .pband::after { content: ""; position: absolute; inset: 0; pointer-events: none;
                     background: linear-gradient(120deg, rgba(74,27,208,0.52), rgba(11,3,32,0.60)); }
-    .pband-cap { position: absolute; left: 0; right: 0; bottom: 22px; z-index: 2; text-align: center;
+    .pband-cap { position: absolute; left: 0; right: 0; bottom: 26px; z-index: 2; text-align: center;
                  font-size: 12.5px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase;
                  color: rgba(255,255,255,0.72); }
     #about { position: relative; overflow: hidden; }
@@ -1545,7 +1545,7 @@ body {
       .m-pad { padding-left: 22px !important; padding-right: 22px !important; }
       .m-sec { padding-top: 64px !important; padding-bottom: 64px !important; }
       .m-quote { padding-top: 44px !important; padding-bottom: 44px !important; }
-      .pband { height: 180px; }
+      .pband { height: 240px; }
       .pband-cap { bottom: 16px; font-size: 11px; letter-spacing: 0.16em; }
       .m-contact h2 { text-align: center; }
       .m-fit { font-size: 12.8px !important; }
@@ -1801,16 +1801,18 @@ body {
     <div class="m-pad" style="max-width: 1180px; margin: 0 auto; padding: 20px 32px 0;">
       <p style="font-size: 13px; font-weight: 500; color: rgba(22,14,46,0.45); margin: 0;">출처: KB금융그룹 「2025 한국 부자 보고서」(2025.12) ·<br class="m-only"> 국토교통부 주택자금조달계획서 분석(2025)</p>
     </div>
-  <div class="pband" style="margin-top: 60px;">
-    <img src="../assets/photo-services.jpg" alt="" aria-hidden="true">
-    <div class="pband-cap">We Are One</div>
-  </div>
-    <div class="m-pad m-sec" style="max-width: 1180px; margin: 0 auto; padding: 80px 32px 100px;">
-      <div style="max-width: 720px; margin-bottom: 44px;">
+    <div class="m-pad" style="max-width: 1180px; margin: 0 auto; padding: 90px 32px 0;">
+      <div style="max-width: 720px;">
         <div style="font-size: 13px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; color: #4A1BD0; margin-bottom: 16px;">Network</div>
         <h2 style="font-weight: 800; font-size: clamp(28px, 3.2vw, 42px); line-height: 1.22; letter-spacing: -0.02em; margin: 0 0 18px;">전문가가 하나로 모이는 곳</h2>
         <p style="font-size: 17px; font-weight: 500; line-height: 1.65; color: rgba(22,14,46,0.7); margin: 0;">‘We Are One’ — 전문직 FP와 일반 FP가<br class="m-only"> 하나의 팀으로 움직입니다.<br>고액자산가(HNWI)·법인 CEO·병의원 원장을 위한<br class="m-only"> 통합 설계를 완성합니다.</p>
       </div>
+    </div>
+  <div class="pband" style="margin-top: 46px;">
+    <img src="../assets/photo-services.jpg" alt="" aria-hidden="true">
+    <div class="pband-cap">We Are One</div>
+  </div>
+    <div class="m-pad m-sec" style="max-width: 1180px; margin: 0 auto; padding: 56px 32px 100px;">
       <div class="m-grid3" style="display: grid; grid-template-columns: 1fr 1fr; gap: 22px;">
         <div style="padding: 32px 28px 36px; border: 1px solid #E3DEF3; border-radius: 18px; background: #fff;">
           <div style="font-size: 13px; font-weight: 800; letter-spacing: 0.14em; color: #6E4AE8; margin-bottom: 18px;">TRACK 01 · 전문직 FP</div>
