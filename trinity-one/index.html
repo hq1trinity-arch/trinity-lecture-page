@@ -1535,6 +1535,8 @@ body {
       .m-contact h2 { text-align: center; }
       .m-fit { font-size: 12.8px !important; }
       .m-eq { flex-direction: column; align-items: stretch !important; }
+      .dgm-row { grid-template-columns: 1fr !important; gap: 10px !important; }
+      .dgm-x { padding: 2px 0; }
       .m-backed { gap: 18px !important; }
       .m-footbase { flex-direction: column !important; align-items: flex-start !important; }
       .m-footbase span { max-width: 100% !important; }
@@ -1625,9 +1627,39 @@ body {
         <p style="font-size: 15px; font-weight: 500; line-height: 1.65; color: rgba(22,14,46,0.68); margin: 0;">고객에게 약속하는 세 가지 결과.<br class="m-only"> 지키고, 불리고,<br class="m-only"> 세대를 넘어 잇습니다.</p>
       </div>
     </div>
-    <div class="m-eq" style="margin-top: 28px; padding: 34px 36px; border: 1px solid rgba(74,27,208,0.3); border-radius: 18px; background: linear-gradient(120deg, #fff, rgba(110,74,232,0.14)); display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap;">
-      <div style="flex: 1; text-align: center; font-weight: 800; font-size: clamp(36px, 4.8vw, 60px); letter-spacing: 0.04em; color: #4A1BD0; white-space: nowrap;">3 × 3 × 3 = ONE</div>
-      <p style="font-size: 15.5px; font-weight: 500; line-height: 1.6; color: rgba(22,14,46,0.72); margin: 0; max-width: 34em;">9개 요소, 27가지 조합이 충돌 없이 맞물려<br class="m-only"> 단 하나의 전략으로 수렴합니다.<br> That is TRINITY ONE.</p>
+    <div style="margin-top: 28px; padding: 40px 32px 34px; border: 1px solid rgba(74,27,208,0.3); border-radius: 18px; background: linear-gradient(120deg, #fff, rgba(110,74,232,0.14));">
+      <div class="dgm-row" style="display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 14px;">
+      <div style="padding: 26px 20px 24px; border: 1px solid #E3DEF3; border-radius: 16px; background: #fff; text-align: center;">
+        <div style="font-weight: 800; font-size: 44px; line-height: 1; color: #4A1BD0; margin-bottom: 10px;">3</div>
+        <div style="font-size: 11.5px; font-weight: 800; letter-spacing: 0.16em; color: #6E4AE8; margin-bottom: 14px;">THREE PILLARS</div>
+        <div style="display: flex; flex-wrap: wrap; gap: 7px; justify-content: center; margin-bottom: 14px;"><span style="display:inline-block; font-size:14px; font-weight:700; color:#4A1BD0; padding:6px 13px; border:1px solid rgba(74,27,208,0.28); border-radius:999px; background:#fff;">사람</span><span style="display:inline-block; font-size:14px; font-weight:700; color:#4A1BD0; padding:6px 13px; border:1px solid rgba(74,27,208,0.28); border-radius:999px; background:#fff;">돈</span><span style="display:inline-block; font-size:14px; font-weight:700; color:#4A1BD0; padding:6px 13px; border:1px solid rgba(74,27,208,0.28); border-radius:999px; background:#fff;">지식</span></div>
+        <div style="font-size: 13.5px; font-weight: 500; color: rgba(22,14,46,0.6);">전략의 토대</div>
+      </div>
+      <div class="dgm-x" style="display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: 800; color: rgba(74,27,208,0.45);">×</div>
+      <div style="padding: 26px 20px 24px; border: 1px solid #E3DEF3; border-radius: 16px; background: #fff; text-align: center;">
+        <div style="font-weight: 800; font-size: 44px; line-height: 1; color: #4A1BD0; margin-bottom: 10px;">3</div>
+        <div style="font-size: 11.5px; font-weight: 800; letter-spacing: 0.16em; color: #6E4AE8; margin-bottom: 14px;">THREE EXPERTS</div>
+        <div style="display: flex; flex-wrap: wrap; gap: 7px; justify-content: center; margin-bottom: 14px;"><span style="display:inline-block; font-size:14px; font-weight:700; color:#4A1BD0; padding:6px 13px; border:1px solid rgba(74,27,208,0.28); border-radius:999px; background:#fff;">법률</span><span style="display:inline-block; font-size:14px; font-weight:700; color:#4A1BD0; padding:6px 13px; border:1px solid rgba(74,27,208,0.28); border-radius:999px; background:#fff;">세무</span><span style="display:inline-block; font-size:14px; font-weight:700; color:#4A1BD0; padding:6px 13px; border:1px solid rgba(74,27,208,0.28); border-radius:999px; background:#fff;">금융</span></div>
+        <div style="font-size: 13.5px; font-weight: 500; color: rgba(22,14,46,0.6);">실행하는 세 영역</div>
+      </div>
+      <div class="dgm-x" style="display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: 800; color: rgba(74,27,208,0.45);">×</div>
+      <div style="padding: 26px 20px 24px; border: 1px solid #E3DEF3; border-radius: 16px; background: #fff; text-align: center;">
+        <div style="font-weight: 800; font-size: 44px; line-height: 1; color: #4A1BD0; margin-bottom: 10px;">3</div>
+        <div style="font-size: 11.5px; font-weight: 800; letter-spacing: 0.16em; color: #6E4AE8; margin-bottom: 14px;">THREE VALUES</div>
+        <div style="display: flex; flex-wrap: wrap; gap: 7px; justify-content: center; margin-bottom: 14px;"><span style="display:inline-block; font-size:14px; font-weight:700; color:#4A1BD0; padding:6px 13px; border:1px solid rgba(74,27,208,0.28); border-radius:999px; background:#fff;">보호</span><span style="display:inline-block; font-size:14px; font-weight:700; color:#4A1BD0; padding:6px 13px; border:1px solid rgba(74,27,208,0.28); border-radius:999px; background:#fff;">증식</span><span style="display:inline-block; font-size:14px; font-weight:700; color:#4A1BD0; padding:6px 13px; border:1px solid rgba(74,27,208,0.28); border-radius:999px; background:#fff;">영속</span></div>
+        <div style="font-size: 13.5px; font-weight: 500; color: rgba(22,14,46,0.6);">약속하는 결과</div>
+      </div>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; margin: 4px 0 0;">
+        <div style="width: 1.5px; height: 20px; background: rgba(74,27,208,0.25);"></div>
+        <div style="width: 40px; height: 40px; border-radius: 50%; border: 1.5px solid rgba(74,27,208,0.3); background: #fff; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 800; color: #4A1BD0;">=</div>
+        <div style="width: 1.5px; height: 20px; background: rgba(74,27,208,0.25);"></div>
+      </div>
+      <div style="padding: 28px 30px; border-radius: 16px; background: linear-gradient(135deg, #4A1BD0, #2E0F9E); color: #fff; text-align: center;">
+        <div style="font-size: 11.5px; font-weight: 800; letter-spacing: 0.22em; color: #A78BFF; margin-bottom: 10px;">ONE</div>
+        <div style="font-weight: 800; font-size: clamp(22px, 2.6vw, 30px); letter-spacing: -0.01em; line-height: 1.35;">TRINITY ONE<br>단 하나의 전략</div>
+      </div>
+      <p style="margin: 22px 0 0; text-align: center; font-size: 15.5px; font-weight: 500; line-height: 1.6; color: rgba(22,14,46,0.72);">9개 요소, 27가지 조합이 충돌 없이 맞물려<br class="m-only"> 단 하나의 전략으로 수렴합니다.<br>That is TRINITY ONE.</p>
     </div>
   </section>
 
