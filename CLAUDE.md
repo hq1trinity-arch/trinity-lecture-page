@@ -7,8 +7,11 @@
 
 - GitHub Pages가 `main` 브랜치를 배포합니다. 작업 브랜치에 커밋·푸시한 뒤 PR을 만들어 **squash 머지**해야 사이트에 반영됩니다.
 - 사이트 주소: `https://trinityone.co.kr/` (커스텀 도메인, 가비아 DNS → GitHub Pages. 구 주소 `https://hq1trinity-arch.github.io/trinity-lecture-page/`는 자동 리다이렉트)
-  - 회사 소개 페이지: `/trinity-one/`
-  - 강의 페이지: 루트 `index.html`, `busan.html`, `seoul.html`, `basecamp.html`
+  - URL 체계 (2026-08-25 재편):
+    - 리쿠르팅(회사 소개) 사이트: 루트 `/` (`index.html`, 에셋·JS는 `trinity-one/` 디렉터리 참조)
+    - 고객용 사이트: `/customer/`
+    - 강의 페이지: `/class-날짜` (예: `class-0728.html`, `class-0728-busan.html`, `class-0730-seoul.html`, `class-0820.html`, `class-0820-b.html`, `class-0908/`, `class-0909-kim/`, `class-0909-kang/`)
+    - 구 경로(`/trinity-one/`, `/insurance/`, `/busan.html`, `/busan-0908/` 등)에는 **리다이렉트 스텁**이 있다. 페이지를 옮기거나 이름을 바꿀 때는 반드시 구 경로에 스텁(meta refresh + JS redirect + OG 유지)을 남긴다.
 - 머지 후 "pages build and deployment" 워크플로가 성공해야 실제 반영됩니다. 배포 성공까지 확인하고 보고하세요.
 - 페이지를 수정하면 로컬 서버 + Chromium(Playwright, `/opt/pw-browsers/chromium`)으로 **데스크톱(1280px)과 모바일(390px) 양쪽을 렌더링해 스크린샷으로 검증**한 뒤 커밋하세요.
 
@@ -81,6 +84,6 @@
 
 ## 기타
 
-- 기존 강의 페이지(루트 `index.html` 등)를 새 작업으로 덮어쓰지 않는다. 새 페이지는 별도 디렉터리로 만든다.
-- `/trinity-one/`은 React 런타임(dc-runtime.js)을 로컬 파일로 포함하고 있다. CDN(unpkg) 의존을 새로 추가하지 않는다.
+- 기존 강의 페이지(`class-*` 경로)를 새 작업으로 덮어쓰지 않는다. 새 페이지는 별도 경로로 만든다. 루트 `index.html`은 리쿠르팅 사이트다.
+- 리쿠르팅 사이트(루트 `index.html`)는 React 런타임(`trinity-one/dc-runtime.js`)을 로컬 파일로 포함하고 있다. CDN(unpkg) 의존을 새로 추가하지 않는다.
 - 커밋 메시지는 한국어로, 변경 내용을 구체적으로 쓴다.
