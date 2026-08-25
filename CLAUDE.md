@@ -6,7 +6,7 @@
 ## 배포 구조
 
 - GitHub Pages가 `main` 브랜치를 배포합니다. 작업 브랜치에 커밋·푸시한 뒤 PR을 만들어 **squash 머지**해야 사이트에 반영됩니다.
-- 사이트 주소: `https://hq1trinity-arch.github.io/trinity-lecture-page/`
+- 사이트 주소: `https://trinityone.co.kr/` (커스텀 도메인, 가비아 DNS → GitHub Pages. 구 주소 `https://hq1trinity-arch.github.io/trinity-lecture-page/`는 자동 리다이렉트)
   - 회사 소개 페이지: `/trinity-one/`
   - 강의 페이지: 루트 `index.html`, `busan.html`, `seoul.html`, `basecamp.html`
 - 머지 후 "pages build and deployment" 워크플로가 성공해야 실제 반영됩니다. 배포 성공까지 확인하고 보고하세요.
