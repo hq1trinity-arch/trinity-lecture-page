@@ -7,6 +7,12 @@
       "skillPath": "skills/brandkit/SKILL.md",
       "computedHash": "b63012f3c3d21197e0185d3e9cc7ec40c589fb10e0b5a32a561739de31aa3f20"
     },
+    "caveman": {
+      "source": "juliusbrussee/caveman",
+      "sourceType": "github",
+      "skillPath": "skills/caveman/SKILL.md",
+      "computedHash": "2bc96f7c5d3c82f76714d9ec5027ef72518ede527b009a4cab6afd6db339ada9"
+    },
     "design-taste-frontend": {
       "source": "Leonxlnx/taste-skill",
       "sourceType": "github",
