@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>세무조사 대응 전략 — TRINITY ONE (서울)</title>
+  <meta name="description" content="조사관은 무엇을 보고, 우리는 무엇을 준비해야 하는가? 사전 준비부터 초기 대응, 쟁점별 소명까지 고객을 지키는 세무조사 대응의 포인트. 2026.10.13 서울 강남 패스트파이브">
+  <link rel="icon" type="image/png" href="../assets/trinity-one-logo.png">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://trinityone.co.kr/class-1013-kim/">
+  <meta property="og:title" content="세무조사 대응 전략 — TRINITY ONE (서울)">
+  <meta property="og:description" content="조사관은 무엇을 보고, 우리는 무엇을 준비해야 하는가? 사전 준비부터 초기 대응, 쟁점별 소명까지 고객을 지키는 세무조사 대응의 포인트. 2026.10.13 서울 강남 패스트파이브">
+  <meta property="og:image" content="https://trinityone.co.kr/assets/og-seoul-1013-v1.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="ko_KR">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="세무조사 대응 전략 — TRINITY ONE (서울)">
+  <meta name="twitter:description" content="조사관은 무엇을 보고, 우리는 무엇을 준비해야 하는가? 사전 준비부터 초기 대응, 쟁점별 소명까지 고객을 지키는 세무조사 대응의 포인트. 2026.10.13 서울 강남 패스트파이브">
+  <meta name="twitter:image" content="https://trinityone.co.kr/assets/og-seoul-1013-v1.jpg">
+
+  <style>
+    /* ── Palette (포스터 기준: 차콜 + 오렌지) ── */
+    :root {
+      --ink:        #1B1F1E;   /* 포스터 차콜 배경 */
+      --ink-2:      #2A2F2D;   /* 차콜 밝은 톤 */
+      --orange:     #FF8A3D;   /* 포인트 오렌지 */
+      --orange-d:   #F0621C;   /* 오렌지 진한 톤 (그라디언트 끝·라벨) */
+      --orange-on:  #2A1200;   /* 오렌지 위 텍스트 */
+      --orange-bg:  #FFF1E6;   /* 오렌지 틴트 배경 */
+      --label:      #C2541A;   /* 섹션 라벨 */
+      --page:       #FAF8F5;   /* 페이지 배경 */
+      --text:       #1F1B17;
+      --text-2:     #3B3630;
+      --muted:      #7A7168;
+      --line:       rgba(31,27,23,0.10);
+    }
+
+    /* ── Fonts ── */
+    @font-face { font-family:"Pretendard"; font-weight:100; font-display:swap; src:url("../assets/fonts/Pretendard-Thin.otf") format("opentype"); }
+    @font-face { font-family:"Pretendard"; font-weight:200; font-display:swap; src:url("../assets/fonts/Pretendard-ExtraLight.otf") format("opentype"); }
+    @font-face { font-family:"Pretendard"; font-weight:300; font-display:swap; src:url("../assets/fonts/Pretendard-Light.otf") format("opentype"); }
+    @font-face { font-family:"Pretendard"; font-weight:400; font-display:swap; src:url("../assets/fonts/Pretendard-Regular.otf") format("opentype"); }
+    @font-face { font-family:"Pretendard"; font-weight:500; font-display:swap; src:url("../assets/fonts/Pretendard-Medium.otf") format("opentype"); }
+    @font-face { font-family:"Pretendard"; font-weight:600; font-display:swap; src:url("../assets/fonts/Pretendard-SemiBold.otf") format("opentype"); }
+    @font-face { font-family:"Pretendard"; font-weight:700; font-display:swap; src:url("../assets/fonts/Pretendard-Bold.otf") format("opentype"); }
+    @font-face { font-family:"Pretendard"; font-weight:800; font-display:swap; src:url("../assets/fonts/Pretendard-ExtraBold.otf") format("opentype"); }
+    @font-face { font-family:"Pretendard"; font-weight:900; font-display:swap; src:url("../assets/fonts/Pretendard-Black.otf") format("opentype"); }
+
+    /* ── Reset ── */
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    a { text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    /* ── Page shell ── */
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      background: radial-gradient(130% 90% at 50% 0%, #2A2F2D, #101312);
+      font-family: "Pretendard", -apple-system, BlinkMacSystemFont, sans-serif;
+      word-break: keep-all;
+    }
+
+    /* ── Card ── */
+    .page-card {
+      position: relative;
+      width: 100%;
+      max-width: 440px;
+      background: var(--page);
+      overflow: hidden;
+      box-shadow: 0 0 80px rgba(0,0,0,0.45);
+    }
+
+    section { padding: 0; }
+
+    /* ── CTA button ── */
+    .btn-apply {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      height: 56px;
+      border-radius: 14px;
+      background: var(--orange);
+      color: var(--orange-on);
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      text-decoration: none;
+      box-shadow: 0 14px 30px rgba(255,138,61,0.42);
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+    }
+    .btn-apply:active { transform: scale(0.98); box-shadow: 0 8px 18px rgba(255,138,61,0.35); }
+
+    /* ── Map nav buttons ── */
+    .btn-map {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      height: 46px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: opacity 0.1s ease;
+    }
+    .btn-map:active { opacity: 0.85; }
+    .btn-map-naver { background: #03C75A; color: #fff; }
+    .btn-map-kakao  { background: #FEE500; color: #191600; }
+
+    /* ── Sticky CTA bar ── */
+    .sticky-cta {
+      position: sticky;
+      bottom: 0;
+      z-index: 50;
+      padding: 12px 20px calc(12px + env(safe-area-inset-bottom));
+      background: linear-gradient(to top, #FAF8F5 70%, rgba(250,248,245,0));
+    }
+    .sticky-cta .btn-apply { border-radius: 15px; box-shadow: 0 12px 28px rgba(255,138,61,0.42); }
+
+    /* ── Section label / heading ── */
+    .sec-label { font-size:12px; font-weight:800; letter-spacing:2px; color:var(--label); text-transform:uppercase; }
+    .sec-h2 { margin:12px 0 0; font-size:26px; font-weight:800; letter-spacing:-0.7px; color:var(--text); line-height:1.3; }
+    .sec-sub { margin:10px 0 0; font-size:14px; color:var(--muted); font-weight:500; }
+    /* 좁은 화면(≤389px)에서 한 줄 유지용 축소 */
+    @media (max-width:389px) {
+      .h2-curr { font-size:22px !important; }
+      .sub-part2 { font-size:13.5px !important; }
+      .sub-part1 { font-size:14px !important; }
+    }
+
+    /* ── Hero entrance animations ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    .hero-brand { animation: fadeIn  0.6s ease both; animation-delay: 0.1s; }
+    .hero-label { animation: fadeUp  0.6s ease both; animation-delay: 0.25s; }
+    .hero-sub   { animation: fadeUp  0.6s ease both; animation-delay: 0.35s; }
+    .hero-h1    { animation: fadeUp  0.7s ease both; animation-delay: 0.45s; }
+    .hero-desc  { animation: fadeUp  0.6s ease both; animation-delay: 0.6s; }
+    .hero-pills { animation: fadeUp  0.6s ease both; animation-delay: 0.72s; }
+    .hero-poster{ animation: fadeUp  0.7s ease both; animation-delay: 0.82s; }
+    .hero-cta   { animation: fadeUp  0.6s ease both; animation-delay: 0.95s; }
+
+    /* ── Scroll-reveal ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+    .reveal.from-left  { transform: translateX(-28px); }
+    .reveal.from-right { transform: translateX(28px); }
+    .reveal.visible { opacity: 1; transform: translate(0, 0); }
+  </style>
+</head>
+<body>
+  <div class="page-card">
+
+    <!-- ══════════ HERO ══════════ -->
+    <section style="position:relative;background:var(--ink);color:#FBF8F4;padding:22px 24px 40px;overflow:hidden;">
+
+      <div style="position:absolute;top:-90px;right:-70px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(255,138,61,0.34),transparent 70%);pointer-events:none;"></div>
+      <div style="position:absolute;top:140px;left:-100px;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,rgba(255,138,61,0.16),transparent 70%);pointer-events:none;"></div>
+
+      <!-- Brand bar -->
+      <div class="hero-brand" style="position:relative;display:flex;align-items:center;justify-content:space-between;">
+        <div style="display:flex;align-items:center;gap:9px;">
+          <div role="img" aria-label="TRINITY ONE" style="flex:none;width:30px;height:30px;background:url('../assets/trinity-mark-v2.png') center/contain no-repeat;filter:brightness(0) invert(1);opacity:0.92;"></div>
+          <span style="font-size:13px;font-weight:700;letter-spacing:2.5px;color:#EBE3D7;">TRINITY ONE</span>
+        </div>
+        <span style="font-size:11px;font-weight:600;letter-spacing:1px;color:#B8B0A6;border:1px solid rgba(255,255,255,0.18);padding:4px 9px;border-radius:999px;">4th TAX CLASS</span>
+      </div>
+
+      <!-- Title block -->
+      <div style="position:relative;margin-top:34px;">
+        <div class="hero-label" style="display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:800;letter-spacing:2px;color:var(--orange);">
+          <span style="width:18px;height:1px;background:var(--orange);"></span>BUSINESS CONFERENCE
+        </div>
+        <div class="hero-sub" style="margin-top:14px;font-size:14px;font-weight:600;color:#C9C2B8;letter-spacing:-0.3px;">결정적 순간, 대표님이 가장 먼저 찾는 전문가가 되려면?</div>
+        <h1 class="hero-h1" style="margin:10px 0 0;font-size:38px;line-height:1.16;font-weight:800;letter-spacing:-1.2px;color:#FFFFFF;">세무조사<br><span style="color:var(--orange);">대응 전략</span></h1>
+        <p class="hero-desc" style="margin:16px 0 0;font-size:15.5px;line-height:1.65;color:#BDB6AC;font-weight:450;">국세공무원 출신,<br>세무조사만 16년차 허도곤 세무사가<br>아무에게도 알려주지 않는 비기를 전달합니다</p>
+      </div>
+
+      <!-- Date / venue pills -->
+      <div class="hero-pills" style="position:relative;display:flex;flex-wrap:wrap;gap:8px;margin-top:22px;">
+        <span style="display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:#EFE8DC;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);padding:8px 13px;border-radius:999px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+          2026. 10. 13 (화) 오후 1시 30분~5시 30분
+        </span>
+        <span style="display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:#EFE8DC;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);padding:8px 13px;border-radius:999px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
+          서울 · 패스트파이브 강남
+        </span>
+      </div>
+
+      <!-- Key visual: poster -->
+      <div class="hero-poster" style="position:relative;margin-top:26px;border-radius:18px;overflow:hidden;box-shadow:0 24px 50px rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.1);">
+        <img src="../assets/poster-seoul-1013-v1.jpg"
+             alt="세무조사 대응 전략 강의 포스터 — 허도곤 세무사"
+             style="display:block;width:100%;height:auto;aspect-ratio:1080/1920;object-fit:cover;">
+      </div>
+
+      <!-- Hero CTA -->
+      <a href="https://forms.gle/8ScbLJyebQx2gaAr8" target="_blank" rel="noopener" class="btn-apply hero-cta" style="position:relative;margin-top:22px;">
+        수강 신청하기
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--orange-on)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+    </section>
+
+    <!-- ══════════ 후킹: 통지서는 예고 없이 옵니다 ══════════ -->
+    <section style="padding:56px 24px 14px;background:var(--page);">
+      <div class="reveal sec-label">WHY NOW</div>
+      <h2 class="reveal sec-h2" style="font-size:28px;">예고 없이 도착하는 통지서</h2>
+      <p class="reveal sec-sub">세무조사 나온다는데, 당신은 어떻게 하나요?</p>
+
+      <div class="reveal" style="margin-top:24px;border-radius:22px;overflow:hidden;background:var(--ink);color:#F4F0EA;box-shadow:0 16px 40px rgba(27,31,30,0.28);">
+        <div style="padding:22px 20px 6px;">
+          <div style="display:flex;gap:14px;align-items:flex-start;padding-bottom:18px;border-bottom:1px solid rgba(255,255,255,0.1);">
+            <span style="flex:none;font-size:14px;font-weight:800;letter-spacing:1px;color:var(--orange);margin-top:4px;">01</span>
+            <div>
+              <div style="font-size:18px;font-weight:800;letter-spacing:-0.4px;color:#FFFFFF;">조사관의 시선 해킹</div>
+              <p style="margin:8px 0 0;font-size:14.5px;line-height:1.6;color:#B9B2A8;">무엇을 먼저 열어보는지 안다면,<br>답지를 보고 시험을 치는 것과 같습니다</p>
+            </div>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start;padding:18px 0;border-bottom:1px solid rgba(255,255,255,0.1);">
+            <span style="flex:none;font-size:14px;font-weight:800;letter-spacing:1px;color:var(--orange);margin-top:4px;">02</span>
+            <div>
+              <div style="font-size:18px;font-weight:800;letter-spacing:-0.4px;color:#FFFFFF;">첫단추와 같이 중요한 초기 대응</div>
+              <p style="margin:8px 0 0;font-size:14.5px;line-height:1.6;color:#B9B2A8;">첫 자료제출과 대응에서<br>의외로 많은 것이 결정됩니다</p>
+            </div>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start;padding:18px 0 22px;">
+            <span style="flex:none;font-size:14px;font-weight:800;letter-spacing:1px;color:var(--orange);margin-top:4px;">03</span>
+            <div>
+              <div style="font-size:18px;font-weight:800;letter-spacing:-0.4px;color:#FFFFFF;">세무조사 빈출 케이스</div>
+              <p style="margin:8px 0 0;font-size:14.5px;line-height:1.6;color:#B9B2A8;">주요 쟁점별로 조사관을 설득하는 소명방식<br>해본 사람이 알려주는 노하우</p>
+            </div>
+          </div>
+        </div>
+        <div style="padding:16px 20px;background:linear-gradient(135deg,var(--orange),var(--orange-d));color:var(--orange-on);">
+          <p style="margin:0;font-size:15px;line-height:1.55;font-weight:700;">국세공무원 16년, 부산지방국세청 조사1국 출신<br>조사관의 눈으로 고객을 지키는 대응의 순서를<br>사전 준비부터 소명까지 하루에 정리합니다</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ 이런 전문직에게 추천 ══════════ -->
+    <section style="padding:46px 24px 14px;background:var(--page);">
+      <div class="reveal sec-label">WHO SHOULD ATTEND</div>
+      <h2 class="reveal sec-h2">이런 <span style="color:var(--label);border-bottom:3px solid rgba(240,98,28,0.3);">전문직</span>에게 추천합니다</h2>
+      <p class="reveal sec-sub">이런 갈증이 있었다면, 이번 기회를 놓치지 마세요</p>
+
+      <div style="display:flex;flex-direction:column;gap:10px;margin-top:24px;">
+        <div class="reveal" data-delay="0" style="display:flex;gap:13px;align-items:flex-start;background:#FFFFFF;border:1px solid var(--line);border-radius:16px;padding:17px;">
+          <span style="flex:none;width:26px;height:26px;border-radius:8px;background:var(--orange-bg);display:flex;align-items:center;justify-content:center;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--orange-d)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>
+          </span>
+          <p style="margin:0;font-size:15px;line-height:1.55;color:var(--text-2);font-weight:500;">거래처에 <b style="font-weight:700;color:var(--text);">세무조사 통지서</b>가 왔을 때,<br>무엇부터 해야 할지 막막했던 세무사 · 회계사</p>
+        </div>
+        <div class="reveal" data-delay="80" style="display:flex;gap:13px;align-items:flex-start;background:#FFFFFF;border:1px solid var(--line);border-radius:16px;padding:17px;">
+          <span style="flex:none;width:26px;height:26px;border-radius:8px;background:var(--orange-bg);display:flex;align-items:center;justify-content:center;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--orange-d)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>
+          </span>
+          <p style="margin:0;font-size:15.5px;line-height:1.55;color:var(--text-2);font-weight:500;"><b style="font-weight:700;color:var(--text);">조사관의 시각</b>으로 우리 고객의 신고 자료를<br>미리 점검해 두고 싶은 전문가</p>
+        </div>
+        <div class="reveal" data-delay="160" style="display:flex;gap:13px;align-items:flex-start;background:#FFFFFF;border:1px solid var(--line);border-radius:16px;padding:17px;">
+          <span style="flex:none;width:26px;height:26px;border-radius:8px;background:var(--orange-bg);display:flex;align-items:center;justify-content:center;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--orange-d)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>
+          </span>
+          <p style="margin:0;font-size:15.5px;line-height:1.55;color:var(--text-2);font-weight:500;">사전 준비 · 초기 대응 · 쟁점별 소명까지,<br><b style="font-weight:700;color:var(--text);">대응 절차를 매뉴얼</b>로 갖추고 싶은 전문가</p>
+        </div>
+        <div class="reveal" data-delay="240" style="display:flex;gap:13px;align-items:flex-start;background:#FFFFFF;border:1px solid var(--line);border-radius:16px;padding:17px;">
+          <span style="flex:none;width:26px;height:26px;border-radius:8px;background:var(--orange-bg);display:flex;align-items:center;justify-content:center;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--orange-d)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>
+          </span>
+          <p style="margin:0;font-size:15.5px;line-height:1.55;color:var(--text-2);font-weight:500;">세무조사 대응을 <b style="font-weight:700;color:var(--text);">고객 신뢰의 계기</b>로 삼아,<br>자문 영역을 넓히고 싶은 전문가</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ 커리큘럼 ══════════ -->
+    <section style="padding:46px 24px 18px;background:var(--page);">
+      <div class="reveal sec-label">CURRICULUM</div>
+      <h2 class="reveal sec-h2 h2-curr" style="margin-bottom:6px;font-size:24px;letter-spacing:-1px;">조사관의 관점에서 실무 대응전략까지</h2>
+      <p class="reveal sec-sub" style="margin-top:8px;">거래처 관리에 깊이를 더하는 4시간의 집중 강의</p>
+
+      <!-- Part 1 -->
+      <div class="reveal from-left" style="margin-top:26px;border-radius:22px;overflow:hidden;background:#FFFFFF;border:1px solid rgba(255,138,61,0.28);box-shadow:0 12px 30px rgba(255,138,61,0.10);">
+        <div style="padding:20px 20px 18px;background:linear-gradient(135deg,var(--orange),var(--orange-d));color:#fff;">
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <span style="font-size:12px;font-weight:800;letter-spacing:1.5px;background:rgba(255,255,255,0.24);padding:5px 11px;border-radius:999px;">PART 1</span>
+            <span style="font-size:14px;font-weight:700;letter-spacing:0.5px;opacity:0.95;">조사관의 관점</span>
+          </div>
+          <h3 style="margin:15px 0 0;font-size:24px;font-weight:800;letter-spacing:-0.6px;line-height:1.3;">국세청 조사관 관점에서의<br>세무조사 대응 전략</h3>
+          <div class="sub-part1" style="margin-top:9px;font-size:15px;font-weight:600;letter-spacing:-0.3px;opacity:0.95;">조사관이 무엇을 보는지 알면, 가야할 길이 보입니다</div>
+        </div>
+        <div style="padding:20px 20px 22px;display:flex;flex-direction:column;gap:13px;">
+          <div style="display:flex;gap:11px;align-items:flex-start;">
+            <span style="flex:none;margin-top:7px;width:6px;height:6px;border-radius:50%;background:var(--orange);"></span>
+            <p style="margin:0;font-size:15.5px;line-height:1.55;color:var(--text-2);">조사 대상은 어떻게 선정되고,<br>조사관은 <b style="color:var(--text);">무엇을 먼저 확인하는가</b></p>
+          </div>
+          <div style="display:flex;gap:11px;align-items:flex-start;">
+            <span style="flex:none;margin-top:7px;width:6px;height:6px;border-radius:50%;background:var(--orange);"></span>
+            <p style="margin:0;font-size:15.5px;line-height:1.55;color:var(--text-2);">조사관이 쟁점을 짚어가는 과정과<br>우리가 미리 살펴야 할 <b style="color:var(--text);">신호</b></p>
+          </div>
+          <div style="display:flex;gap:11px;align-items:flex-start;">
+            <span style="flex:none;margin-top:7px;width:6px;height:6px;border-radius:50%;background:var(--orange);"></span>
+            <p style="margin:0;font-size:15.5px;line-height:1.55;color:var(--text-2);"><b style="color:var(--text);">사전 준비</b>, 통지서를 받기 전<br>점검해야 할 <b style="color:var(--text);">체크리스트</b></p>
+          </div>
+          <div style="display:flex;gap:11px;align-items:flex-start;">
+            <span style="flex:none;margin-top:7px;width:6px;height:6px;border-radius:50%;background:var(--orange);"></span>
+            <p style="margin:0;font-size:15.5px;line-height:1.55;color:var(--text-2);">조사관의 시각으로 다시 보는<br>우리 고객의 <b style="color:var(--text);">신고 자료 점검 포인트</b></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Part 2 -->
+      <div class="reveal from-right" data-delay="100" style="margin-top:18px;border-radius:22px;overflow:hidden;background:#FFFFFF;border:1px solid rgba(27,31,30,0.22);box-shadow:0 12px 30px rgba(27,31,30,0.10);">
+        <div style="padding:20px 20px 18px;background:linear-gradient(135deg,var(--ink-2),var(--ink));color:#fff;">
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <span style="font-size:12px;font-weight:800;letter-spacing:1.5px;background:rgba(255,138,61,0.22);color:var(--orange);padding:5px 11px;border-radius:999px;">PART 2</span>
+            <span style="font-size:14px;font-weight:700;letter-spacing:0.5px;opacity:0.9;">실무 대응전략</span>
+          </div>
+          <h3 style="margin:15px 0 0;font-size:24px;font-weight:800;letter-spacing:-0.6px;line-height:1.3;">세무조사!<br>실무에서 바로 써먹는 대응전략</h3>
+          <div class="sub-part2" style="margin-top:9px;font-size:14px;font-weight:600;letter-spacing:-0.3px;color:var(--orange);">내일 당장 통지서가 오더라도, 당황하지 않는 행동 지침</div>
+        </div>
+        <div style="padding:20px 20px 22px;display:flex;flex-direction:column;gap:13px;">
+          <div style="display:flex;gap:11px;align-items:flex-start;">
+            <span style="flex:none;margin-top:7px;width:6px;height:6px;border-radius:50%;background:var(--ink);"></span>
+            <p style="margin:0;font-size:15px;line-height:1.55;letter-spacing:-0.2px;color:var(--text-2);"><b style="color:var(--text);">초기 대응</b>, 통지서를 받은 직후<br>가장 먼저 확인하고 준비해야 할 <b style="color:var(--text);">TO DO LIST</b></p>
+          </div>
+          <div style="display:flex;gap:11px;align-items:flex-start;">
+            <span style="flex:none;margin-top:7px;width:6px;height:6px;border-radius:50%;background:var(--ink);"></span>
+            <p style="margin:0;font-size:15.5px;line-height:1.55;color:var(--text-2);">자료 제출과 답변의 원칙,<br>쟁점을 키우지 않는 <b style="color:var(--text);">현장 대응 요령</b></p>
+          </div>
+          <div style="display:flex;gap:11px;align-items:flex-start;">
+            <span style="flex:none;margin-top:7px;width:6px;height:6px;border-radius:50%;background:var(--ink);"></span>
+            <p style="margin:0;font-size:15.5px;line-height:1.55;color:var(--text-2);"><b style="color:var(--text);">쟁점별 소명</b>, 조사관이 좋아하는<br>소명 자료의 구조와 작성 포인트</p>
+          </div>
+          <div style="display:flex;gap:11px;align-items:flex-start;">
+            <span style="flex:none;margin-top:7px;width:6px;height:6px;border-radius:50%;background:var(--ink);"></span>
+            <p style="margin:0;font-size:15.5px;line-height:1.55;color:var(--text-2);">고객을 지키는 <b style="color:var(--text);">대응 매뉴얼</b>, 가이드라인 안내</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ 강사 프로필 ══════════ -->
+    <section style="padding:46px 24px 18px;background:var(--page);">
+      <div class="reveal sec-label">SPEAKER</div>
+      <h2 class="reveal sec-h2">강사 프로필</h2>
+
+      <div class="reveal" style="margin-top:24px;background:#FFFFFF;border:1px solid var(--line);border-radius:20px;padding:18px;">
+        <div style="display:flex;gap:16px;align-items:center;">
+          <div style="flex:none;width:84px;height:104px;border-radius:14px;overflow:hidden;border:2px solid var(--orange);background-image:url('../assets/speaker-heo.jpg');background-size:cover;background-position:center 20%;"></div>
+          <div style="flex:1;min-width:0;">
+            <div style="display:inline-flex;font-size:11px;font-weight:800;letter-spacing:1px;color:var(--orange-d);background:var(--orange-bg);padding:4px 9px;border-radius:6px;">PART 1 · 2 세무조사 대응</div>
+            <div style="margin-top:10px;font-size:19px;font-weight:800;color:var(--text);letter-spacing:-0.4px;">허도곤 <span style="font-size:14px;font-weight:600;color:#6E6660;">세무사</span></div>
+          </div>
+        </div>
+        <p style="margin:14px 0 0;padding-top:14px;border-top:1px solid var(--line);font-size:13.5px;line-height:1.6;color:#6E6660;font-weight:450;">국세공무원 16년,<br>부산지방국세청 조사1국 출신!<br>조사관의 눈으로 새로운 세계를 보여드립니다</p>
+      </div>
+    </section>
+
+    <!-- ══════════ 일시·장소·오시는 길 ══════════ -->
+    <section style="padding:46px 24px 18px;background:var(--page);">
+      <div class="reveal sec-label">DATE &amp; VENUE</div>
+      <h2 class="reveal sec-h2">일시 · 장소 · 오시는 길</h2>
+
+      <div class="reveal" style="margin-top:22px;border-radius:20px;overflow:hidden;background:#FFFFFF;border:1px solid var(--line);">
+        <div style="display:flex;gap:13px;align-items:center;padding:18px;border-bottom:1px solid var(--line);">
+          <span style="flex:none;width:40px;height:40px;border-radius:11px;background:var(--ink);display:flex;align-items:center;justify-content:center;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+          </span>
+          <div>
+            <div style="font-size:12px;font-weight:700;color:#9A928A;letter-spacing:0.5px;">일시</div>
+            <div style="margin-top:3px;font-size:16px;font-weight:700;color:var(--text);line-height:1.45;">2026. 10. 13 (화)<br>오후 1시 30분 ~ 5시 30분</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:13px;align-items:flex-start;padding:18px;">
+          <span style="flex:none;width:40px;height:40px;border-radius:11px;background:var(--ink);display:flex;align-items:center;justify-content:center;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
+          </span>
+          <div style="flex:1;">
+            <div style="font-size:12px;font-weight:700;color:#9A928A;letter-spacing:0.5px;">장소</div>
+            <div style="margin-top:3px;font-size:16px;font-weight:700;color:var(--text);line-height:1.45;">99빌딩 패스트파이브 L1층 세미나룸</div>
+            <div style="margin-top:3px;font-size:13.5px;color:#6E6660;line-height:1.5;">서울 강남구 강남대로 484</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Google Maps embed -->
+      <div class="reveal" data-delay="80" style="margin-top:14px;border-radius:18px;overflow:hidden;border:1px solid var(--line);">
+        <iframe
+          title="패스트파이브 강남 위치"
+          src="https://maps.google.com/maps?q=%EC%84%9C%EC%9A%B8%20%EA%B0%95%EB%82%A8%EA%B5%AC%20%EA%B0%95%EB%82%A8%EB%8C%80%EB%A1%9C%20484&z=16&hl=ko&output=embed"
+          style="display:block;width:100%;height:220px;border:0;"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </div>
+
+      <!-- Map navigation buttons -->
+      <div class="reveal" data-delay="160" style="display:flex;gap:9px;margin-top:10px;">
+        <a href="https://map.naver.com/p/search/%EC%84%9C%EC%9A%B8%20%EA%B0%95%EB%82%A8%EA%B5%AC%20%EA%B0%95%EB%82%A8%EB%8C%80%EB%A1%9C%20484"
+           target="_blank" rel="noopener" class="btn-map btn-map-naver">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
+          네이버 지도
+        </a>
+        <a href="https://map.kakao.com/?q=%EC%84%9C%EC%9A%B8%20%EA%B0%95%EB%82%A8%EA%B5%AC%20%EA%B0%95%EB%82%A8%EB%8C%80%EB%A1%9C%20484"
+           target="_blank" rel="noopener" class="btn-map btn-map-kakao">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#191600" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
+          카카오맵
+        </a>
+      </div>
+
+      <!-- Parking notice -->
+      <div class="reveal" data-delay="240" style="margin-top:14px;display:flex;gap:11px;align-items:flex-start;background:#FCEEE9;border:1px solid rgba(196,90,60,0.2);border-radius:14px;padding:15px 16px;">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#C0492C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex:none;margin-top:1px;" aria-hidden="true"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+        <p style="margin:0;font-size:13.5px;line-height:1.55;color:#8A3A22;font-weight:500;"><b style="font-weight:700;">주차 안내</b><br>별도 주차 공간이 없습니다.<br>인근 유료 주차장 · 대중교통 이용을 권장드립니다.</p>
+      </div>
+    </section>
+
+    <!-- ══════════ 주최 / 문의 ══════════ -->
+    <section style="padding:40px 24px 130px;background:var(--page);">
+      <div class="reveal" style="border-radius:20px;background:var(--ink);color:#EFE8DC;padding:26px 22px;text-align:center;">
+        <div aria-hidden="true" style="width:40px;height:40px;background:url('../assets/trinity-mark-v2.png') center/contain no-repeat;filter:brightness(0) invert(1);opacity:0.9;margin:0 auto;"></div>
+        <div style="margin-top:12px;font-size:14px;font-weight:700;letter-spacing:2px;">TRINITY ONE</div>
+        <div style="margin-top:5px;font-size:12px;color:#9A928A;letter-spacing:0.5px;">The Only Strategy for the 0.1%</div>
+        <div style="margin:20px auto;width:40px;height:1px;background:rgba(255,255,255,0.15);"></div>
+        <div style="font-size:13px;color:#A9A198;">주최</div>
+        <div style="margin-top:4px;font-size:15px;font-weight:600;color:#EFE8DC;">TRINITY ONE</div>
+        <a href="tel:010-9805-2512"
+           style="margin-top:18px;display:inline-flex;align-items:center;gap:8px;font-size:15px;font-weight:700;color:#FBF8F4;text-decoration:none;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.16);padding:11px 18px;border-radius:999px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.4-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>
+          문의 · 010-9805-2512 김홍권 회계사
+        </a>
+      </div>
+    </section>
+
+    <!-- ══════════ STICKY CTA ══════════ -->
+    <div class="sticky-cta">
+      <a href="https://forms.gle/8ScbLJyebQx2gaAr8" target="_blank" rel="noopener" class="btn-apply">
+        수강 신청하기
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--orange-on)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+    </div>
+
+  </div>
+
+  <script>
+    (function () {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          var el = e.target;
+          var delay = el.dataset.delay ? parseInt(el.dataset.delay, 10) : 0;
+          setTimeout(function () { el.classList.add('visible'); }, delay);
+          io.unobserve(el);
+        });
+      }, { threshold: 0.12 });
+      document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
+    })();
+  </script>
+
+</body>
+</html>
