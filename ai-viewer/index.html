@@ -69,6 +69,19 @@
       display: flex; align-items: center; gap: 6px;
     }
     .topbar .privacy svg { width: 14px; height: 14px; fill: var(--violet); }
+    .topbar .modes {
+      display: none; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-left: 10px;
+    }
+    body.has-file .topbar .modes { display: inline-flex; }
+    .topbar .modes button {
+      height: 36px; padding: 0 14px; border: 0; border-right: 1px solid var(--border);
+      background: var(--white); color: var(--ink-60); font-size: 13px; font-weight: 600;
+      display: inline-flex; align-items: center; gap: 6px; white-space: nowrap;
+    }
+    .topbar .modes button:last-child { border-right: 0; }
+    .topbar .modes button svg { width: 15px; height: 15px; fill: currentColor; }
+    .topbar .modes button:hover { background: var(--tint); color: var(--violet); }
+    .topbar .modes button[aria-pressed="true"] { background: var(--violet); color: var(--white); }
 
     .btn {
       display: inline-flex; align-items: center; justify-content: center; gap: 6px;
@@ -91,7 +104,7 @@
     .app { height: calc(100% - var(--topbar-h)); display: flex; flex-direction: column; }
 
     .empty {
-      flex: 1; display: flex; align-items: center; justify-content: center;
+      flex: 1; display: flex; align-items: safe center; justify-content: center;
       padding: 24px 16px;
       overflow: auto;
     }
@@ -115,15 +128,43 @@
     .drop .hint { margin: 22px 0 0; font-size: 12.5px; color: var(--ink-40); line-height: 1.6; }
     .drop .hint b { color: var(--ink-60); font-weight: 600; }
 
-    .features {
-      width: min(720px, 100%); margin: 16px auto 0;
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+    .home { width: min(860px, 100%); }
+    .home .head { text-align: center; margin-bottom: 22px; }
+    .home .head .badge {
+      display: inline-block; font-size: 11.5px; font-weight: 700; letter-spacing: .12em;
+      color: var(--lavender); text-transform: uppercase; margin-bottom: 12px;
     }
-    .feature {
-      background: var(--white); border: 1px solid var(--border); border-radius: 14px;
-      padding: 16px 18px; font-size: 13px; line-height: 1.55; color: var(--ink-60);
+    .home .head h1 { margin: 0 0 8px; font-size: 26px; font-weight: 700; letter-spacing: -.02em; line-height: 1.3; }
+    .home .head p { margin: 0; font-size: 14.5px; color: var(--ink-60); line-height: 1.6; }
+    .mode-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .mode-card {
+      background: var(--white); border: 1px solid var(--border); border-radius: 18px;
+      padding: 24px 22px 22px; text-align: left; color: var(--ink);
+      display: flex; flex-direction: column; gap: 10px; min-height: 236px;
+      transition: border-color .15s, box-shadow .15s, transform .15s;
     }
-    .feature strong { display: block; color: var(--ink); font-size: 13.5px; margin-bottom: 4px; }
+    .mode-card:hover { border-color: var(--lavender-light); box-shadow: 0 12px 32px rgba(74,27,208,.12); transform: translateY(-2px); }
+    .mode-card .ico {
+      width: 44px; height: 44px; border-radius: 12px; background: var(--tint);
+      display: flex; align-items: center; justify-content: center; margin-bottom: 4px;
+    }
+    .mode-card .ico svg { width: 22px; height: 22px; fill: var(--violet); }
+    .mode-card .step { font-size: 11px; font-weight: 700; letter-spacing: .12em; color: var(--lavender); }
+    .mode-card h2 { margin: 0; font-size: 18px; font-weight: 700; letter-spacing: -.01em; }
+    .mode-card p { margin: 0; font-size: 13px; line-height: 1.6; color: var(--ink-60); flex: 1; }
+    .mode-card .go {
+      margin-top: 4px; display: inline-flex; align-items: center; gap: 6px;
+      font-size: 13px; font-weight: 700; color: var(--violet);
+    }
+    .mode-card .go svg { width: 14px; height: 14px; fill: currentColor; }
+    .mode-card .fmt { font-size: 11.5px; color: var(--ink-40); }
+    .home .drop {
+      margin-top: 14px; padding: 16px 20px; border-radius: 14px; width: 100%;
+      display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap;
+      font-size: 13px; color: var(--ink-60);
+    }
+    .home .drop b { color: var(--ink); font-weight: 600; }
+    .home .drop svg { width: 16px; height: 16px; fill: var(--lavender); }
 
     .work { flex: 1; display: none; min-height: 0; }
     .app.has-file .empty { display: none; }
@@ -177,7 +218,13 @@
     .thumb.active .frame { border-color: var(--violet); box-shadow: 0 0 0 2px rgba(74,27,208,.18); }
     .thumb.active .lbl { color: var(--violet); font-weight: 700; }
 
-    .main { flex: 1; display: flex; flex-direction: column; min-width: 0; min-height: 0; position: relative; }
+    .main { flex: 1; display: flex; flex-direction: row; min-width: 0; min-height: 0; position: relative; }
+    .stage-col { flex: 1; display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+    .dock {
+      width: 340px; flex: none; display: none; overflow: auto;
+      background: var(--white); border-left: 1px solid var(--border);
+    }
+    .app.mode-bg .dock, .app.mode-up .dock { display: block; }
 
     .toolbar {
       display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
@@ -245,19 +292,14 @@
     .info .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--ink-40); }
     .info .tag { color: var(--ok); font-weight: 600; }
 
-    /* ── Panels (저장 / 배경 제거) ───────────────────────── */
-    .panel {
-      position: absolute; top: 54px; right: 14px; z-index: 6;
-      width: 320px; max-height: calc(100% - 70px); overflow: auto;
-      background: var(--white); border: 1px solid var(--border); border-radius: 14px;
-      box-shadow: 0 16px 48px rgba(22,14,46,.18);
-      padding: 16px; display: none;
-    }
+    /* ── Panels (저장 / 배경 제거) — 오른쪽 도크에 표시 ── */
+    .panel { padding: 18px 18px 22px; display: none; }
     .panel.show { display: block; }
     .panel h4 {
-      margin: 0 0 12px; font-size: 14px; font-weight: 700; letter-spacing: -.01em;
+      margin: 0 0 14px; font-size: 15px; font-weight: 700; letter-spacing: -.01em;
       display: flex; align-items: center; justify-content: space-between;
     }
+    .panel .lead { font-size: 12.5px; color: var(--ink-60); line-height: 1.55; margin: -6px 0 14px; }
     .panel h4 .x { border: 0; background: transparent; color: var(--ink-40); font-size: 18px; line-height: 1; padding: 2px 6px; }
     .panel .row { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
     .panel label.lbl { font-size: 11px; font-weight: 700; letter-spacing: .1em; color: var(--lavender); text-transform: uppercase; }
@@ -337,10 +379,14 @@
       .topbar .btn span.txt { display: none; }
       .topbar .btn { padding: 0 12px; }
 
-      .drop { padding: 34px 20px; border-radius: 16px; }
-      .drop h1 { font-size: 22px; }
-      .drop p { font-size: 14px; }
-      .features { grid-template-columns: 1fr; }
+      .topbar .modes { margin-left: 0; }
+      .topbar .modes button { padding: 0 10px; font-size: 12.5px; height: 34px; }
+      .topbar .modes button span { display: none; }
+      .home .head h1 { font-size: 22px; }
+      .mode-cards { grid-template-columns: 1fr; gap: 10px; }
+      .mode-card { min-height: 0; padding: 18px 18px 16px; border-radius: 14px; }
+      .mode-card .ico { width: 38px; height: 38px; }
+      .home .drop { padding: 14px 16px; font-size: 12.5px; }
 
       .work { flex-direction: column; }
       .side {
@@ -371,11 +417,9 @@
       .stage-inner { padding: 14px; }
       .info { font-size: 11.5px; gap: 10px; padding: 8px 12px; }
 
-      .panel {
-        top: auto; right: 0; left: 0; bottom: 0; width: 100%;
-        max-height: 72%; border-radius: 16px 16px 0 0;
-        box-shadow: 0 -12px 40px rgba(22,14,46,.22);
-      }
+      .main { flex-direction: column; }
+      .dock { width: 100%; max-height: 48%; border-left: 0; border-top: 1px solid var(--border); }
+      .panel { padding: 14px 14px 18px; }
     }
   </style>
 </head>
@@ -386,6 +430,11 @@
   <div class="brand">
     <strong>AI 파일 뷰어</strong>
     <span>Illustrator(.ai)·이미지 확인 · 4K 저장 · 배경 제거</span>
+  </div>
+  <div class="modes" id="modes" role="group" aria-label="작업 선택">
+    <button type="button" data-mode="view" aria-pressed="true"><svg viewBox="0 0 24 24"><path d="M12 5C7 5 3 8.6 1.5 12 3 15.4 7 19 12 19s9-3.6 10.5-7C21 8.6 17 5 12 5Zm0 11.5a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9Zm0-7a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5Z"/></svg><span>파일 보기</span></button>
+    <button type="button" data-mode="bg" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Zm0 2a7 7 0 0 1 5.6 11.2L7.8 6.4A6.97 6.97 0 0 1 12 5Zm-5.6 2.8 9.8 9.8A7 7 0 0 1 6.4 7.8Z"/></svg><span>누끼</span></button>
+    <button type="button" data-mode="up" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M4 4h6v2H7.4l4.3 4.3-1.4 1.4L6 7.4V10H4V4Zm10 0h6v6h-2V7.4l-4.3 4.3-1.4-1.4L16.6 6H14V4ZM4 14h2v2.6l4.3-4.3 1.4 1.4L7.4 18H10v2H4v-6Zm14.6 4-4.3-4.3 1.4-1.4 4.3 4.3V14h2v6h-6v-2h2.6Z"/></svg><span>4K 저장</span></button>
   </div>
   <div class="spacer"></div>
   <div class="privacy" title="파일은 이 브라우저 안에서만 처리되며 서버로 전송되지 않습니다.">
@@ -402,26 +451,42 @@
 <main class="app" id="app">
 
   <section class="empty" id="empty">
-    <div style="width:min(720px,100%)">
-      <div class="drop" id="drop">
-        <span class="badge">AI FILE VIEWER</span>
-        <h1>.ai 파일이나 사진을<br class="m-only"> 여기에 끌어다 놓으세요</h1>
-        <p>일러스트레이터가 없어도<br class="m-only"> 디자인 시안을 바로 확인하고,<br>4K 고해상도 저장과 배경 제거(누끼)까지<br class="m-only"> 한 자리에서 처리합니다.</p>
-        <div class="actions">
-          <button class="btn btn-primary" type="button" id="btnOpen2">
-            <svg viewBox="0 0 24 24"><path d="M10 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-8l-2-2Z"/></svg>
-            파일 선택
-          </button>
-        </div>
-        <p class="hint">
-          지원 형식: <b>.ai</b> (Illustrator 9 이상, PDF 호환 저장본), <b>.pdf</b>,<br class="m-only"> <b>JPG · PNG · WebP · SVG</b><br>
-          여러 파일을 한 번에 열 수 있습니다.
-        </p>
+    <div class="home">
+      <div class="head">
+        <span class="badge">TRINITY ONE · DESIGN TOOLS</span>
+        <h1>무엇을 할까요?</h1>
+        <p>작업을 고르면 파일 선택 창이 열립니다.<br class="m-only"> 처리는 모두 내 브라우저 안에서만 이루어집니다.</p>
       </div>
-      <div class="features">
-        <div class="feature"><strong>설치 없음</strong>브라우저만 있으면<br>PC·모바일 어디서나 열립니다.</div>
-        <div class="feature"><strong>4K 고해상도 저장</strong>AI 파일은 벡터 그대로,<br>사진은 Lanczos-3 보간으로 키웁니다.</div>
-        <div class="feature"><strong>배경 제거 (누끼)</strong>단색 배경은 즉시,<br>인물·사물은 AI 모델로 따냅니다.</div>
+      <div class="mode-cards">
+        <button class="mode-card" type="button" data-pick="view">
+          <span class="ico"><svg viewBox="0 0 24 24"><path d="M12 5C7 5 3 8.6 1.5 12 3 15.4 7 19 12 19s9-3.6 10.5-7C21 8.6 17 5 12 5Zm0 11.5a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9Zm0-7a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5Z"/></svg></span>
+          <span class="step">01</span>
+          <h2>AI 파일 보기</h2>
+          <p>일러스트레이터가 없어도<br>디자이너가 보낸 .ai 파일을 바로 확인하고,<br>PDF나 이미지로 저장합니다.</p>
+          <span class="fmt">.ai · .pdf · SVG · 이미지</span>
+          <span class="go">파일 선택 <svg viewBox="0 0 24 24"><path d="M8.6 16.6 10 18l6-6-6-6-1.4 1.4 4.6 4.6-4.6 4.6Z"/></svg></span>
+        </button>
+        <button class="mode-card" type="button" data-pick="bg">
+          <span class="ico"><svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Zm0 2a7 7 0 0 1 5.6 11.2L7.8 6.4A6.97 6.97 0 0 1 12 5Zm-5.6 2.8 9.8 9.8A7 7 0 0 1 6.4 7.8Z"/></svg></span>
+          <span class="step">02</span>
+          <h2>누끼 따기</h2>
+          <p>로고·포스터의 단색 배경은 즉시,<br>인물·제품 사진은 AI 모델로<br>배경을 지워 투명 PNG로 저장합니다.</p>
+          <span class="fmt">JPG · PNG · .ai · SVG</span>
+          <span class="go">파일 선택 <svg viewBox="0 0 24 24"><path d="M8.6 16.6 10 18l6-6-6-6-1.4 1.4 4.6 4.6-4.6 4.6Z"/></svg></span>
+        </button>
+        <button class="mode-card" type="button" data-pick="up">
+          <span class="ico"><svg viewBox="0 0 24 24"><path d="M4 4h6v2H7.4l4.3 4.3-1.4 1.4L6 7.4V10H4V4Zm10 0h6v6h-2V7.4l-4.3 4.3-1.4-1.4L16.6 6H14V4ZM4 14h2v2.6l4.3-4.3 1.4 1.4L7.4 18H10v2H4v-6Zm14.6 4-4.3-4.3 1.4-1.4 4.3 4.3V14h2v6h-6v-2h2.6Z"/></svg></span>
+          <span class="step">03</span>
+          <h2>4K 고해상도 저장</h2>
+          <p>사진은 원본 그대로 Lanczos-3로 키우고,<br>AI 파일은 벡터에서 바로 렌더링해<br>4K 이상 크기로 뽑습니다.</p>
+          <span class="fmt">JPG · PNG · .ai · .pdf · SVG</span>
+          <span class="go">파일 선택 <svg viewBox="0 0 24 24"><path d="M8.6 16.6 10 18l6-6-6-6-1.4 1.4 4.6 4.6-4.6 4.6Z"/></svg></span>
+        </button>
+      </div>
+      <div class="drop" id="drop">
+        <svg viewBox="0 0 24 24"><path d="M19 13v6H5v-6H3v6a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6h-2Zm-6-.8 2.6-2.6L17 11l-5 5-5-5 1.4-1.4L11 12.2V3h2v9.2Z"/></svg>
+        <span>파일을 이 창에 <b>끌어다 놓거나 붙여넣기(Ctrl+V)</b> 하면 바로 열립니다.</span>
+        <span style="color:var(--ink-40)">지원: .ai(PDF 호환 저장본) · .pdf · JPG · PNG · WebP · SVG</span>
       </div>
     </div>
   </section>
@@ -435,6 +500,7 @@
     </aside>
 
     <div class="main">
+      <div class="stage-col">
       <div class="toolbar">
         <div class="group">
           <button class="btn btn-ghost btn-sm btn-icon" id="btnPrev" type="button" title="이전 아트보드">
@@ -458,13 +524,13 @@
         <div class="sep"></div>
         <span class="fname" id="fname"></span>
         <div class="spacer"></div>
-        <button class="btn btn-ghost btn-sm" id="btnBg" type="button" title="배경 제거 (누끼)">
+        <button class="btn btn-ghost btn-sm" id="btnBg" type="button" title="누끼 따기 (배경 제거)">
           <svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Zm0 2a7 7 0 0 1 5.6 11.2L7.8 6.4A6.97 6.97 0 0 1 12 5Zm-5.6 2.8 9.8 9.8A7 7 0 0 1 6.4 7.8Z"/></svg>
-          <span class="txt">배경 제거</span>
+          <span class="txt">누끼</span>
         </button>
-        <button class="btn btn-ghost btn-sm" id="btnSave" type="button" title="이미지로 저장 (크기·형식 선택)">
+        <button class="btn btn-ghost btn-sm" id="btnSave" type="button" title="4K 고해상도 저장">
           <svg viewBox="0 0 24 24"><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2Zm0 16H5v-2.6l3.5-3.5 2.5 2.5 5-5 3 3V19Zm0-8.4-3-3-5 5-2.5-2.5L5 13.6V5h14v5.6ZM8.5 10A1.5 1.5 0 1 0 8.5 7a1.5 1.5 0 0 0 0 3Z"/></svg>
-          <span class="txt">이미지 저장</span>
+          <span class="txt">4K 저장</span>
         </button>
         <button class="btn btn-ghost btn-sm" id="btnPdf" type="button" title="이 파일을 PDF로 저장 (다른 사람에게 보낼 때)">
           <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6Zm-1 7V3.5L18.5 9H13Zm-5 4h1.5a1.75 1.75 0 0 1 0 3.5H9V18H8v-5Zm1 2.5h.5a.75.75 0 0 0 0-1.5H9v1.5ZM12 13h1.6c1.4 0 2.2.9 2.2 2.5S15 18 13.6 18H12v-5Zm1 4h.5c.8 0 1.2-.5 1.2-1.5S14.3 14 13.5 14H13v3Zm3.7-4H19v1h-1.3v1H19v1h-1.3v2h-1V13Z"/></svg>
@@ -472,9 +538,23 @@
         </button>
       </div>
 
+      <div class="stage" id="stage">
+        <div class="stage-inner">
+          <div class="sheet" id="sheet">
+            <canvas id="canvas"></canvas>
+            <div class="loading" id="loadingLbl">렌더링 중…</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="info" id="info"></div>
+      </div><!-- /stage-col -->
+
+      <aside class="dock" id="dock">
       <!-- 이미지 저장 패널 -->
       <div class="panel" id="savePanel">
-        <h4>이미지로 저장 <button class="x" type="button" data-close="savePanel" aria-label="닫기">×</button></h4>
+        <h4><span id="saveTitle">4K 고해상도 저장</span> <button class="x" type="button" data-close="savePanel" aria-label="닫기">×</button></h4>
+        <p class="lead" id="saveLead">크기와 형식을 고르고 저장을 누르세요. 벡터 파일은 어떤 크기든 화질 손실이 없습니다.</p>
         <div class="row">
           <label class="lbl" for="selSize">크기</label>
           <select id="selSize">
@@ -501,14 +581,15 @@
             <button type="button" data-v="0.7" aria-pressed="false">강하게</button>
           </div>
         </div>
-        <button class="btn btn-primary btn-full" id="btnDoSave" type="button">저장</button>
+        <button class="btn btn-primary btn-full" id="btnDoSave" type="button">이미지 저장</button>
         <div class="progress" id="saveProg"><i></i></div>
         <div class="pstat" id="saveStat"></div>
       </div>
 
       <!-- 배경 제거 패널 -->
       <div class="panel" id="bgPanel">
-        <h4>배경 제거 (누끼) <button class="x" type="button" data-close="bgPanel" aria-label="닫기">×</button></h4>
+        <h4>누끼 따기 (배경 제거) <button class="x" type="button" data-close="bgPanel" aria-label="닫기">×</button></h4>
+        <p class="lead">배경 종류에 맞는 방법을 골라 적용한 뒤, 아래 "투명 PNG로 저장"을 누르세요.</p>
 
         <div id="secVector">
           <p class="sec-title">파일의 투명 배경 사용 <span class="badge">AI·PDF·SVG</span></p>
@@ -541,19 +622,13 @@
         <div class="pstat" id="bgStat"></div>
 
         <div class="sec"></div>
-        <button class="btn btn-ghost btn-full" id="btnRevert" type="button">원본으로 되돌리기</button>
+        <button class="btn btn-primary btn-full" id="btnBgSave" type="button">투명 PNG로 저장 (원본 크기)</button>
+        <div class="progress" id="bgSaveProg"><i></i></div>
+        <div class="pstat" id="bgSaveStat"></div>
+        <button class="btn btn-ghost btn-full" id="btnRevert" type="button" style="margin-top:10px">원본으로 되돌리기</button>
+        <p class="hint" style="margin-top:10px">더 큰 크기로 저장하려면 상단의 <b>4K 저장</b>으로 전환하세요. 누끼 결과가 그대로 이어집니다.</p>
       </div>
-
-      <div class="stage" id="stage">
-        <div class="stage-inner">
-          <div class="sheet" id="sheet">
-            <canvas id="canvas"></canvas>
-            <div class="loading" id="loadingLbl">렌더링 중…</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="info" id="info"></div>
+      </aside>
     </div>
   </section>
 </main>
@@ -666,8 +741,12 @@
     }
     if (lastOpened) {
       app.classList.add('has-file');
+      document.body.classList.add('has-file');
       renderFileList();
       await selectDoc(lastOpened);
+      if (pendingMode) { setMode(pendingMode); pendingMode = null; }
+    } else {
+      pendingMode = null;
     }
   }
 
@@ -782,7 +861,7 @@
     if (current === d) {
       current = null;
       if (docs.length) await selectDoc(docs[Math.min(i, docs.length - 1)]);
-      else { app.classList.remove('has-file'); thumbsEl.innerHTML = ''; closePanels(); }
+      else { app.classList.remove('has-file'); document.body.classList.remove('has-file'); thumbsEl.innerHTML = ''; setMode('view'); }
     }
     renderFileList();
   }
@@ -796,9 +875,10 @@
     fnameEl.textContent = d.name;
     fnameEl.title = d.name;
     $('btnPdf').style.display = d.kind === 'pdf' ? '' : 'none';
+    infoEl.innerHTML = '';
     syncPanels();
-    await buildThumbs(d);
     await renderPage();
+    buildThumbs(d);   // 썸네일은 본문 표시 후 백그라운드로
   }
 
   /** 페이지 크기(scale 1 기준) */
@@ -865,7 +945,7 @@
   }
 
   function markActiveThumb() {
-    if (!current) return;
+    if (!current || !current.thumbs.length) return;
     current.thumbs.forEach((t, i) => t.classList.toggle('active', i + 1 === current.page));
     const active = current.thumbs[current.page - 1];
     if (active && active.scrollIntoView) active.scrollIntoView({ block: 'nearest', inline: 'nearest' });
@@ -1004,7 +1084,7 @@
     else if (e.key === '+' || e.key === '=') { e.preventDefault(); zoomBy(1); }
     else if (e.key === '-') { e.preventDefault(); zoomBy(-1); }
     else if (e.key === '0') { e.preventDefault(); current.zoom = 'fit'; renderPage(); }
-    else if (e.key === 'Escape') { closePanels(); stopPicking(); }
+    else if (e.key === 'Escape') { setMode('view'); }
   });
 
   stage.addEventListener('wheel', (e) => {
@@ -1020,20 +1100,31 @@
     resizeT = setTimeout(renderPage, 120);
   });
 
-  // ── 패널 열기/닫기 ────────────────────────────────────
-  function openPanel(id) {
-    closePanels();
-    $(id).classList.add('show');
-    $(id === 'savePanel' ? 'btnSave' : 'btnBg').classList.add('on');
-    if (id === 'savePanel') updateSizeHint();
+  // ── 작업 모드: view(파일 보기) / bg(누끼) / up(4K 저장) ──
+  let mode = 'view';
+  let pendingMode = null;   // 홈 카드에서 고른 작업 (파일 열리면 적용)
+  function setMode(m) {
+    mode = m;
+    ['view', 'bg', 'up'].forEach(k => app.classList.toggle(`mode-${k}`, k === m));
+    document.querySelectorAll('#modes button').forEach(b => b.setAttribute('aria-pressed', b.dataset.mode === m ? 'true' : 'false'));
+    $('savePanel').classList.toggle('show', m === 'up');
+    $('bgPanel').classList.toggle('show', m === 'bg');
+    $('btnSave').classList.toggle('on', m === 'up');
+    $('btnBg').classList.toggle('on', m === 'bg');
+    if (m !== 'bg') stopPicking();
+    $('dock').scrollTop = 0;
+    if (m === 'up' && $('selSize').value === 'base' && !setMode._sizeTouched) $('selSize').value = 'fit4k';
+    syncPanels();
+    // 도크가 열리고 닫히면 스테이지 폭이 바뀌므로 맞춤 배율을 다시 계산
+    if (current && current.zoom === 'fit') setTimeout(renderPage, 30);
   }
-  function closePanels() {
-    ['savePanel', 'bgPanel'].forEach(id => $(id).classList.remove('show'));
-    $('btnSave').classList.remove('on'); $('btnBg').classList.remove('on');
-  }
-  $('btnSave').addEventListener('click', () => $('savePanel').classList.contains('show') ? closePanels() : openPanel('savePanel'));
-  $('btnBg').addEventListener('click', () => $('bgPanel').classList.contains('show') ? (closePanels(), stopPicking()) : openPanel('bgPanel'));
-  document.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', () => { closePanels(); stopPicking(); }));
+  function closePanels() { setMode('view'); }
+  $('selSize').addEventListener('change', () => { setMode._sizeTouched = true; });
+  document.querySelectorAll('#modes button').forEach(b => b.addEventListener('click', () => setMode(b.dataset.mode)));
+  document.querySelectorAll('.mode-card').forEach(b => b.addEventListener('click', () => { pendingMode = b.dataset.pick; fileInput.click(); }));
+  $('btnSave').addEventListener('click', () => setMode(mode === 'up' ? 'view' : 'up'));
+  $('btnBg').addEventListener('click', () => setMode(mode === 'bg' ? 'view' : 'bg'));
+  document.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', () => setMode('view')));
 
   function seg(id, cb) {
     const el = $(id);
@@ -1063,19 +1154,19 @@
   }
 
   // ── 저장 크기 계산 ────────────────────────────────────
-  async function exportPlan() {
+  async function exportPlan(sizeOverride) {
     const d = current;
     const sz = await pageSize(d, d.page);
     const res = d.results[d.page];
     // 소스 픽셀 크기: 결과물이 있으면 그 캔버스, 사진이면 원본, 벡터면 "기본" 렌더 크기
     const srcW = res ? res.canvas.width : (d.kind === 'image' ? d.w0 : Math.round(sz.w * BASE_LONG / Math.max(sz.w, sz.h)));
     const srcH = res ? res.canvas.height : (d.kind === 'image' ? d.h0 : Math.round(sz.h * BASE_LONG / Math.max(sz.w, sz.h)));
-    const mode = $('selSize').value;
+    const sizeMode = sizeOverride || $('selSize').value;
     let s;
-    if (mode === 'base') s = 1;
-    else if (mode === 'fit4k') s = Math.min(3840 / srcW, 2160 / srcH);
-    else if (mode === 'long4k') s = 3840 / Math.max(srcW, srcH);
-    else if (mode === 'x2') s = 2;
+    if (sizeMode === 'base') s = 1;
+    else if (sizeMode === 'fit4k') s = Math.min(3840 / srcW, 2160 / srcH);
+    else if (sizeMode === 'long4k') s = 3840 / Math.max(srcW, srcH);
+    else if (sizeMode === 'x2') s = 2;
     else s = 4;
     let tw = Math.round(srcW * s), th = Math.round(srcH * s);
     const cap = capDims(tw, th);
@@ -1116,15 +1207,20 @@
     st.textContent = text || '';
   }
 
-  $('btnDoSave').addEventListener('click', async () => {
+  $('btnDoSave').addEventListener('click', () => exportImage({ btnId: 'btnDoSave', progId: 'saveProg', statId: 'saveStat' }));
+  $('btnBgSave').addEventListener('click', () => exportImage({ btnId: 'btnBgSave', progId: 'bgSaveProg', statId: 'bgSaveStat', sizeMode: 'base', fmt: 'png', sharp: 0 }));
+
+  async function exportImage(opts) {
     if (!current) return;
-    const btn = $('btnDoSave'); btn.disabled = true;
+    const btn = $(opts.btnId); btn.disabled = true;
+    const P = (r, t) => setProg(opts.progId, opts.statId, r, t);
+    const fmt = opts.fmt || saveFmt, sharp = opts.sharp ?? saveSharp;
     try {
-      const p = await exportPlan();
+      const p = await exportPlan(opts.sizeMode);
       const d = p.d;
       let out;
       if (p.vectorDirect) {
-        setProg('saveProg', 'saveStat', 0.2, '렌더링 중…');
+        P(0.2, '렌더링 중…');
         out = makeCanvas(p.tw, p.th);
         const scale = p.tw / p.sz.w;
         await (await drawSource(d, d.page, scale, out, d.transparent)).promise;
@@ -1136,7 +1232,7 @@
         if (p.tw > src.width + 1) {
           const sctx = src.getContext('2d', { willReadFrequently: true });
           const srcData = sctx.getImageData(0, 0, src.width, src.height);
-          const outData = await lanczosResize(srcData, p.tw, p.th, (r) => setProg('saveProg', 'saveStat', r * 0.9, `확대 중 ${Math.round(r * 100)}%`));
+          const outData = await lanczosResize(srcData, p.tw, p.th, (r) => P(r * 0.9, `확대 중 ${Math.round(r * 100)}%`));
           out = makeCanvas(p.tw, p.th);
           out.getContext('2d').putImageData(outData, 0, 0);
         } else if (p.tw < src.width - 1) {
@@ -1144,39 +1240,39 @@
         } else {
           out = src;
         }
-        if (saveSharp > 0) {
+        if (sharp > 0) {
           const octx = out.getContext('2d', { willReadFrequently: true });
-          const sharpened = await unsharp(octx.getImageData(0, 0, out.width, out.height), saveSharp, (r) => setProg('saveProg', 'saveStat', 0.9 + r * 0.1, '선명도 보정 중…'));
+          const sharpened = await unsharp(octx.getImageData(0, 0, out.width, out.height), sharp, (r) => P(0.9 + r * 0.1, '선명도 보정 중…'));
           const c2 = makeCanvas(out.width, out.height);
           c2.getContext('2d').putImageData(sharpened, 0, 0);
           out = c2;
         }
       }
-      if (saveFmt === 'jpg') {
+      if (fmt === 'jpg') {
         const flat = makeCanvas(out.width, out.height);
         const fx = flat.getContext('2d');
         fx.fillStyle = '#fff'; fx.fillRect(0, 0, flat.width, flat.height);
         fx.drawImage(out, 0, 0);
         out = flat;
       }
-      setProg('saveProg', 'saveStat', 0.97, '파일 만드는 중…');
-      const blob = await new Promise(res => saveFmt === 'jpg' ? out.toBlob(res, 'image/jpeg', 1.0) : out.toBlob(res, 'image/png'));
+      P(0.97, '파일 만드는 중…');
+      const blob = await new Promise(res => fmt === 'jpg' ? out.toBlob(res, 'image/jpeg', 1.0) : out.toBlob(res, 'image/png'));
       if (!blob) throw new Error('toBlob');
       const parts = [baseName(d.name)];
       if (d.numPages > 1) parts.push(`artboard${d.page}`);
       if (p.res) parts.push('nukki');
       else if (d.transparent && d.kind !== 'image') parts.push('transparent');
-      if ($('selSize').value !== 'base') parts.push(`${out.width}x${out.height}`);
-      download(blob, `${parts.join('-')}.${saveFmt === 'jpg' ? 'jpg' : 'png'}`);
-      setProg('saveProg', 'saveStat', null, `저장 완료 · ${out.width} × ${out.height} px · ${fmtSize(blob.size)}`);
+      if ((opts.sizeMode || $('selSize').value) !== 'base') parts.push(`${out.width}x${out.height}`);
+      download(blob, `${parts.join('-')}.${fmt === 'jpg' ? 'jpg' : 'png'}`);
+      P(null, `저장 완료 · ${out.width} × ${out.height} px · ${fmtSize(blob.size)}`);
     } catch (e) {
       console.error(e);
-      setProg('saveProg', 'saveStat', null, '');
+      P(null, '');
       showAlert('저장에 실패했습니다', '<p>이미지가 너무 크거나 브라우저 메모리가 부족할 수 있습니다. 크기를 한 단계 줄여 다시 시도해 주세요.</p>');
     } finally {
       btn.disabled = false;
     }
-  });
+  }
 
   $('btnPdf').addEventListener('click', () => {
     if (!current || current.kind !== 'pdf') return;
@@ -1500,7 +1596,6 @@
 
   // ── 입력: 버튼 / 드래그 앤 드롭 / 붙여넣기 ────────────
   $('btnOpen').addEventListener('click', () => fileInput.click());
-  $('btnOpen2').addEventListener('click', () => fileInput.click());
   fileInput.addEventListener('change', () => { openFiles(fileInput.files); fileInput.value = ''; });
 
   let dragDepth = 0;
