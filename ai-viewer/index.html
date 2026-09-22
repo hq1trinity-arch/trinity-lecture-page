@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
   <title>AI 파일 뷰어 — TRINITY ONE</title>
-  <meta name="description" content="일러스트레이터(.ai) 파일을 설치 없이 브라우저에서 바로 열어 보는 내부용 뷰어. 파일은 서버로 전송되지 않습니다.">
+  <meta name="description" content="일러스트레이터(.ai) 파일과 이미지를 설치 없이 브라우저에서 열어 보고, 4K 고해상도 저장과 배경 제거(누끼)까지 처리하는 내부용 도구. 파일은 서버로 전송되지 않습니다.">
   <link rel="icon" type="image/png" href="../assets/trinity-one-logo.png">
   <style>
     @font-face { font-family: "Pretendard"; font-weight: 400; font-style: normal; font-display: swap; src: url("../assets/fonts/Pretendard-Regular.otf") format("opentype"); }
@@ -24,10 +24,9 @@
       --tint: #F2EFFE;
       --border: #E3DEF3;
       --white: #FFFFFF;
-      --deep-a: #0B0320;
-      --deep-b: #260C6B;
       --danger: #B3261E;
       --danger-bg: #FDECEB;
+      --ok: #1E7A46;
       --font: "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       --topbar-h: 64px;
     }
@@ -43,7 +42,8 @@
       -webkit-font-smoothing: antialiased;
       overflow: hidden;
     }
-    button { font: inherit; cursor: pointer; }
+    button, select, input { font: inherit; }
+    button { cursor: pointer; }
     button:disabled { cursor: not-allowed; opacity: .45; }
     .m-only { display: none; }
     @media (max-width: 860px) {
@@ -83,13 +83,13 @@
     .btn-primary:hover { background: var(--violet-dark); }
     .btn-ghost { background: var(--white); color: var(--violet); border-color: var(--border); }
     .btn-ghost:hover { background: var(--tint); border-color: var(--lavender-light); }
+    .btn-ghost.on { background: var(--tint); border-color: var(--violet); }
     .btn-sm { height: 32px; padding: 0 12px; font-size: 13px; border-radius: 8px; }
     .btn-icon { width: 32px; padding: 0; }
 
     /* ── Layout ──────────────────────────────────────────── */
     .app { height: calc(100% - var(--topbar-h)); display: flex; flex-direction: column; }
 
-    /* Empty state / drop zone */
     .empty {
       flex: 1; display: flex; align-items: center; justify-content: center;
       padding: 24px 16px;
@@ -125,7 +125,6 @@
     }
     .feature strong { display: block; color: var(--ink); font-size: 13.5px; margin-bottom: 4px; }
 
-    /* Workspace */
     .work { flex: 1; display: none; min-height: 0; }
     .app.has-file .empty { display: none; }
     .app.has-file .work { display: flex; }
@@ -178,12 +177,13 @@
     .thumb.active .frame { border-color: var(--violet); box-shadow: 0 0 0 2px rgba(74,27,208,.18); }
     .thumb.active .lbl { color: var(--violet); font-weight: 700; }
 
-    .main { flex: 1; display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+    .main { flex: 1; display: flex; flex-direction: column; min-width: 0; min-height: 0; position: relative; }
 
     .toolbar {
       display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
       padding: 10px 14px;
       background: var(--white); border-bottom: 1px solid var(--border);
+      position: relative; z-index: 5;
     }
     .toolbar .group { display: inline-flex; align-items: center; gap: 4px; }
     .toolbar .sep { width: 1px; height: 22px; background: var(--border); margin: 0 4px; }
@@ -197,7 +197,7 @@
     .toolbar .spacer { flex: 1; }
     .toolbar .fname {
       font-size: 13px; font-weight: 600; color: var(--ink);
-      max-width: 34vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+      max-width: 26vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
     }
 
     .stage {
@@ -208,6 +208,7 @@
         linear-gradient(90deg, rgba(74,27,208,.05) 1px, transparent 1px);
       background-size: 24px 24px;
     }
+    .stage.picking { cursor: crosshair; }
     .stage-inner {
       min-width: 100%; min-height: 100%;
       display: flex; align-items: flex-start; justify-content: center;
@@ -217,6 +218,16 @@
       background: var(--white);
       box-shadow: 0 8px 32px rgba(22,14,46,.16), 0 1px 3px rgba(22,14,46,.1);
       position: relative; flex: none;
+    }
+    .sheet.checker {
+      background-color: #fff;
+      background-image:
+        linear-gradient(45deg, #DDD9EA 25%, transparent 25%),
+        linear-gradient(-45deg, #DDD9EA 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #DDD9EA 75%),
+        linear-gradient(-45deg, transparent 75%, #DDD9EA 75%);
+      background-size: 16px 16px;
+      background-position: 0 0, 0 8px, 8px -8px, -8px 0;
     }
     .sheet canvas { display: block; }
     .sheet .loading {
@@ -232,6 +243,54 @@
     }
     .info b { color: var(--ink); font-weight: 600; }
     .info .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--ink-40); }
+    .info .tag { color: var(--ok); font-weight: 600; }
+
+    /* ── Panels (저장 / 배경 제거) ───────────────────────── */
+    .panel {
+      position: absolute; top: 54px; right: 14px; z-index: 6;
+      width: 320px; max-height: calc(100% - 70px); overflow: auto;
+      background: var(--white); border: 1px solid var(--border); border-radius: 14px;
+      box-shadow: 0 16px 48px rgba(22,14,46,.18);
+      padding: 16px; display: none;
+    }
+    .panel.show { display: block; }
+    .panel h4 {
+      margin: 0 0 12px; font-size: 14px; font-weight: 700; letter-spacing: -.01em;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .panel h4 .x { border: 0; background: transparent; color: var(--ink-40); font-size: 18px; line-height: 1; padding: 2px 6px; }
+    .panel .row { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+    .panel label.lbl { font-size: 11px; font-weight: 700; letter-spacing: .1em; color: var(--lavender); text-transform: uppercase; }
+    .panel select, .panel input[type="text"] {
+      height: 36px; padding: 0 10px; border-radius: 8px; border: 1px solid var(--border);
+      background: var(--white); color: var(--ink); font-size: 13.5px; width: 100%;
+    }
+    .panel .seg { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+    .panel .seg button {
+      flex: 1; height: 34px; border: 0; border-right: 1px solid var(--border); background: var(--white);
+      color: var(--ink); font-size: 13px; font-weight: 500;
+    }
+    .panel .seg button:last-child { border-right: 0; }
+    .panel .seg button[aria-pressed="true"] { background: var(--violet); color: var(--white); font-weight: 600; }
+    .panel .hint { font-size: 12px; color: var(--ink-60); line-height: 1.55; margin: 0; }
+    .panel .hint b { color: var(--ink); font-weight: 600; }
+    .panel .sec { border-top: 1px solid var(--border); margin: 14px 0 12px; }
+    .panel .sec-title { font-size: 13px; font-weight: 700; margin: 0 0 8px; display: flex; align-items: center; gap: 8px; }
+    .panel .sec-title .badge { font-size: 10.5px; font-weight: 700; letter-spacing: .06em; color: var(--lavender); background: var(--tint); border-radius: 6px; padding: 2px 6px; }
+    .panel .inline { display: flex; align-items: center; gap: 8px; }
+    .panel .inline .btn { flex: 1; }
+    .panel input[type="range"] { width: 100%; accent-color: var(--violet); }
+    .panel .range-row { display: flex; align-items: center; gap: 10px; font-size: 12.5px; color: var(--ink-60); }
+    .panel .range-row > span { white-space: nowrap; }
+    .panel .range-row output { min-width: 32px; text-align: right; font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; }
+    .panel .check { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--ink); cursor: pointer; }
+    .panel .check input { accent-color: var(--violet); width: 16px; height: 16px; margin: 0; }
+    .panel .swatch { width: 22px; height: 22px; border-radius: 6px; border: 1px solid var(--border); flex: none; }
+    .panel .progress { height: 6px; border-radius: 3px; background: var(--tint); overflow: hidden; margin-top: 8px; display: none; }
+    .panel .progress i { display: block; height: 100%; width: 0; background: var(--violet); transition: width .2s; }
+    .panel .progress.show { display: block; }
+    .panel .pstat { font-size: 12px; color: var(--ink-60); margin-top: 6px; min-height: 16px; }
+    .panel .btn-full { width: 100%; }
 
     /* Alert / toast */
     .alert {
@@ -254,7 +313,6 @@
     .alert ol { margin: 6px 0 0; padding-left: 18px; color: var(--ink-60); }
     .alert li { margin: 2px 0; }
 
-    /* Full-page drag overlay */
     .dragover {
       position: fixed; inset: 0; z-index: 30; display: none;
       align-items: center; justify-content: center;
@@ -296,6 +354,7 @@
       }
       .file { padding: 7px 8px; font-size: 12.5px; }
       .file .meta { display: none; }
+      .file-add { display: none; }
       .thumbs {
         flex: 1; display: flex; gap: 6px; padding: 8px; overflow-x: auto; overflow-y: hidden;
         align-items: flex-start;
@@ -311,6 +370,12 @@
       .toolbar .btn-sm { padding: 0 9px; }
       .stage-inner { padding: 14px; }
       .info { font-size: 11.5px; gap: 10px; padding: 8px 12px; }
+
+      .panel {
+        top: auto; right: 0; left: 0; bottom: 0; width: 100%;
+        max-height: 72%; border-radius: 16px 16px 0 0;
+        box-shadow: 0 -12px 40px rgba(22,14,46,.22);
+      }
     }
   </style>
 </head>
@@ -320,7 +385,7 @@
   <img class="logo" src="../assets/trinity-one-logo.png" alt="TRINITY ONE">
   <div class="brand">
     <strong>AI 파일 뷰어</strong>
-    <span>Illustrator(.ai) 파일을 설치 없이 바로 확인</span>
+    <span>Illustrator(.ai)·이미지 확인 · 4K 저장 · 배경 제거</span>
   </div>
   <div class="spacer"></div>
   <div class="privacy" title="파일은 이 브라우저 안에서만 처리되며 서버로 전송되지 않습니다.">
@@ -331,18 +396,17 @@
     <svg viewBox="0 0 24 24"><path d="M10 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-8l-2-2Z"/></svg>
     <span class="txt">파일 열기</span>
   </button>
-  <input type="file" id="fileInput" accept=".ai,.pdf,application/pdf,application/postscript,application/illustrator" multiple>
+  <input type="file" id="fileInput" accept=".ai,.pdf,.svg,image/*,application/pdf,application/postscript,application/illustrator" multiple>
 </header>
 
 <main class="app" id="app">
 
-  <!-- 빈 상태: 드롭존 -->
   <section class="empty" id="empty">
     <div style="width:min(720px,100%)">
       <div class="drop" id="drop">
         <span class="badge">AI FILE VIEWER</span>
-        <h1>.ai 파일을 여기에<br class="m-only"> 끌어다 놓으세요</h1>
-        <p>일러스트레이터가 없어도<br class="m-only"> 디자인 시안을 바로 확인하고,<br>PNG 이미지나 PDF로 저장할 수 있습니다.</p>
+        <h1>.ai 파일이나 사진을<br class="m-only"> 여기에 끌어다 놓으세요</h1>
+        <p>일러스트레이터가 없어도<br class="m-only"> 디자인 시안을 바로 확인하고,<br>4K 고해상도 저장과 배경 제거(누끼)까지<br class="m-only"> 한 자리에서 처리합니다.</p>
         <div class="actions">
           <button class="btn btn-primary" type="button" id="btnOpen2">
             <svg viewBox="0 0 24 24"><path d="M10 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-8l-2-2Z"/></svg>
@@ -350,19 +414,18 @@
           </button>
         </div>
         <p class="hint">
-          지원 형식: <b>.ai</b> (Illustrator 9 이상, PDF 호환 저장본), <b>.pdf</b><br>
+          지원 형식: <b>.ai</b> (Illustrator 9 이상, PDF 호환 저장본), <b>.pdf</b>,<br class="m-only"> <b>JPG · PNG · WebP · SVG</b><br>
           여러 파일을 한 번에 열 수 있습니다.
         </p>
       </div>
       <div class="features">
         <div class="feature"><strong>설치 없음</strong>브라우저만 있으면<br>PC·모바일 어디서나 열립니다.</div>
-        <div class="feature"><strong>안전한 처리</strong>파일은 서버로 올라가지 않고<br>내 브라우저 안에서만 처리됩니다.</div>
-        <div class="feature"><strong>이미지로 저장</strong>아트보드별로 고해상도 PNG,<br>또는 PDF로 내려받을 수 있습니다.</div>
+        <div class="feature"><strong>4K 고해상도 저장</strong>AI 파일은 벡터 그대로,<br>사진은 Lanczos-3 보간으로 키웁니다.</div>
+        <div class="feature"><strong>배경 제거 (누끼)</strong>단색 배경은 즉시,<br>인물·사물은 AI 모델로 따냅니다.</div>
       </div>
     </div>
   </section>
 
-  <!-- 작업 화면 -->
   <section class="work" id="work">
     <aside class="side">
       <h3>열린 파일</h3>
@@ -395,9 +458,13 @@
         <div class="sep"></div>
         <span class="fname" id="fname"></span>
         <div class="spacer"></div>
-        <button class="btn btn-ghost btn-sm" id="btnPng" type="button" title="현재 아트보드를 PNG로 저장">
+        <button class="btn btn-ghost btn-sm" id="btnBg" type="button" title="배경 제거 (누끼)">
+          <svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Zm0 2a7 7 0 0 1 5.6 11.2L7.8 6.4A6.97 6.97 0 0 1 12 5Zm-5.6 2.8 9.8 9.8A7 7 0 0 1 6.4 7.8Z"/></svg>
+          <span class="txt">배경 제거</span>
+        </button>
+        <button class="btn btn-ghost btn-sm" id="btnSave" type="button" title="이미지로 저장 (크기·형식 선택)">
           <svg viewBox="0 0 24 24"><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2Zm0 16H5v-2.6l3.5-3.5 2.5 2.5 5-5 3 3V19Zm0-8.4-3-3-5 5-2.5-2.5L5 13.6V5h14v5.6ZM8.5 10A1.5 1.5 0 1 0 8.5 7a1.5 1.5 0 0 0 0 3Z"/></svg>
-          <span class="txt">PNG 저장</span>
+          <span class="txt">이미지 저장</span>
         </button>
         <button class="btn btn-ghost btn-sm" id="btnPdf" type="button" title="이 파일을 PDF로 저장 (다른 사람에게 보낼 때)">
           <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6Zm-1 7V3.5L18.5 9H13Zm-5 4h1.5a1.75 1.75 0 0 1 0 3.5H9V18H8v-5Zm1 2.5h.5a.75.75 0 0 0 0-1.5H9v1.5ZM12 13h1.6c1.4 0 2.2.9 2.2 2.5S15 18 13.6 18H12v-5Zm1 4h.5c.8 0 1.2-.5 1.2-1.5S14.3 14 13.5 14H13v3Zm3.7-4H19v1h-1.3v1H19v1h-1.3v2h-1V13Z"/></svg>
@@ -405,11 +472,83 @@
         </button>
       </div>
 
+      <!-- 이미지 저장 패널 -->
+      <div class="panel" id="savePanel">
+        <h4>이미지로 저장 <button class="x" type="button" data-close="savePanel" aria-label="닫기">×</button></h4>
+        <div class="row">
+          <label class="lbl" for="selSize">크기</label>
+          <select id="selSize">
+            <option value="base">기본</option>
+            <option value="fit4k">4K에 맞춤 (3840×2160 안에 최대)</option>
+            <option value="long4k">긴 변 3840px</option>
+            <option value="x2">×2</option>
+            <option value="x4">×4</option>
+          </select>
+          <p class="hint" id="sizeHint"></p>
+        </div>
+        <div class="row">
+          <label class="lbl">형식</label>
+          <div class="seg" id="segFmt">
+            <button type="button" data-v="png" aria-pressed="true">PNG (투명 유지)</button>
+            <button type="button" data-v="jpg" aria-pressed="false">JPG (흰 배경)</button>
+          </div>
+        </div>
+        <div class="row" id="rowSharp">
+          <label class="lbl">선명도 보정 <span style="font-weight:500;letter-spacing:0;text-transform:none;color:var(--ink-40)">(사진 확대 시)</span></label>
+          <div class="seg" id="segSharp">
+            <button type="button" data-v="0" aria-pressed="true">원본 그대로</button>
+            <button type="button" data-v="0.35" aria-pressed="false">약하게</button>
+            <button type="button" data-v="0.7" aria-pressed="false">강하게</button>
+          </div>
+        </div>
+        <button class="btn btn-primary btn-full" id="btnDoSave" type="button">저장</button>
+        <div class="progress" id="saveProg"><i></i></div>
+        <div class="pstat" id="saveStat"></div>
+      </div>
+
+      <!-- 배경 제거 패널 -->
+      <div class="panel" id="bgPanel">
+        <h4>배경 제거 (누끼) <button class="x" type="button" data-close="bgPanel" aria-label="닫기">×</button></h4>
+
+        <div id="secVector">
+          <p class="sec-title">파일의 투명 배경 사용 <span class="badge">AI·PDF·SVG</span></p>
+          <label class="check"><input type="checkbox" id="chkTransparent"> 흰 종이 대신 파일 원래의 투명 배경으로 표시·저장</label>
+          <p class="hint" style="margin-top:6px">디자인에 흰 사각형 배경이 깔려 있으면 이것만으로는 안 지워집니다. 아래 "단색 배경 제거"를 쓰세요.</p>
+          <div class="sec"></div>
+        </div>
+
+        <p class="sec-title">단색 배경 제거 <span class="badge">로고·포스터</span></p>
+        <div class="row">
+          <div class="range-row">
+            <span>허용 오차</span>
+            <input type="range" id="rngTol" min="1" max="100" value="28">
+            <output id="outTol">28</output>
+          </div>
+          <label class="check"><input type="checkbox" id="chkInner"> 안쪽에 닫힌 같은 색 영역도 제거 (글자 속 구멍 등)</label>
+          <div class="inline">
+            <span class="swatch" id="swatch" title="배경색"></span>
+            <span class="hint" id="refHint">배경색: 모서리에서 자동 감지</span>
+            <button class="btn btn-ghost btn-sm" id="btnPick" type="button" style="flex:none">이미지에서 선택</button>
+          </div>
+        </div>
+        <button class="btn btn-primary btn-full" id="btnChroma" type="button">단색 배경 제거 적용</button>
+
+        <div class="sec"></div>
+        <p class="sec-title">AI 누끼 <span class="badge">인물·사물 사진</span></p>
+        <p class="hint">브라우저에서 AI 모델이 직접 돌아갑니다. 처음 한 번만 약 <b>55MB</b>를 내려받고, 기기에 따라 10초에서 1분쯤 걸립니다. 사진은 여전히 외부로 전송되지 않습니다.</p>
+        <button class="btn btn-primary btn-full" id="btnAI" type="button" style="margin-top:8px">AI 누끼 실행</button>
+        <div class="progress" id="bgProg"><i></i></div>
+        <div class="pstat" id="bgStat"></div>
+
+        <div class="sec"></div>
+        <button class="btn btn-ghost btn-full" id="btnRevert" type="button">원본으로 되돌리기</button>
+      </div>
+
       <div class="stage" id="stage">
         <div class="stage-inner">
           <div class="sheet" id="sheet">
             <canvas id="canvas"></canvas>
-            <div class="loading">렌더링 중…</div>
+            <div class="loading" id="loadingLbl">렌더링 중…</div>
           </div>
         </div>
       </div>
@@ -435,6 +574,8 @@
   const PDFJS_VER = '4.10.38';
   const CMAP_URL = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${PDFJS_VER}/cmaps/`;
   const STD_FONT_URL = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${PDFJS_VER}/standard_fonts/`;
+  // AI 누끼 모델(@imgly/background-removal)은 버튼을 눌렀을 때만 내려받는다.
+  const BGRM_URL = 'https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.7.0/+esm';
 
   const $ = (id) => document.getElementById(id);
   const app = $('app'), drop = $('drop'), filesEl = $('files'), thumbsEl = $('thumbs');
@@ -442,11 +583,16 @@
   const pgEl = $('pg'), fnameEl = $('fname'), infoEl = $('info'), fitBtn = $('btnFit');
   const fileInput = $('fileInput');
 
-  const ZOOM_STEPS = [0.25, 0.33, 0.5, 0.67, 0.75, 1, 1.25, 1.5, 2, 3, 4];
-  const MAX_CANVAS_PX = 4096 * 4096; // 캔버스 메모리 상한
+  const ZOOM_STEPS = [0.1, 0.15, 0.25, 0.33, 0.5, 0.67, 0.75, 1, 1.25, 1.5, 2, 3, 4];
+  const MAX_CANVAS_PX = 4096 * 4096;   // 표시·저장 캔버스 상한 (iOS Safari 한계)
   const MAX_CANVAS_SIDE = 8192;
+  const BASE_LONG = 3000;              // 벡터 파일 기본 저장 크기 (긴 변)
+  const SRC_LONG = 3000;               // 배경 제거용 래스터화 크기 (긴 변)
 
-  /** @type {Array<{id:number,name:string,size:number,bytes:ArrayBuffer,pdf:any,numPages:number,meta:any,page:number,zoom:number|'fit',thumbs:HTMLElement[]}>} */
+  /**
+   * doc: { id, name, size, kind: 'pdf'|'image'|'svg', bytes?, pdf?, img?, w0, h0 (scale 1 크기),
+   *        numPages, meta, page, zoom, thumbs[], transparent:boolean, results:{[page]:{canvas,label}} }
+   */
   const docs = [];
   let current = null;
   let renderTask = null;
@@ -455,9 +601,14 @@
 
   // ── 유틸 ──────────────────────────────────────────────
   const fmtSize = (n) => n < 1024 * 1024 ? `${(n / 1024).toFixed(0)} KB` : `${(n / 1024 / 1024).toFixed(1)} MB`;
-  const baseName = (name) => name.replace(/\.(ai|pdf)$/i, '');
+  const baseName = (name) => name.replace(/\.[^.]+$/, '');
   const mm = (pt) => Math.round(pt / 72 * 25.4);
+  const yieldFrame = () => new Promise(r => setTimeout(r, 0));
+  const clamp255 = (v) => v < 0 ? 0 : (v > 255 ? 255 : Math.round(v));
 
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
   function showAlert(title, bodyHtml, kind = 'error') {
     $('alertTitle').textContent = title;
     $('alertBody').innerHTML = bodyHtml;
@@ -465,17 +616,36 @@
     el.classList.toggle('info', kind === 'info');
     el.classList.add('show');
     clearTimeout(showAlert._t);
-    if (kind === 'info') showAlert._t = setTimeout(hideAlert, 4000);
+    if (kind === 'info') showAlert._t = setTimeout(hideAlert, 4500);
   }
   function hideAlert() { $('alert').classList.remove('show'); }
   $('alertClose').addEventListener('click', hideAlert);
 
   function sniff(bytes) {
-    const head = new TextDecoder('latin1').decode(new Uint8Array(bytes, 0, Math.min(bytes.byteLength, 4096)));
+    const u = new Uint8Array(bytes, 0, Math.min(bytes.byteLength, 4096));
+    const head = new TextDecoder('latin1').decode(u);
     if (head.includes('%PDF-')) return 'pdf';
     if (head.startsWith('%!PS') || head.includes('%!PS-Adobe')) return 'postscript';
+    if (u[0] === 0x89 && u[1] === 0x50) return 'image';                     // PNG
+    if (u[0] === 0xFF && u[1] === 0xD8) return 'image';                     // JPEG
+    if (head.startsWith('GIF8') || head.startsWith('BM')) return 'image';   // GIF / BMP
+    if (head.startsWith('RIFF') && head.slice(8, 12) === 'WEBP') return 'image';
+    if (/^\s*(<\?xml|<!DOCTYPE svg|<svg)/i.test(head)) return 'svg';
     if (head.startsWith('PK')) return 'zip';
     return 'unknown';
+  }
+
+  function makeCanvas(w, h) {
+    const c = document.createElement('canvas');
+    c.width = Math.max(1, Math.floor(w)); c.height = Math.max(1, Math.floor(h));
+    return c;
+  }
+  function capDims(w, h, maxPx = MAX_CANVAS_PX) {
+    let k = 1;
+    if (w * h > maxPx) k = Math.sqrt(maxPx / (w * h));
+    if (w * k > MAX_CANVAS_SIDE) k = Math.min(k, MAX_CANVAS_SIDE / w);
+    if (h * k > MAX_CANVAS_SIDE) k = Math.min(k, MAX_CANVAS_SIDE / h);
+    return { w: Math.floor(w * k), h: Math.floor(h * k), k };
   }
 
   // ── 파일 열기 ─────────────────────────────────────────
@@ -504,28 +674,59 @@
   async function loadDoc(file) {
     const bytes = await file.arrayBuffer();
     const kind = sniff(bytes);
-    if (kind !== 'pdf') {
-      const e = new Error('not-pdf'); e.kind = kind; throw e;
+    const base = { id: nextId++, name: file.name, size: file.size, page: 1, zoom: 'fit', thumbs: [], transparent: false, results: {}, meta: null };
+
+    if (kind === 'pdf') {
+      // pdf.js는 전달한 버퍼를 워커로 넘겨 버리므로 원본은 복사본을 보관한다.
+      const task = pdfjsLib.getDocument({
+        data: new Uint8Array(bytes.slice(0)),
+        cMapUrl: CMAP_URL, cMapPacked: true,
+        standardFontDataUrl: STD_FONT_URL,
+        isEvalSupported: false,
+      });
+      const pdf = await task.promise;
+      let meta = null;
+      try { meta = (await pdf.getMetadata()).info || null; } catch (_) { /* 메타데이터 없어도 무방 */ }
+      const p1 = await pdf.getPage(1);
+      const vp = p1.getViewport({ scale: 1 });
+      return { ...base, kind: 'pdf', bytes, pdf, numPages: pdf.numPages, meta, w0: vp.width, h0: vp.height };
     }
-    // pdf.js는 전달한 버퍼를 워커로 넘겨 버리므로 원본은 복사본을 보관한다.
-    const task = pdfjsLib.getDocument({
-      data: new Uint8Array(bytes.slice(0)),
-      cMapUrl: CMAP_URL, cMapPacked: true,
-      standardFontDataUrl: STD_FONT_URL,
-      isEvalSupported: false,
+    if (kind === 'image') {
+      const bmp = await createImageBitmap(file, { imageOrientation: 'from-image' });
+      return { ...base, kind: 'image', img: bmp, numPages: 1, w0: bmp.width, h0: bmp.height };
+    }
+    if (kind === 'svg') {
+      const img = await loadSvg(file);
+      return { ...base, kind: 'svg', img: img.el, numPages: 1, w0: img.w, h0: img.h };
+    }
+    const e = new Error('not-supported'); e.kind = kind; throw e;
+  }
+
+  function loadSvg(file) {
+    return new Promise((res, rej) => {
+      const fr = new FileReader();
+      fr.onload = () => {
+        const text = fr.result;
+        const img = new Image();
+        const url = URL.createObjectURL(new Blob([text], { type: 'image/svg+xml' }));
+        img.onload = () => {
+          const m = /viewBox\s*=\s*["']\s*[\d.eE+-]+[\s,]+[\d.eE+-]+[\s,]+([\d.eE+-]+)[\s,]+([\d.eE+-]+)/.exec(text);
+          let w = m ? parseFloat(m[1]) : 0, h = m ? parseFloat(m[2]) : 0;
+          if (!w || !h) { w = img.naturalWidth; h = img.naturalHeight; }
+          if (!w || !h) { w = 1024; h = 1024; }
+          res({ el: img, w: Math.round(w), h: Math.round(h) });
+        };
+        img.onerror = () => rej(new Error('svg-load'));
+        img.src = url;
+      };
+      fr.onerror = () => rej(new Error('file-read'));
+      fr.readAsText(file);
     });
-    const pdf = await task.promise;
-    let meta = null;
-    try { meta = (await pdf.getMetadata()).info || null; } catch (_) { /* 메타데이터 없어도 무방 */ }
-    return {
-      id: nextId++, name: file.name, size: file.size, bytes, pdf,
-      numPages: pdf.numPages, meta, page: 1, zoom: 'fit', thumbs: [],
-    };
   }
 
   function explainError(file, err) {
     const name = `<b>${escapeHtml(file.name)}</b>`;
-    if (err && err.message === 'not-pdf' && err.kind === 'postscript') {
+    if (err && err.message === 'not-supported' && err.kind === 'postscript') {
       showAlert('PDF 호환 옵션 없이 저장된 파일입니다',
         `<p>${name} 은(는) 오래된 방식(PostScript 전용)으로 저장되어 브라우저에서 열 수 없습니다.</p>
          <ol>
@@ -534,23 +735,19 @@
          </ol>`);
       return;
     }
-    if (err && err.message === 'not-pdf' && err.kind === 'zip') {
+    if (err && err.message === 'not-supported' && err.kind === 'zip') {
       showAlert('압축 파일로 보입니다',
-        `<p>${name} 은(는) 내부 구조가 압축(ZIP) 형식입니다. 먼저 압축을 풀고 안의 .ai 파일을 열어 주세요.</p>`);
+        `<p>${name} 은(는) 내부 구조가 압축(ZIP) 형식입니다. 먼저 압축을 풀고 안의 파일을 열어 주세요.</p>`);
       return;
     }
-    if (err && (err.name === 'PasswordException')) {
+    if (err && err.name === 'PasswordException') {
       showAlert('암호가 걸린 파일입니다',
         `<p>${name} 은(는) 열기 암호가 설정되어 있어 표시할 수 없습니다. 암호를 해제한 파일을 요청해 주세요.</p>`);
       return;
     }
     showAlert('파일을 열 수 없습니다',
       `<p>${name} 을(를) 읽는 중 문제가 생겼습니다. 파일이 손상되었거나 지원하지 않는 형식일 수 있습니다.</p>
-       <p style="margin-top:6px">Illustrator 9 이상에서 <b>"PDF 호환 파일 만들기"</b> 옵션으로 저장된 .ai 파일과 일반 .pdf 파일을 지원합니다.</p>`);
-  }
-
-  function escapeHtml(s) {
-    return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+       <p style="margin-top:6px">지원 형식: "PDF 호환 파일 만들기"로 저장된 .ai, .pdf, JPG, PNG, WebP, GIF, SVG</p>`);
   }
 
   // ── 파일 목록 ─────────────────────────────────────────
@@ -561,7 +758,8 @@
       b.type = 'button';
       b.className = 'file' + (d === current ? ' active' : '');
       b.title = d.name;
-      b.innerHTML = `<span class="name">${escapeHtml(d.name)}</span><span class="meta">${d.numPages}p</span><span class="rm" title="목록에서 닫기">×</span>`;
+      const meta = d.kind === 'pdf' ? `${d.numPages}p` : (d.kind === 'svg' ? 'SVG' : 'IMG');
+      b.innerHTML = `<span class="name">${escapeHtml(d.name)}</span><span class="meta">${meta}</span><span class="rm" title="목록에서 닫기">×</span>`;
       b.addEventListener('click', (e) => {
         if (e.target.classList.contains('rm')) { closeDoc(d); return; }
         selectDoc(d);
@@ -580,11 +778,11 @@
     const i = docs.indexOf(d);
     if (i < 0) return;
     docs.splice(i, 1);
-    try { await d.pdf.destroy(); } catch (_) {}
+    try { if (d.pdf) await d.pdf.destroy(); if (d.img && d.img.close) d.img.close(); } catch (_) {}
     if (current === d) {
       current = null;
       if (docs.length) await selectDoc(docs[Math.min(i, docs.length - 1)]);
-      else { app.classList.remove('has-file'); thumbsEl.innerHTML = ''; }
+      else { app.classList.remove('has-file'); thumbsEl.innerHTML = ''; closePanels(); }
     }
     renderFileList();
   }
@@ -593,11 +791,48 @@
   async function selectDoc(d) {
     if (current === d) return;
     current = d;
+    stopPicking();
     renderFileList();
     fnameEl.textContent = d.name;
     fnameEl.title = d.name;
+    $('btnPdf').style.display = d.kind === 'pdf' ? '' : 'none';
+    syncPanels();
     await buildThumbs(d);
     await renderPage();
+  }
+
+  /** 페이지 크기(scale 1 기준) */
+  async function pageSize(d, p) {
+    if (d.kind !== 'pdf') return { w: d.w0, h: d.h0 };
+    if (p === 1) return { w: d.w0, h: d.h0 };
+    const page = await d.pdf.getPage(p);
+    const vp = page.getViewport({ scale: 1 });
+    return { w: vp.width, h: vp.height };
+  }
+
+  /**
+   * 원본을 지정 배율로 캔버스에 그린다. transparent=true면 배경을 칠하지 않는다.
+   * pdf는 page.render, image/svg는 drawImage. 반환: {canvas, task?}
+   */
+  async function drawSource(d, p, scale, targetCanvas, transparent, pixelRatio = 1) {
+    if (d.kind === 'pdf') {
+      const page = await d.pdf.getPage(p);
+      const vp = page.getViewport({ scale });
+      const task = page.render({
+        canvasContext: targetCanvas.getContext('2d'),
+        viewport: vp,
+        transform: pixelRatio !== 1 ? [pixelRatio, 0, 0, pixelRatio, 0, 0] : null,
+        background: transparent ? 'rgba(0,0,0,0)' : 'rgb(255,255,255)',
+      });
+      return task;
+    }
+    const c = targetCanvas.getContext('2d');
+    c.setTransform(1, 0, 0, 1, 0, 0);
+    c.clearRect(0, 0, targetCanvas.width, targetCanvas.height);
+    if (!transparent && d.kind === 'svg') { c.fillStyle = '#fff'; c.fillRect(0, 0, targetCanvas.width, targetCanvas.height); }
+    c.imageSmoothingEnabled = true; c.imageSmoothingQuality = 'high';
+    c.drawImage(d.img, 0, 0, targetCanvas.width, targetCanvas.height);
+    return { promise: Promise.resolve(), cancel() {} };
   }
 
   async function buildThumbs(d) {
@@ -607,26 +842,24 @@
       const b = document.createElement('button');
       b.type = 'button';
       b.className = 'thumb' + (p === d.page ? ' active' : '');
-      b.innerHTML = `<div class="frame"><canvas></canvas></div><span class="lbl">아트보드 ${p}</span>`;
-      b.addEventListener('click', () => { d.page = p; renderPage(); });
+      const lbl = d.kind === 'pdf' ? `아트보드 ${p}` : '이미지';
+      b.innerHTML = `<div class="frame"><canvas></canvas></div><span class="lbl">${lbl}</span>`;
+      b.addEventListener('click', () => { d.page = p; stopPicking(); syncPanels(); renderPage(); });
       thumbsEl.appendChild(b);
       d.thumbs.push(b);
     }
-    // 순차 렌더 (문서가 바뀌면 중단)
     const mine = d;
     for (let p = 1; p <= d.numPages; p++) {
       if (current !== mine) return;
       try {
-        const page = await d.pdf.getPage(p);
-        const vp0 = page.getViewport({ scale: 1 });
+        const sz = await pageSize(d, p);
         const targetW = 150;
-        const scale = targetW / vp0.width;
-        const vp = page.getViewport({ scale });
-        const c = d.thumbs[p - 1].querySelector('canvas');
+        const scale = targetW / sz.w;
         const dpr = Math.min(window.devicePixelRatio || 1, 2);
-        c.width = Math.ceil(vp.width * dpr); c.height = Math.ceil(vp.height * dpr);
-        c.style.width = `${Math.round(vp.width)}px`;
-        await page.render({ canvasContext: c.getContext('2d'), viewport: vp, transform: [dpr, 0, 0, dpr, 0, 0] }).promise;
+        const c = d.thumbs[p - 1].querySelector('canvas');
+        c.width = Math.ceil(sz.w * scale * dpr); c.height = Math.ceil(sz.h * scale * dpr);
+        c.style.width = `${Math.round(sz.w * scale)}px`;
+        await (await drawSource(d, p, scale, c, false, dpr)).promise;
       } catch (e) { console.warn('thumb', p, e); }
     }
   }
@@ -639,12 +872,14 @@
   }
 
   // ── 메인 렌더 ─────────────────────────────────────────
-  function fitScale(vp0) {
+  function fitScale(w, h) {
     const pad = window.innerWidth <= 860 ? 28 : 56;
     const availW = stage.clientWidth - pad;
     const availH = stage.clientHeight - pad;
-    return Math.max(0.05, Math.min(availW / vp0.width, availH / vp0.height));
+    return Math.max(0.02, Math.min(availW / w, availH / h));
   }
+
+  let lastFitScale = 1;
 
   async function renderPage() {
     const d = current;
@@ -657,34 +892,39 @@
     $('btnPrev').disabled = d.page <= 1;
     $('btnNext').disabled = d.page >= d.numPages;
 
-    let page;
-    try { page = await d.pdf.getPage(d.page); }
+    let sz;
+    try { sz = await pageSize(d, d.page); }
     catch (e) { sheet.classList.remove('busy'); console.error(e); return; }
     if (seq !== renderSeq) return;
 
-    const vp0 = page.getViewport({ scale: 1 });
-    const scale = d.zoom === 'fit' ? fitScale(vp0) : d.zoom;
-    const vp = page.getViewport({ scale });
+    const scale = d.zoom === 'fit' ? fitScale(sz.w, sz.h) : d.zoom;
+    if (d.zoom === 'fit') lastFitScale = scale;
 
-    // 표시 크기 (CSS px)
-    const cssW = Math.max(1, Math.round(vp.width));
-    const cssH = Math.max(1, Math.round(vp.height));
-    // 실제 픽셀: DPR 반영하되 상한을 넘지 않도록 조정
+    const cssW = Math.max(1, Math.round(sz.w * scale));
+    const cssH = Math.max(1, Math.round(sz.h * scale));
     let dpr = window.devicePixelRatio || 1;
-    let pxW = Math.ceil(cssW * dpr), pxH = Math.ceil(cssH * dpr);
-    if (pxW * pxH > MAX_CANVAS_PX || pxW > MAX_CANVAS_SIDE || pxH > MAX_CANVAS_SIDE) {
-      const k = Math.min(Math.sqrt(MAX_CANVAS_PX / (pxW * pxH)), MAX_CANVAS_SIDE / pxW, MAX_CANVAS_SIDE / pxH);
-      dpr *= k; pxW = Math.floor(pxW * k); pxH = Math.floor(pxH * k);
-    }
-    canvas.width = pxW; canvas.height = pxH;
+    let px = capDims(Math.ceil(cssW * dpr), Math.ceil(cssH * dpr));
+    dpr *= px.k;
+    canvas.width = px.w; canvas.height = px.h;
     canvas.style.width = `${cssW}px`; canvas.style.height = `${cssH}px`;
     sheet.style.width = `${cssW}px`; sheet.style.height = `${cssH}px`;
 
     fitBtn.textContent = d.zoom === 'fit' ? `맞춤 ${Math.round(scale * 100)}%` : `${Math.round(scale * 100)}%`;
 
+    const result = d.results[d.page];
+    const transparentView = !!result || (d.transparent && d.kind !== 'image');
+    sheet.classList.toggle('checker', transparentView);
+
     try {
-      renderTask = page.render({ canvasContext: ctx, viewport: vp, transform: [dpr, 0, 0, dpr, 0, 0] });
-      await renderTask.promise;
+      if (result) {
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
+        ctx.drawImage(result.canvas, 0, 0, canvas.width, canvas.height);
+      } else {
+        renderTask = await drawSource(d, d.page, scale, canvas, d.transparent, dpr);
+        await renderTask.promise;
+      }
     } catch (e) {
       if (!(e && e.name === 'RenderingCancelledException')) console.error(e);
       return;
@@ -692,22 +932,29 @@
       if (seq === renderSeq) sheet.classList.remove('busy');
     }
     if (seq !== renderSeq) return;
-    renderInfo(d, vp0);
+    renderInfo(d, sz);
   }
 
-  function renderInfo(d, vp0) {
+  function renderInfo(d, sz) {
     const parts = [];
     parts.push(`<span><b>${escapeHtml(d.name)}</b></span>`);
     parts.push(`<span>${fmtSize(d.size)}</span>`);
-    parts.push(`<span>아트보드 ${d.numPages}개</span>`);
-    parts.push(`<span>${mm(vp0.width)} × ${mm(vp0.height)} mm (${Math.round(vp0.width)} × ${Math.round(vp0.height)} pt)</span>`);
-    const creator = d.meta && (d.meta.Creator || d.meta.Producer);
-    if (creator) {
-      const c = String(creator).trim();
-      parts.push(`<span title="${escapeHtml(c)}">${escapeHtml(c.length > 40 ? c.slice(0, 40) + '…' : c)}</span>`);
+    if (d.kind === 'pdf') {
+      parts.push(`<span>아트보드 ${d.numPages}개</span>`);
+      parts.push(`<span>${mm(sz.w)} × ${mm(sz.h)} mm (${Math.round(sz.w)} × ${Math.round(sz.h)} pt)</span>`);
+      const creator = d.meta && (d.meta.Creator || d.meta.Producer);
+      if (creator) {
+        const c = String(creator).trim();
+        parts.push(`<span title="${escapeHtml(c)}">${escapeHtml(c.length > 40 ? c.slice(0, 40) + '…' : c)}</span>`);
+      }
+      const dt = d.meta && d.meta.ModDate && parsePdfDate(d.meta.ModDate);
+      if (dt) parts.push(`<span>수정 ${dt}</span>`);
+    } else {
+      parts.push(`<span>${d.kind === 'svg' ? 'SVG 벡터' : '이미지'} ${Math.round(sz.w)} × ${Math.round(sz.h)} px</span>`);
     }
-    const dt = d.meta && d.meta.ModDate && parsePdfDate(d.meta.ModDate);
-    if (dt) parts.push(`<span>수정 ${dt}</span>`);
+    const r = d.results[d.page];
+    if (r) parts.push(`<span class="tag">${escapeHtml(r.label)} 적용됨</span>`);
+    else if (d.transparent && d.kind !== 'image') parts.push(`<span class="tag">투명 배경</span>`);
     infoEl.innerHTML = parts.join('<span class="dot"></span>');
   }
 
@@ -720,9 +967,7 @@
   // ── 줌 / 페이지 이동 ──────────────────────────────────
   function currentScale() {
     if (!current) return 1;
-    if (current.zoom !== 'fit') return current.zoom;
-    const n = parseInt((fitBtn.textContent.match(/(\d+)%/) || [])[1], 10);
-    return n ? n / 100 : 1;
+    return current.zoom === 'fit' ? lastFitScale : current.zoom;
   }
   function zoomBy(dir) {
     if (!current) return;
@@ -738,6 +983,7 @@
     const p = Math.min(current.numPages, Math.max(1, current.page + delta));
     if (p === current.page) return;
     current.page = p;
+    stopPicking(); syncPanels();
     renderPage();
   }
 
@@ -752,15 +998,15 @@
   $('btnNext').addEventListener('click', () => goPage(1));
 
   document.addEventListener('keydown', (e) => {
-    if (!current || e.target.matches('input,textarea')) return;
+    if (!current || e.target.matches('input,textarea,select')) return;
     if (e.key === 'ArrowRight' || e.key === 'PageDown') { e.preventDefault(); goPage(1); }
     else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); goPage(-1); }
     else if (e.key === '+' || e.key === '=') { e.preventDefault(); zoomBy(1); }
     else if (e.key === '-') { e.preventDefault(); zoomBy(-1); }
     else if (e.key === '0') { e.preventDefault(); current.zoom = 'fit'; renderPage(); }
+    else if (e.key === 'Escape') { closePanels(); stopPicking(); }
   });
 
-  // Ctrl/⌘ + 휠 → 줌
   stage.addEventListener('wheel', (e) => {
     if (!(e.ctrlKey || e.metaKey) || !current) return;
     e.preventDefault();
@@ -774,7 +1020,86 @@
     resizeT = setTimeout(renderPage, 120);
   });
 
-  // ── 저장 ──────────────────────────────────────────────
+  // ── 패널 열기/닫기 ────────────────────────────────────
+  function openPanel(id) {
+    closePanels();
+    $(id).classList.add('show');
+    $(id === 'savePanel' ? 'btnSave' : 'btnBg').classList.add('on');
+    if (id === 'savePanel') updateSizeHint();
+  }
+  function closePanels() {
+    ['savePanel', 'bgPanel'].forEach(id => $(id).classList.remove('show'));
+    $('btnSave').classList.remove('on'); $('btnBg').classList.remove('on');
+  }
+  $('btnSave').addEventListener('click', () => $('savePanel').classList.contains('show') ? closePanels() : openPanel('savePanel'));
+  $('btnBg').addEventListener('click', () => $('bgPanel').classList.contains('show') ? (closePanels(), stopPicking()) : openPanel('bgPanel'));
+  document.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', () => { closePanels(); stopPicking(); }));
+
+  function seg(id, cb) {
+    const el = $(id);
+    el.addEventListener('click', (e) => {
+      const b = e.target.closest('button'); if (!b) return;
+      el.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b ? 'true' : 'false'));
+      cb(b.dataset.v);
+    });
+  }
+  function segValue(id) { return $(id).querySelector('button[aria-pressed="true"]').dataset.v; }
+
+  let saveFmt = 'png', saveSharp = 0;
+  seg('segFmt', v => { saveFmt = v; });
+  seg('segSharp', v => { saveSharp = parseFloat(v); });
+  $('selSize').addEventListener('change', updateSizeHint);
+
+  /** 현재 문서·옵션에 맞춰 패널 표시를 갱신 */
+  function syncPanels() {
+    const d = current; if (!d) return;
+    const isVector = d.kind !== 'image';
+    $('secVector').style.display = isVector ? '' : 'none';
+    $('chkTransparent').checked = !!d.transparent;
+    $('rowSharp').style.display = (d.kind === 'image' || d.results[d.page]) ? '' : 'none';
+    const baseOpt = $('selSize').querySelector('option[value="base"]');
+    baseOpt.textContent = (d.kind === 'image' || d.results[d.page]) ? '원본 크기' : `기본 (긴 변 ${BASE_LONG}px)`;
+    updateSizeHint();
+  }
+
+  // ── 저장 크기 계산 ────────────────────────────────────
+  async function exportPlan() {
+    const d = current;
+    const sz = await pageSize(d, d.page);
+    const res = d.results[d.page];
+    // 소스 픽셀 크기: 결과물이 있으면 그 캔버스, 사진이면 원본, 벡터면 "기본" 렌더 크기
+    const srcW = res ? res.canvas.width : (d.kind === 'image' ? d.w0 : Math.round(sz.w * BASE_LONG / Math.max(sz.w, sz.h)));
+    const srcH = res ? res.canvas.height : (d.kind === 'image' ? d.h0 : Math.round(sz.h * BASE_LONG / Math.max(sz.w, sz.h)));
+    const mode = $('selSize').value;
+    let s;
+    if (mode === 'base') s = 1;
+    else if (mode === 'fit4k') s = Math.min(3840 / srcW, 2160 / srcH);
+    else if (mode === 'long4k') s = 3840 / Math.max(srcW, srcH);
+    else if (mode === 'x2') s = 2;
+    else s = 4;
+    let tw = Math.round(srcW * s), th = Math.round(srcH * s);
+    const cap = capDims(tw, th);
+    const capped = cap.k < 1;
+    tw = cap.w; th = cap.h;
+    const vectorDirect = !res && d.kind !== 'image';   // 벡터는 목표 크기로 바로 렌더
+    return { d, sz, res, srcW, srcH, tw, th, s, capped, vectorDirect };
+  }
+
+  async function updateSizeHint() {
+    if (!current) return;
+    try {
+      const p = await exportPlan();
+      let t = `${p.tw} × ${p.th} px`;
+      if (p.vectorDirect) t += ' · 벡터에서 바로 렌더링 (화질 손실 없음)';
+      else if (p.s > 1.001) t += ' · Lanczos-3 보간 확대';
+      else if (p.s < 0.999) t += ' · 축소';
+      if (p.capped) t += ' · 브라우저 한계로 크기를 줄였습니다';
+      if (p.s <= 1 && !p.vectorDirect && $('selSize').value !== 'base') t += ' (이미 목표 크기 이상이라 원본 크기로 저장)';
+      $('sizeHint').textContent = t;
+    } catch (e) { $('sizeHint').textContent = ''; }
+  }
+
+  // ── 저장 실행 ─────────────────────────────────────────
   function download(blob, filename) {
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
@@ -784,40 +1109,393 @@
     setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
   }
 
-  $('btnPdf').addEventListener('click', () => {
+  function setProg(progId, statId, ratio, text) {
+    const pr = $(progId); const st = $(statId);
+    if (ratio == null) { pr.classList.remove('show'); pr.firstElementChild.style.width = '0'; }
+    else { pr.classList.add('show'); pr.firstElementChild.style.width = `${Math.round(ratio * 100)}%`; }
+    st.textContent = text || '';
+  }
+
+  $('btnDoSave').addEventListener('click', async () => {
     if (!current) return;
+    const btn = $('btnDoSave'); btn.disabled = true;
+    try {
+      const p = await exportPlan();
+      const d = p.d;
+      let out;
+      if (p.vectorDirect) {
+        setProg('saveProg', 'saveStat', 0.2, '렌더링 중…');
+        out = makeCanvas(p.tw, p.th);
+        const scale = p.tw / p.sz.w;
+        await (await drawSource(d, d.page, scale, out, d.transparent)).promise;
+      } else {
+        // 소스 이미지 데이터
+        let src;
+        if (p.res) src = p.res.canvas;
+        else { src = makeCanvas(d.w0, d.h0); src.getContext('2d').drawImage(d.img, 0, 0); }
+        if (p.tw > src.width + 1) {
+          const sctx = src.getContext('2d', { willReadFrequently: true });
+          const srcData = sctx.getImageData(0, 0, src.width, src.height);
+          const outData = await lanczosResize(srcData, p.tw, p.th, (r) => setProg('saveProg', 'saveStat', r * 0.9, `확대 중 ${Math.round(r * 100)}%`));
+          out = makeCanvas(p.tw, p.th);
+          out.getContext('2d').putImageData(outData, 0, 0);
+        } else if (p.tw < src.width - 1) {
+          out = downscale(src, p.tw, p.th);
+        } else {
+          out = src;
+        }
+        if (saveSharp > 0) {
+          const octx = out.getContext('2d', { willReadFrequently: true });
+          const sharpened = await unsharp(octx.getImageData(0, 0, out.width, out.height), saveSharp, (r) => setProg('saveProg', 'saveStat', 0.9 + r * 0.1, '선명도 보정 중…'));
+          const c2 = makeCanvas(out.width, out.height);
+          c2.getContext('2d').putImageData(sharpened, 0, 0);
+          out = c2;
+        }
+      }
+      if (saveFmt === 'jpg') {
+        const flat = makeCanvas(out.width, out.height);
+        const fx = flat.getContext('2d');
+        fx.fillStyle = '#fff'; fx.fillRect(0, 0, flat.width, flat.height);
+        fx.drawImage(out, 0, 0);
+        out = flat;
+      }
+      setProg('saveProg', 'saveStat', 0.97, '파일 만드는 중…');
+      const blob = await new Promise(res => saveFmt === 'jpg' ? out.toBlob(res, 'image/jpeg', 1.0) : out.toBlob(res, 'image/png'));
+      if (!blob) throw new Error('toBlob');
+      const parts = [baseName(d.name)];
+      if (d.numPages > 1) parts.push(`artboard${d.page}`);
+      if (p.res) parts.push('nukki');
+      else if (d.transparent && d.kind !== 'image') parts.push('transparent');
+      if ($('selSize').value !== 'base') parts.push(`${out.width}x${out.height}`);
+      download(blob, `${parts.join('-')}.${saveFmt === 'jpg' ? 'jpg' : 'png'}`);
+      setProg('saveProg', 'saveStat', null, `저장 완료 · ${out.width} × ${out.height} px · ${fmtSize(blob.size)}`);
+    } catch (e) {
+      console.error(e);
+      setProg('saveProg', 'saveStat', null, '');
+      showAlert('저장에 실패했습니다', '<p>이미지가 너무 크거나 브라우저 메모리가 부족할 수 있습니다. 크기를 한 단계 줄여 다시 시도해 주세요.</p>');
+    } finally {
+      btn.disabled = false;
+    }
+  });
+
+  $('btnPdf').addEventListener('click', () => {
+    if (!current || current.kind !== 'pdf') return;
     download(new Blob([current.bytes], { type: 'application/pdf' }), `${baseName(current.name)}.pdf`);
     showAlert('PDF로 저장했습니다', '<p>.ai 파일 안에 들어 있는 PDF 데이터를 그대로 꺼낸 것이라 원본 품질 그대로입니다.</p>', 'info');
   });
 
-  $('btnPng').addEventListener('click', async () => {
-    if (!current) return;
-    const btn = $('btnPng');
-    btn.disabled = true;
-    try {
-      const page = await current.pdf.getPage(current.page);
-      const vp0 = page.getViewport({ scale: 1 });
-      // 긴 변 기준 약 3000px, 상한 내에서 최대 해상도
-      let scale = 3000 / Math.max(vp0.width, vp0.height);
-      scale = Math.max(1, Math.min(scale, 8));
-      let vp = page.getViewport({ scale });
-      if (vp.width * vp.height > MAX_CANVAS_PX) {
-        scale *= Math.sqrt(MAX_CANVAS_PX / (vp.width * vp.height));
-        vp = page.getViewport({ scale });
+  /** 다단계 축소 (계단 현상 방지) */
+  function downscale(src, tw, th) {
+    let cur = src, w = src.width, h = src.height;
+    while (w / 2 > tw && h / 2 > th) {
+      w = Math.floor(w / 2); h = Math.floor(h / 2);
+      const c = makeCanvas(w, h); const cc = c.getContext('2d');
+      cc.imageSmoothingEnabled = true; cc.imageSmoothingQuality = 'high';
+      cc.drawImage(cur, 0, 0, w, h); cur = c;
+    }
+    const out = makeCanvas(tw, th); const oc = out.getContext('2d');
+    oc.imageSmoothingEnabled = true; oc.imageSmoothingQuality = 'high';
+    oc.drawImage(cur, 0, 0, tw, th);
+    return out;
+  }
+
+  // ── Lanczos-3 리샘플링 (원본 4K 업스케일러에서 이식) ──
+  function lanczosKernel(x) {
+    if (x === 0) return 1;
+    const ax = Math.abs(x); if (ax >= 3) return 0;
+    const px = Math.PI * x;
+    return 3 * Math.sin(px) * Math.sin(px / 3) / (px * px);
+  }
+  function buildWeights(srcLen, dstLen) {
+    const scale = dstLen / srcLen, out = new Array(dstLen);
+    for (let i = 0; i < dstLen; i++) {
+      const center = (i + 0.5) / scale - 0.5;
+      const lo = Math.max(0, Math.floor(center) - 2);
+      const hi = Math.min(srcLen - 1, Math.floor(center) + 3);
+      const idx = [], w = []; let sum = 0;
+      for (let j = lo; j <= hi; j++) {
+        const wt = lanczosKernel(center - j);
+        if (wt !== 0) { idx.push(j); w.push(wt); sum += wt; }
       }
-      const c = document.createElement('canvas');
-      c.width = Math.floor(vp.width); c.height = Math.floor(vp.height);
-      await page.render({ canvasContext: c.getContext('2d'), viewport: vp }).promise;
-      const blob = await new Promise(res => c.toBlob(res, 'image/png'));
-      const suffix = current.numPages > 1 ? `-artboard${current.page}` : '';
-      download(blob, `${baseName(current.name)}${suffix}.png`);
-      showAlert('PNG로 저장했습니다', `<p>${c.width} × ${c.height} px 크기로 저장되었습니다.</p>`, 'info');
+      for (let j = 0; j < w.length; j++) w[j] /= sum;
+      out[i] = { idx, w };
+    }
+    return out;
+  }
+  async function lanczosResize(src, dstW, dstH, onProgress) {
+    const srcW = src.width, srcH = src.height, d = src.data;
+    const wx = buildWeights(srcW, dstW), wy = buildWeights(srcH, dstH);
+    const mid = new Float32Array(dstW * srcH * 4);
+    const CHUNK = 64; let done = 0; const total = srcH + dstH;
+    for (let y = 0; y < srcH; y++) {
+      const rowOff = y * srcW * 4, midOff = y * dstW * 4;
+      for (let x = 0; x < dstW; x++) {
+        const cw = wx[x]; let r = 0, g = 0, b = 0, al = 0;
+        for (let k = 0; k < cw.idx.length; k++) {
+          const p = rowOff + cw.idx[k] * 4, ws = cw.w[k] * (d[p + 3] / 255);
+          r += d[p] * ws; g += d[p + 1] * ws; b += d[p + 2] * ws; al += 255 * ws;
+        }
+        const q = midOff + x * 4;
+        mid[q] = r; mid[q + 1] = g; mid[q + 2] = b; mid[q + 3] = al;
+      }
+      if (++done % CHUNK === 0) { onProgress(done / total); await yieldFrame(); }
+    }
+    const out = new ImageData(dstW, dstH), od = out.data;
+    for (let y = 0; y < dstH; y++) {
+      const ch = wy[y], outOff = y * dstW * 4;
+      for (let x = 0; x < dstW; x++) {
+        let r = 0, g = 0, b = 0, al = 0;
+        for (let k = 0; k < ch.idx.length; k++) {
+          const p = (ch.idx[k] * dstW + x) * 4, wv = ch.w[k];
+          r += mid[p] * wv; g += mid[p + 1] * wv; b += mid[p + 2] * wv; al += mid[p + 3] * wv;
+        }
+        const q = outOff + x * 4;
+        if (al > 0.0001) {
+          const inv = 255 / al;
+          od[q] = clamp255(r * inv); od[q + 1] = clamp255(g * inv); od[q + 2] = clamp255(b * inv);
+        } else { od[q] = 0; od[q + 1] = 0; od[q + 2] = 0; }
+        od[q + 3] = clamp255(al);
+      }
+      if (++done % CHUNK === 0) { onProgress(done / total); await yieldFrame(); }
+    }
+    onProgress(1);
+    return out;
+  }
+  async function unsharp(img, amount, onProgress) {
+    const w = img.width, h = img.height, s = img.data;
+    const out = new ImageData(w, h), o = out.data;
+    for (let y = 0; y < h; y++) {
+      const up = (y > 0 ? y - 1 : 0) * w * 4, row = y * w * 4, dn = (y < h - 1 ? y + 1 : y) * w * 4;
+      for (let x = 0; x < w; x++) {
+        const l = (x > 0 ? x - 1 : 0) * 4, c0 = x * 4, r = (x < w - 1 ? x + 1 : x) * 4;
+        for (let c = 0; c < 3; c++) {
+          const v = s[row + c0 + c] * (1 + 4 * amount) - amount * (s[up + c0 + c] + s[dn + c0 + c] + s[row + l + c] + s[row + r + c]);
+          o[row + c0 + c] = v < 0 ? 0 : (v > 255 ? 255 : v);
+        }
+        o[row + c0 + 3] = s[row + c0 + 3];
+      }
+      if (y % 96 === 0) { if (onProgress) onProgress(y / h); await yieldFrame(); }
+    }
+    if (onProgress) onProgress(1);
+    return out;
+  }
+
+  // ── 배경 제거 ─────────────────────────────────────────
+  /** 배경 제거용 소스 캔버스: 사진은 원본(상한 내), 벡터는 SRC_LONG 크기로 래스터화 */
+  async function sourceCanvas(d, p, { forAI = false } = {}) {
+    if (d.kind === 'image') {
+      const cap = capDims(d.w0, d.h0);
+      const c = makeCanvas(cap.w, cap.h);
+      const cc = c.getContext('2d'); cc.imageSmoothingQuality = 'high';
+      cc.drawImage(d.img, 0, 0, cap.w, cap.h);
+      return c;
+    }
+    const sz = await pageSize(d, p);
+    const long = forAI ? 2048 : SRC_LONG;
+    const scale = long / Math.max(sz.w, sz.h);
+    const c = makeCanvas(sz.w * scale, sz.h * scale);
+    // 벡터 파일의 투명 배경은 그대로 살린다 (AI 모델에는 흰 배경이 유리하므로 forAI면 칠함)
+    await (await drawSource(d, p, scale, c, d.transparent && !forAI)).promise;
+    return c;
+  }
+
+  function setResult(d, p, canvas, label) {
+    d.results[p] = { canvas, label };
+    syncPanels();
+    renderPage();
+  }
+
+  $('chkTransparent').addEventListener('change', () => {
+    if (!current) return;
+    current.transparent = $('chkTransparent').checked;
+    renderPage(); updateSizeHint();
+  });
+
+  $('rngTol').addEventListener('input', () => { $('outTol').textContent = $('rngTol').value; });
+  $('chkInner').addEventListener('change', () => {});
+
+  // 배경색 선택
+  let refColor = null;     // null = 모서리 자동
+  let picking = false;
+  function setRef(c) {
+    refColor = c;
+    $('swatch').style.background = c ? `rgb(${c[0]},${c[1]},${c[2]})` : 'transparent';
+    $('refHint').textContent = c ? `배경색: rgb(${c[0]}, ${c[1]}, ${c[2]})  ·  자동으로 되돌리려면 다시 선택 후 취소` : '배경색: 모서리에서 자동 감지';
+  }
+  function stopPicking() {
+    picking = false; stage.classList.remove('picking');
+    $('btnPick').textContent = '이미지에서 선택';
+  }
+  $('btnPick').addEventListener('click', () => {
+    if (picking) { stopPicking(); setRef(null); return; }
+    picking = true; stage.classList.add('picking');
+    $('btnPick').textContent = '취소 (자동 감지로)';
+    showAlert('이미지에서 지울 배경색을 클릭하세요', '<p>클릭한 지점의 색을 기준으로 단색 배경을 제거합니다.</p>', 'info');
+  });
+  canvas.addEventListener('click', (e) => {
+    if (!picking) return;
+    const r = canvas.getBoundingClientRect();
+    const x = Math.floor((e.clientX - r.left) / r.width * canvas.width);
+    const y = Math.floor((e.clientY - r.top) / r.height * canvas.height);
+    const px = ctx.getImageData(x, y, 1, 1).data;
+    setRef([px[0], px[1], px[2]]);
+    stopPicking(); hideAlert();
+    $('bgPanel').classList.add('show'); $('btnBg').classList.add('on');
+  });
+
+  $('btnChroma').addEventListener('click', async () => {
+    if (!current) return;
+    const btn = $('btnChroma'); btn.disabled = true;
+    setProg('bgProg', 'bgStat', 0.1, '배경 분석 중…');
+    try {
+      const d = current, p = d.page;
+      const src = d.results[p] ? d.results[p].canvas : await sourceCanvas(d, p);
+      const sctx = src.getContext('2d', { willReadFrequently: true });
+      const img = sctx.getImageData(0, 0, src.width, src.height);
+      await yieldFrame();
+      const tol = parseInt($('rngTol').value, 10);
+      const inner = $('chkInner').checked;
+      const removed = await chromaRemove(img, { tol, inner, ref: refColor }, (r) => setProg('bgProg', 'bgStat', 0.1 + r * 0.85, `배경 제거 중 ${Math.round(r * 100)}%`));
+      const out = makeCanvas(img.width, img.height);
+      out.getContext('2d').putImageData(removed.data, 0, 0);
+      setResult(d, p, out, '단색 배경 제거');
+      setProg('bgProg', 'bgStat', null, `완료 · 전체의 ${Math.round(removed.ratio * 100)}%를 투명 처리`);
+      if (removed.ratio < 0.02) showAlert('지워진 영역이 거의 없습니다', '<p>허용 오차를 올리거나, "이미지에서 선택"으로 배경색을 직접 지정해 보세요. 사진처럼 배경이 복잡하면 AI 누끼를 쓰세요.</p>', 'info');
     } catch (e) {
       console.error(e);
-      showAlert('PNG 저장에 실패했습니다', '<p>아트보드가 너무 크거나 브라우저 메모리가 부족할 수 있습니다. 다시 시도해 주세요.</p>');
-    } finally {
-      btn.disabled = false;
+      setProg('bgProg', 'bgStat', null, '');
+      showAlert('배경 제거에 실패했습니다', '<p>이미지가 너무 크거나 메모리가 부족할 수 있습니다.</p>');
+    } finally { btn.disabled = false; }
+  });
+
+  /**
+   * 단색 배경 제거: 기준색과의 거리로 알파를 만든다.
+   * inner=false면 가장자리에서 이어진 영역만(플러드 필), true면 전체.
+   * 경계는 tol~soft 구간에서 부드럽게, 색 번짐(despill) 보정.
+   */
+  async function chromaRemove(img, { tol, inner, ref }, onProgress) {
+    const w = img.width, h = img.height, d = img.data, n = w * h;
+    if (!ref) ref = cornerColor(img);
+    const thr = tol * 2.2, soft = thr * 1.6;
+    const thr2 = thr * thr, soft2 = soft * soft;
+    const dist2 = new Float32Array(n);
+    for (let i = 0, q = 0; i < n; i++, q += 4) {
+      const dr = d[q] - ref[0], dg = d[q + 1] - ref[1], db = d[q + 2] - ref[2];
+      dist2[i] = dr * dr + dg * dg + db * db;
+      if ((i & 0xFFFFF) === 0) { onProgress(i / n * 0.4); await yieldFrame(); }
     }
+    const mark = new Uint8Array(n);   // 1 = 배경 후보
+    if (inner) {
+      for (let i = 0; i < n; i++) if (dist2[i] <= soft2) mark[i] = 1;
+    } else {
+      const queue = new Int32Array(n); let qh = 0, qt = 0;
+      const push = (i) => { if (!mark[i] && dist2[i] <= soft2) { mark[i] = 1; queue[qt++] = i; } };
+      for (let x = 0; x < w; x++) { push(x); push((h - 1) * w + x); }
+      for (let y = 0; y < h; y++) { push(y * w); push(y * w + w - 1); }
+      let step = 0;
+      while (qh < qt) {
+        const i = queue[qh++];
+        const x = i % w, y = (i - x) / w;
+        if (x > 0) push(i - 1);
+        if (x < w - 1) push(i + 1);
+        if (y > 0) push(i - w);
+        if (y < h - 1) push(i + w);
+        if ((++step & 0x3FFFF) === 0) { onProgress(0.4 + Math.min(qh / n, 1) * 0.4); await yieldFrame(); }
+      }
+    }
+    let removed = 0;
+    const out = new ImageData(w, h), o = out.data;
+    o.set(d);
+    for (let i = 0, q = 0; i < n; i++, q += 4) {
+      if (!mark[i]) continue;
+      const ds = dist2[i];
+      let a; // 0..1 남길 비율
+      if (ds <= thr2) a = 0;
+      else a = (Math.sqrt(ds) - thr) / (soft - thr);
+      if (a <= 0) { o[q + 3] = 0; removed++; continue; }
+      if (a >= 1) continue;
+      // 경계 픽셀: 배경색 성분을 빼서(despill) 원래 색을 복원한 뒤 알파 적용
+      o[q] = clamp255((d[q] - (1 - a) * ref[0]) / a);
+      o[q + 1] = clamp255((d[q + 1] - (1 - a) * ref[1]) / a);
+      o[q + 2] = clamp255((d[q + 2] - (1 - a) * ref[2]) / a);
+      o[q + 3] = Math.round(d[q + 3] * a);
+      removed += 1 - a;
+    }
+    onProgress(1);
+    return { data: out, ratio: removed / n };
+  }
+  function cornerColor(img) {
+    const w = img.width, h = img.height, d = img.data, s = Math.max(2, Math.min(8, Math.floor(Math.min(w, h) / 40)));
+    const corners = [[0, 0], [w - s, 0], [0, h - s], [w - s, h - s]].map(([cx, cy]) => {
+      let r = 0, g = 0, b = 0, c = 0;
+      for (let y = cy; y < cy + s; y++) for (let x = cx; x < cx + s; x++) {
+        const q = (y * w + x) * 4; if (d[q + 3] < 8) continue;
+        r += d[q]; g += d[q + 1]; b += d[q + 2]; c++;
+      }
+      return c ? [r / c, g / c, b / c] : null;
+    }).filter(Boolean);
+    if (!corners.length) return [255, 255, 255];
+    // 서로 가장 가까운 모서리 쌍의 평균 = 진짜 배경일 확률이 높다
+    let best = corners[0], bestD = Infinity;
+    for (const a of corners) {
+      let sum = 0;
+      for (const b of corners) sum += Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]);
+      if (sum < bestD) { bestD = sum; best = a; }
+    }
+    return best.map(Math.round);
+  }
+
+  // AI 누끼
+  let bgrmModule = null;
+  $('btnAI').addEventListener('click', async () => {
+    if (!current) return;
+    const btn = $('btnAI'); btn.disabled = true;
+    const d = current, p = d.page;
+    try {
+      setProg('bgProg', 'bgStat', 0.02, '이미지 준비 중…');
+      const src = d.results[p] ? d.results[p].canvas : await sourceCanvas(d, p, { forAI: true });
+      const blob = await new Promise(res => src.toBlob(res, 'image/png'));
+      setProg('bgProg', 'bgStat', 0.05, 'AI 모듈 불러오는 중…');
+      if (!bgrmModule) bgrmModule = await import(/* @vite-ignore */ BGRM_URL);
+      const fetched = {};
+      const progress = (key, cur, total) => {
+        if (key.startsWith('fetch:')) {
+          fetched[key] = [cur, total];
+          let c = 0, t = 0; for (const k in fetched) { c += fetched[k][0]; t += fetched[k][1]; }
+          const r = t ? c / t : 0;
+          setProg('bgProg', 'bgStat', 0.05 + r * 0.45, `모델 내려받는 중 ${Math.round(r * 100)}% (${fmtSize(c)} / ${fmtSize(t)})`);
+        } else {
+          setProg('bgProg', 'bgStat', 0.55 + (total ? cur / total : 0.5) * 0.4, 'AI가 배경을 분리하는 중… (기기에 따라 최대 1분)');
+        }
+      };
+      const cfg = { model: 'isnet_quint8', progress, output: { format: 'image/png', quality: 1 } };
+      let out;
+      try {
+        if (navigator.gpu) out = await bgrmModule.removeBackground(blob, { ...cfg, device: 'gpu' });
+        else out = await bgrmModule.removeBackground(blob, cfg);
+      } catch (e) {
+        console.warn('gpu 경로 실패, cpu로 재시도', e);
+        out = await bgrmModule.removeBackground(blob, cfg);
+      }
+      const bmp = await createImageBitmap(out);
+      const c = makeCanvas(bmp.width, bmp.height);
+      c.getContext('2d').drawImage(bmp, 0, 0);
+      bmp.close();
+      setResult(d, p, c, 'AI 누끼');
+      setProg('bgProg', 'bgStat', null, '완료 · 결과는 "이미지 저장"에서 PNG로 내려받으세요');
+    } catch (e) {
+      console.error(e);
+      setProg('bgProg', 'bgStat', null, '');
+      showAlert('AI 누끼를 실행하지 못했습니다',
+        '<p>모델을 내려받지 못했거나 브라우저가 지원하지 않습니다. 인터넷 연결을 확인하고 최신 크롬·엣지·사파리에서 다시 시도해 주세요.</p>');
+    } finally { btn.disabled = false; }
+  });
+
+  $('btnRevert').addEventListener('click', () => {
+    if (!current) return;
+    delete current.results[current.page];
+    setProg('bgProg', 'bgStat', null, '');
+    syncPanels(); renderPage();
   });
 
   // ── 입력: 버튼 / 드래그 앤 드롭 / 붙여넣기 ────────────
