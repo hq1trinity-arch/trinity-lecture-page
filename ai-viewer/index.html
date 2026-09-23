@@ -5,9 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
   <title>TRINITY ONE 업무 도구 — 이전했습니다</title>
-  <meta http-equiv="refresh" content="0; url=/tools/">
+  <meta http-equiv="refresh" content="0; url=/tools/?from=ai-viewer">
   <link rel="canonical" href="https://trinityone.co.kr/tools/">
-  <script>location.replace('/tools/' + location.search + location.hash);</script>
+  <script>
+    // 옛 /tools/ 리다이렉트가 브라우저에 캐시된 경우와 서로 튕기지 않도록, 항상 새 URL로 이동해 캐시를 우회한다
+    var q = location.search ? location.search + '&' : '?';
+    location.replace('/tools/' + q + 'r=' + Date.now() + location.hash);
+  </script>
   <style>body{font-family:sans-serif;display:flex;min-height:100vh;align-items:center;justify-content:center;margin:0;background:#F2EFFE;color:#160E2E}a{color:#4A1BD0;font-weight:700}</style>
 </head>
 <body><p>업무 도구가 <a href="/tools/">trinityone.co.kr/tools/</a> 로 이전했습니다. 자동으로 이동합니다…</p></body>
