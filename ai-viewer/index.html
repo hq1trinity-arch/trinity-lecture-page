@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
-  <title>AI 파일 뷰어 — TRINITY ONE</title>
+  <title>업무 도구 — TRINITY ONE</title>
   <meta name="description" content="일러스트레이터(.ai) 파일과 이미지를 설치 없이 브라우저에서 열어 보고, 4K 고해상도 저장과 배경 제거(누끼)까지 처리하는 내부용 도구. 파일은 서버로 전송되지 않습니다.">
   <link rel="icon" type="image/png" href="../assets/trinity-one-logo.png">
   <style>
@@ -128,7 +128,7 @@
     .drop .hint { margin: 22px 0 0; font-size: 12.5px; color: var(--ink-40); line-height: 1.6; }
     .drop .hint b { color: var(--ink-60); font-weight: 600; }
 
-    .home { width: min(1120px, 100%); }
+    .home { width: min(1240px, 100%); }
     .home .head { text-align: center; margin-bottom: 22px; }
     .home .head .badge {
       display: inline-block; font-size: 11.5px; font-weight: 700; letter-spacing: .12em;
@@ -136,8 +136,10 @@
     }
     .home .head h1 { margin: 0 0 8px; font-size: 26px; font-weight: 700; letter-spacing: -.02em; line-height: 1.3; }
     .home .head p { margin: 0; font-size: 14.5px; color: var(--ink-60); line-height: 1.6; }
-    .mode-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
-    @media (max-width: 1100px) and (min-width: 861px) { .mode-cards { grid-template-columns: repeat(2, 1fr); } }
+    .mode-cards { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
+    @media (max-width: 1180px) and (min-width: 861px) { .mode-cards { grid-template-columns: repeat(2, 1fr); } }
+    a.mode-card { text-decoration: none; }
+    .mode-card.link { background: linear-gradient(180deg, #FAF8FF 0%, var(--white) 100%); }
     .mode-card {
       background: var(--white); border: 1px solid var(--border); border-radius: 18px;
       padding: 24px 22px 22px; text-align: left; color: var(--ink);
@@ -476,8 +478,8 @@
 <header class="topbar">
   <img class="logo" src="../assets/trinity-one-logo.png" alt="TRINITY ONE">
   <div class="brand">
-    <strong>AI 파일 뷰어</strong>
-    <span>Illustrator(.ai)·이미지 확인 · 4K 저장 · 배경 제거</span>
+    <strong>TRINITY ONE 업무 도구</strong>
+    <span>AI 파일 보기 · 누끼 · 4K·규격 저장 · 얼굴 블러 · 단축 링크</span>
   </div>
   <div class="modes" id="modes" role="group" aria-label="작업 선택">
     <button type="button" data-mode="view" aria-pressed="true"><svg viewBox="0 0 24 24"><path d="M12 5C7 5 3 8.6 1.5 12 3 15.4 7 19 12 19s9-3.6 10.5-7C21 8.6 17 5 12 5Zm0 11.5a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9Zm0-7a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5Z"/></svg><span>파일 보기</span></button>
@@ -511,7 +513,7 @@
           <span class="ico"><svg viewBox="0 0 24 24"><path d="M12 5C7 5 3 8.6 1.5 12 3 15.4 7 19 12 19s9-3.6 10.5-7C21 8.6 17 5 12 5Zm0 11.5a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9Zm0-7a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5Z"/></svg></span>
           <span class="step">01</span>
           <h2>AI 파일 보기</h2>
-          <p>일러스트레이터가 없어도<br>디자이너가 보낸 .ai 파일을 바로 확인하고,<br>PDF나 이미지로 저장합니다.</p>
+          <p>일러스트레이터가 없어도<br>디자이너가 보낸 .ai 파일을<br>바로 확인하고 저장합니다.</p>
           <span class="fmt">.ai · .pdf · SVG · 이미지</span>
           <span class="go">파일 선택 <svg viewBox="0 0 24 24"><path d="M8.6 16.6 10 18l6-6-6-6-1.4 1.4 4.6 4.6-4.6 4.6Z"/></svg></span>
         </button>
@@ -539,6 +541,14 @@
           <span class="fmt">JPG · PNG · WebP</span>
           <span class="go">파일 선택 <svg viewBox="0 0 24 24"><path d="M8.6 16.6 10 18l6-6-6-6-1.4 1.4 4.6 4.6-4.6 4.6Z"/></svg></span>
         </button>
+        <a class="mode-card link" href="../s/admin/">
+          <span class="ico"><svg viewBox="0 0 24 24"><path d="M10.6 13.4a1 1 0 0 1 0-1.4l2.8-2.8a1 1 0 1 1 1.4 1.4L12 13.4a1 1 0 0 1-1.4 0Zm-2.1 3.5a3 3 0 0 1 0-4.2l2.1-2.1-1.4-1.4-2.1 2.1a5 5 0 0 0 7.1 7.1l2.1-2.1-1.4-1.4-2.1 2.1a3 3 0 0 1-4.3 0Zm7-9.8a3 3 0 0 1 4.2 4.2l-2.1 2.1 1.4 1.4 2.1-2.1a5 5 0 0 0-7.1-7.1l-2.1 2.1 1.4 1.4 2.2-2Z"/></svg></span>
+          <span class="step">05</span>
+          <h2>단축 링크 만들기</h2>
+          <p>구글 폼·시트 같은 긴 링크를<br>trinityone.co.kr/s/코드로 줄이고<br>QR 코드까지 내려받습니다.</p>
+          <span class="fmt">모든 https 주소</span>
+          <span class="go">관리 페이지 열기 <svg viewBox="0 0 24 24"><path d="M8.6 16.6 10 18l6-6-6-6-1.4 1.4 4.6 4.6-4.6 4.6Z"/></svg></span>
+        </a>
       </div>
       <div class="drop" id="drop">
         <svg viewBox="0 0 24 24"><path d="M19 13v6H5v-6H3v6a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6h-2Zm-6-.8 2.6-2.6L17 11l-5 5-5-5 1.4-1.4L11 12.2V3h2v9.2Z"/></svg>
@@ -1397,7 +1407,7 @@
   function closePanels() { setMode('view'); }
   $('selSize').addEventListener('change', () => { setMode._sizeTouched = true; });
   document.querySelectorAll('#modes button').forEach(b => b.addEventListener('click', () => setMode(b.dataset.mode)));
-  document.querySelectorAll('.mode-card').forEach(b => b.addEventListener('click', () => { pendingMode = b.dataset.pick; fileInput.click(); }));
+  document.querySelectorAll('.mode-card[data-pick]').forEach(b => b.addEventListener('click', () => { pendingMode = b.dataset.pick; fileInput.click(); }));
   $('btnSave').addEventListener('click', () => setMode(mode === 'up' ? 'view' : 'up'));
   $('btnBg').addEventListener('click', () => setMode(mode === 'bg' ? 'view' : 'bg'));
   document.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', () => setMode('view')));
