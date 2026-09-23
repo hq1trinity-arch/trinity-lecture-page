@@ -4,11 +4,2625 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
-  <title>TRINITY ONE 업무 도구</title>
-  <meta http-equiv="refresh" content="0; url=/ai-viewer/">
-  <link rel="canonical" href="https://trinityone.co.kr/ai-viewer/">
-  <script>location.replace('/ai-viewer/');</script>
-  <style>body{font-family:sans-serif;display:flex;min-height:100vh;align-items:center;justify-content:center;margin:0;background:#F2EFFE;color:#160E2E}a{color:#4A1BD0;font-weight:700}</style>
+  <title>업무 도구 — TRINITY ONE</title>
+  <meta name="description" content="일러스트레이터(.ai) 파일과 이미지를 설치 없이 브라우저에서 열어 보고, 4K 고해상도 저장과 배경 제거(누끼)까지 처리하는 내부용 도구. 파일은 서버로 전송되지 않습니다.">
+  <link rel="icon" type="image/png" href="../assets/trinity-one-logo.png">
+  <style>
+    @font-face { font-family: "Pretendard"; font-weight: 400; font-style: normal; font-display: swap; src: url("../assets/fonts/Pretendard-Regular.otf") format("opentype"); }
+    @font-face { font-family: "Pretendard"; font-weight: 500; font-style: normal; font-display: swap; src: url("../assets/fonts/Pretendard-Medium.otf") format("opentype"); }
+    @font-face { font-family: "Pretendard"; font-weight: 600; font-style: normal; font-display: swap; src: url("../assets/fonts/Pretendard-SemiBold.otf") format("opentype"); }
+    @font-face { font-family: "Pretendard"; font-weight: 700; font-style: normal; font-display: swap; src: url("../assets/fonts/Pretendard-Bold.otf") format("opentype"); }
+
+    :root {
+      --violet: #4A1BD0;
+      --violet-dark: #2E0F9E;
+      --lavender: #6E4AE8;
+      --lavender-light: #A78BFF;
+      --ink: #160E2E;
+      --ink-60: rgba(22,14,46,.6);
+      --ink-40: rgba(22,14,46,.4);
+      --tint: #F2EFFE;
+      --border: #E3DEF3;
+      --white: #FFFFFF;
+      --danger: #B3261E;
+      --danger-bg: #FDECEB;
+      --ok: #1E7A46;
+      --font: "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --topbar-h: 64px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: var(--font);
+      color: var(--ink);
+      background: var(--tint);
+      word-break: keep-all;
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+    }
+    button, select, input { font: inherit; }
+    button { cursor: pointer; }
+    button:disabled { cursor: not-allowed; opacity: .45; }
+    .m-only { display: none; }
+    @media (max-width: 860px) {
+      .m-only { display: inline; }
+      .d-only { display: none; }
+    }
+
+    /* ── Top bar ─────────────────────────────────────────── */
+    .topbar {
+      height: var(--topbar-h);
+      display: flex; align-items: center; gap: 14px;
+      padding: 0 20px;
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+    }
+    .topbar .logo { height: 34px; width: auto; display: block; }
+    .topbar .brand { display: flex; flex-direction: column; line-height: 1.15; }
+    .topbar .brand strong { font-size: 15px; font-weight: 700; letter-spacing: -.01em; }
+    .topbar .brand span { font-size: 11.5px; color: var(--ink-60); margin-top: 2px; }
+    .topbar .spacer { flex: 1; }
+    .topbar .privacy {
+      font-size: 12px; color: var(--ink-60);
+      display: flex; align-items: center; gap: 6px;
+    }
+    .topbar .privacy svg { width: 14px; height: 14px; fill: var(--violet); }
+    .topbar .modes {
+      display: none; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-left: 10px;
+    }
+    body.has-file .topbar .modes { display: inline-flex; }
+    .topbar .modes button {
+      height: 36px; padding: 0 14px; border: 0; border-right: 1px solid var(--border);
+      background: var(--white); color: var(--ink-60); font-size: 13px; font-weight: 600;
+      display: inline-flex; align-items: center; gap: 6px; white-space: nowrap;
+    }
+    .topbar .modes button:last-child { border-right: 0; }
+    .topbar .modes button svg { width: 15px; height: 15px; fill: currentColor; }
+    .topbar .modes button:hover { background: var(--tint); color: var(--violet); }
+    .topbar .modes button[aria-pressed="true"] { background: var(--violet); color: var(--white); }
+
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      height: 38px; padding: 0 16px;
+      border-radius: 10px; border: 1px solid transparent;
+      font-size: 14px; font-weight: 600; letter-spacing: -.01em;
+      white-space: nowrap;
+      transition: background .15s, border-color .15s, color .15s;
+    }
+    .btn svg { width: 16px; height: 16px; fill: currentColor; flex: none; }
+    .btn-primary { background: var(--violet); color: var(--white); }
+    .btn-primary:hover { background: var(--violet-dark); }
+    .btn-ghost { background: var(--white); color: var(--violet); border-color: var(--border); }
+    .btn-ghost:hover { background: var(--tint); border-color: var(--lavender-light); }
+    .btn-ghost.on { background: var(--tint); border-color: var(--violet); }
+    .btn-sm { height: 32px; padding: 0 12px; font-size: 13px; border-radius: 8px; }
+    .btn-icon { width: 32px; padding: 0; }
+
+    /* ── Layout ──────────────────────────────────────────── */
+    .app { height: calc(100% - var(--topbar-h)); display: flex; flex-direction: column; }
+
+    .empty {
+      flex: 1; display: flex; align-items: safe center; justify-content: center;
+      padding: 24px 16px;
+      overflow: auto;
+    }
+    .drop {
+      width: min(720px, 100%);
+      background: var(--white);
+      border: 2px dashed var(--lavender-light);
+      border-radius: 20px;
+      padding: 48px 32px;
+      text-align: center;
+      transition: border-color .15s, background .15s, transform .15s;
+    }
+    .drop.over { border-color: var(--violet); background: #FAF8FF; transform: scale(1.01); }
+    .drop .badge {
+      display: inline-block; font-size: 11.5px; font-weight: 700; letter-spacing: .12em;
+      color: var(--lavender); text-transform: uppercase; margin-bottom: 16px;
+    }
+    .drop h1 { margin: 0 0 12px; font-size: 26px; font-weight: 700; letter-spacing: -.02em; line-height: 1.3; }
+    .drop p { margin: 0 0 24px; font-size: 15px; color: var(--ink-60); line-height: 1.65; }
+    .drop .actions { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+    .drop .hint { margin: 22px 0 0; font-size: 12.5px; color: var(--ink-40); line-height: 1.6; }
+    .drop .hint b { color: var(--ink-60); font-weight: 600; }
+
+    .home { width: min(1240px, 100%); }
+    .home .head { text-align: center; margin-bottom: 22px; }
+    .home .head .badge {
+      display: inline-block; font-size: 11.5px; font-weight: 700; letter-spacing: .12em;
+      color: var(--lavender); text-transform: uppercase; margin-bottom: 12px;
+    }
+    .home .head h1 { margin: 0 0 8px; font-size: 26px; font-weight: 700; letter-spacing: -.02em; line-height: 1.3; }
+    .home .head p { margin: 0; font-size: 14.5px; color: var(--ink-60); line-height: 1.6; }
+    .mode-cards { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
+    @media (max-width: 1180px) and (min-width: 861px) { .mode-cards { grid-template-columns: repeat(2, 1fr); } }
+    a.mode-card { text-decoration: none; }
+    .mode-card.link { background: linear-gradient(180deg, #FAF8FF 0%, var(--white) 100%); }
+    .mode-card {
+      background: var(--white); border: 1px solid var(--border); border-radius: 18px;
+      padding: 24px 22px 22px; text-align: left; color: var(--ink);
+      display: flex; flex-direction: column; gap: 10px; min-height: 236px;
+      transition: border-color .15s, box-shadow .15s, transform .15s;
+    }
+    .mode-card:hover { border-color: var(--lavender-light); box-shadow: 0 12px 32px rgba(74,27,208,.12); transform: translateY(-2px); }
+    .mode-card .ico {
+      width: 44px; height: 44px; border-radius: 12px; background: var(--tint);
+      display: flex; align-items: center; justify-content: center; margin-bottom: 4px;
+    }
+    .mode-card .ico svg { width: 22px; height: 22px; fill: var(--violet); }
+    .mode-card .step { font-size: 11px; font-weight: 700; letter-spacing: .12em; color: var(--lavender); }
+    .mode-card h2 { margin: 0; font-size: 18px; font-weight: 700; letter-spacing: -.01em; }
+    .mode-card p { margin: 0; font-size: 13px; line-height: 1.6; color: var(--ink-60); flex: 1; }
+    .mode-card .go {
+      margin-top: 4px; display: inline-flex; align-items: center; gap: 6px;
+      font-size: 13px; font-weight: 700; color: var(--violet);
+    }
+    .mode-card .go svg { width: 14px; height: 14px; fill: currentColor; }
+    .mode-card .fmt { font-size: 11.5px; color: var(--ink-40); }
+    .home .drop {
+      margin-top: 14px; padding: 16px 20px; border-radius: 14px; width: 100%;
+      display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap;
+      font-size: 13px; color: var(--ink-60);
+    }
+    .home .drop b { color: var(--ink); font-weight: 600; }
+    .home .drop svg { width: 16px; height: 16px; fill: var(--lavender); }
+
+    .work { flex: 1; display: none; min-height: 0; }
+    .app.has-file .empty { display: none; }
+    .app.has-file .work { display: flex; }
+
+    .side {
+      width: 232px; flex: none;
+      background: var(--white);
+      border-right: 1px solid var(--border);
+      display: flex; flex-direction: column; min-height: 0;
+    }
+    .side h3 {
+      margin: 0; padding: 14px 16px 8px;
+      font-size: 11px; font-weight: 700; letter-spacing: .12em; color: var(--lavender);
+      text-transform: uppercase;
+    }
+    .files { padding: 0 10px 8px; border-bottom: 1px solid var(--border); max-height: 34%; overflow: auto; }
+    .file {
+      display: flex; align-items: center; gap: 8px;
+      width: 100%; text-align: left;
+      padding: 8px 10px; border-radius: 9px; border: 1px solid transparent;
+      background: transparent; color: var(--ink);
+      font-size: 13px; font-weight: 500;
+    }
+    .file:hover { background: var(--tint); }
+    .file.active { background: var(--tint); border-color: var(--border); color: var(--violet); font-weight: 600; }
+    .file .name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .file .meta { font-size: 11px; color: var(--ink-40); font-weight: 500; flex: none; }
+    .file .rm {
+      flex: none; width: 22px; height: 22px; border-radius: 6px; border: 0; background: transparent;
+      color: var(--ink-40); font-size: 14px; line-height: 1; display: none; padding: 0;
+    }
+    .file:hover .rm, .file.active .rm { display: inline-flex; align-items: center; justify-content: center; }
+    .file .rm:hover { background: var(--danger-bg); color: var(--danger); }
+    .file-add { margin: 4px 0 2px; width: 100%; }
+
+    .thumbs { flex: 1; overflow: auto; padding: 4px 12px 16px; }
+    .thumb {
+      display: block; width: 100%;
+      background: transparent; border: 0; padding: 6px; margin-bottom: 4px;
+      border-radius: 12px; text-align: center;
+    }
+    .thumb .frame {
+      display: flex; align-items: center; justify-content: center;
+      background: #F7F5FD; border: 1px solid var(--border); border-radius: 8px;
+      padding: 8px; min-height: 90px;
+      transition: border-color .15s, box-shadow .15s;
+    }
+    .thumb canvas { max-width: 100%; height: auto; background: var(--white); box-shadow: 0 1px 4px rgba(22,14,46,.12); }
+    .thumb .lbl { display: block; margin-top: 6px; font-size: 11.5px; color: var(--ink-60); font-weight: 500; }
+    .thumb.active .frame { border-color: var(--violet); box-shadow: 0 0 0 2px rgba(74,27,208,.18); }
+    .thumb.active .lbl { color: var(--violet); font-weight: 700; }
+
+    .main { flex: 1; display: flex; flex-direction: row; min-width: 0; min-height: 0; position: relative; }
+    .stage-col { flex: 1; display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+    .dock {
+      width: 340px; flex: none; display: none; overflow: auto;
+      background: var(--white); border-left: 1px solid var(--border);
+    }
+    .app.mode-bg .dock, .app.mode-up .dock, .app.mode-blur .dock { display: block; }
+    @media (max-width: 1500px) {
+      .app.mode-bg .toolbar .fname, .app.mode-up .toolbar .fname, .app.mode-blur .toolbar .fname,
+      .app.mode-bg .toolbar .sep:last-of-type, .app.mode-up .toolbar .sep:last-of-type, .app.mode-blur .toolbar .sep:last-of-type { display: none; }
+    }
+
+    .toolbar {
+      display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+      padding: 10px 14px;
+      background: var(--white); border-bottom: 1px solid var(--border);
+      position: relative; z-index: 5;
+    }
+    .toolbar .group { display: inline-flex; align-items: center; gap: 4px; }
+    .toolbar .sep { width: 1px; height: 22px; background: var(--border); margin: 0 4px; }
+    .toolbar .pg { font-size: 13px; font-weight: 600; color: var(--ink); min-width: 54px; text-align: center; font-variant-numeric: tabular-nums; }
+    .toolbar .zoom {
+      min-width: 58px; height: 32px; padding: 0 8px; text-align: center;
+      border-radius: 8px; border: 1px solid var(--border); background: var(--white);
+      font-size: 13px; font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums;
+    }
+    .toolbar .zoom:hover { border-color: var(--lavender-light); }
+    .toolbar .spacer { flex: 1; }
+    .toolbar .fname {
+      font-size: 13px; font-weight: 600; color: var(--ink);
+      max-width: 26vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+
+    .stage {
+      flex: 1; overflow: auto; position: relative;
+      background-color: #ECE8F8;
+      background-image:
+        linear-gradient(rgba(74,27,208,.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(74,27,208,.05) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+    .stage.picking { cursor: crosshair; }
+    .stage-inner {
+      min-width: 100%; min-height: 100%;
+      display: flex; align-items: flex-start; justify-content: center;
+      padding: 28px;
+    }
+    .sheet {
+      background: var(--white);
+      box-shadow: 0 8px 32px rgba(22,14,46,.16), 0 1px 3px rgba(22,14,46,.1);
+      position: relative; flex: none;
+    }
+    .sheet.checker {
+      background-color: #fff;
+      background-image:
+        linear-gradient(45deg, #DDD9EA 25%, transparent 25%),
+        linear-gradient(-45deg, #DDD9EA 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #DDD9EA 75%),
+        linear-gradient(-45deg, transparent 75%, #DDD9EA 75%);
+      background-size: 16px 16px;
+      background-position: 0 0, 0 8px, 8px -8px, -8px 0;
+    }
+    .sheet canvas { display: block; }
+    .sheet { overflow: hidden; }
+    #cropBox {
+      position: absolute; display: none; box-sizing: border-box;
+      border: 2px solid var(--violet); box-shadow: 0 0 0 9999px rgba(22,14,46,.42);
+      cursor: grab; touch-action: none; z-index: 2;
+    }
+    #cropBox:active { cursor: grabbing; }
+    #cropBox::after {
+      content: attr(data-label); position: absolute; left: 6px; top: 6px;
+      background: var(--violet); color: #fff; font-size: 11px; font-weight: 700;
+      padding: 2px 7px; border-radius: 6px; white-space: nowrap;
+    }
+    #trimBox { position: absolute; display: none; box-sizing: border-box; border: 1.5px dashed var(--lavender); pointer-events: none; z-index: 1; }
+    #blurLayer { position: absolute; inset: 0; display: none; z-index: 3; touch-action: none; }
+    .app.mode-blur #blurLayer { display: block; }
+    .app.mode-blur .stage.adding, .app.mode-blur .stage.adding #blurLayer { cursor: crosshair; }
+    .blur-box {
+      position: absolute; box-sizing: border-box; cursor: move; touch-action: none;
+      border: 2px solid #fff; outline: 2px dashed var(--violet); background: rgba(74,27,208,.10);
+    }
+    .blur-box.ellipse { border-radius: 50%; }
+    .blur-box .del {
+      position: absolute; right: -11px; top: -11px; width: 22px; height: 22px; border-radius: 50%;
+      border: 2px solid #fff; background: var(--violet); color: #fff; font-size: 13px; line-height: 18px;
+      text-align: center; padding: 0; cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,.25);
+    }
+    .blur-box.drawing { pointer-events: none; }
+    .wm-grid { display: grid; grid-template-columns: repeat(3, 28px); gap: 4px; margin-top: 8px; }
+    .wm-grid button {
+      width: 28px; height: 22px; border: 1px solid var(--border); border-radius: 6px; background: var(--white); padding: 0;
+    }
+    .wm-grid button[aria-pressed="true"] { background: var(--violet); border-color: var(--violet); }
+    .panel input[type="text"] { height: 34px; }
+    .sheet .loading {
+      position: absolute; inset: 0; display: none; align-items: center; justify-content: center;
+      background: rgba(255,255,255,.55); font-size: 13px; color: var(--violet); font-weight: 600;
+    }
+    .sheet.busy .loading { display: flex; }
+
+    .info {
+      padding: 8px 14px; font-size: 12px; color: var(--ink-60);
+      background: var(--white); border-top: 1px solid var(--border);
+      display: flex; gap: 14px; flex-wrap: wrap; align-items: center;
+    }
+    .info b { color: var(--ink); font-weight: 600; }
+    .info .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--ink-40); }
+    .info .tag { color: var(--ok); font-weight: 600; }
+
+    /* ── Panels (저장 / 배경 제거) — 오른쪽 도크에 표시 ── */
+    .panel { padding: 18px 18px 22px; display: none; }
+    .panel.show { display: block; }
+    .panel h4 {
+      margin: 0 0 14px; font-size: 15px; font-weight: 700; letter-spacing: -.01em;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .panel .lead { font-size: 12.5px; color: var(--ink-60); line-height: 1.55; margin: -6px 0 14px; }
+    .panel h4 .x { border: 0; background: transparent; color: var(--ink-40); font-size: 18px; line-height: 1; padding: 2px 6px; }
+    .panel .row { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+    .panel label.lbl { font-size: 11px; font-weight: 700; letter-spacing: .1em; color: var(--lavender); text-transform: uppercase; }
+    .panel select, .panel input[type="text"] {
+      height: 36px; padding: 0 10px; border-radius: 8px; border: 1px solid var(--border);
+      background: var(--white); color: var(--ink); font-size: 13.5px; width: 100%;
+    }
+    .panel .seg { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+    .panel .seg button {
+      flex: 1; height: 34px; border: 0; border-right: 1px solid var(--border); background: var(--white);
+      color: var(--ink); font-size: 13px; font-weight: 500;
+    }
+    .panel .seg button:last-child { border-right: 0; }
+    .panel .seg button[aria-pressed="true"] { background: var(--violet); color: var(--white); font-weight: 600; }
+    .panel .hint { font-size: 12px; color: var(--ink-60); line-height: 1.55; margin: 0; }
+    .panel .hint b { color: var(--ink); font-weight: 600; }
+    .panel .sec { border-top: 1px solid var(--border); margin: 14px 0 12px; }
+    .panel .sec-title { font-size: 13px; font-weight: 700; margin: 0 0 8px; display: flex; align-items: center; gap: 8px; }
+    .panel .sec-title .badge { font-size: 10.5px; font-weight: 700; letter-spacing: .06em; color: var(--lavender); background: var(--tint); border-radius: 6px; padding: 2px 6px; }
+    .panel .inline { display: flex; align-items: center; gap: 8px; }
+    .panel .inline .btn { flex: 1; }
+    .panel input[type="range"] { width: 100%; accent-color: var(--violet); }
+    .panel .range-row { display: flex; align-items: center; gap: 10px; font-size: 12.5px; color: var(--ink-60); }
+    .panel .range-row > span { white-space: nowrap; }
+    .panel .range-row output { min-width: 32px; text-align: right; font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; }
+    .panel .check { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--ink); cursor: pointer; }
+    .panel .check input { accent-color: var(--violet); width: 16px; height: 16px; margin: 0; }
+    .panel .swatch { width: 22px; height: 22px; border-radius: 6px; border: 1px solid var(--border); flex: none; }
+    .panel .progress { height: 6px; border-radius: 3px; background: var(--tint); overflow: hidden; margin-top: 8px; display: none; }
+    .panel .progress i { display: block; height: 100%; width: 0; background: var(--violet); transition: width .2s; }
+    .panel .progress.show { display: block; }
+    .panel .pstat { font-size: 12px; color: var(--ink-60); margin-top: 6px; min-height: 16px; }
+    .panel .btn-full { width: 100%; }
+    .panel input[type="number"] {
+      width: 88px; height: 34px; padding: 0 8px; border-radius: 8px; border: 1px solid var(--border);
+      background: var(--white); color: var(--ink); font-size: 13.5px;
+    }
+    .panel input[type="color"] {
+      width: 40px; height: 32px; padding: 2px; border: 1px solid var(--border); border-radius: 8px; background: var(--white); cursor: pointer;
+    }
+    .panel .seg.four button { padding: 0 4px; font-size: 12.5px; }
+    .panel .inline.gap { gap: 8px; margin-top: 8px; }
+    .panel .inline .btn { flex: 1; }
+
+    /* Alert / toast */
+    .alert {
+      position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%);
+      width: min(560px, calc(100% - 32px));
+      background: var(--white); border: 1px solid var(--border); border-left: 4px solid var(--danger);
+      border-radius: 14px; padding: 14px 16px 14px 18px;
+      box-shadow: 0 12px 40px rgba(22,14,46,.18);
+      font-size: 13.5px; line-height: 1.6; color: var(--ink);
+      display: none; z-index: 20;
+    }
+    .alert.show { display: block; }
+    .alert.info { border-left-color: var(--violet); }
+    .alert strong { display: block; font-weight: 700; margin-bottom: 4px; }
+    .alert p { margin: 0; color: var(--ink-60); }
+    .alert .close {
+      position: absolute; top: 8px; right: 10px; border: 0; background: transparent;
+      color: var(--ink-40); font-size: 18px; line-height: 1; padding: 4px;
+    }
+    .alert ol { margin: 6px 0 0; padding-left: 18px; color: var(--ink-60); }
+    .alert li { margin: 2px 0; }
+
+    .dragover {
+      position: fixed; inset: 0; z-index: 30; display: none;
+      align-items: center; justify-content: center;
+      background: rgba(74,27,208,.14); backdrop-filter: blur(2px);
+      pointer-events: none;
+    }
+    .dragover.show { display: flex; }
+    .dragover div {
+      background: var(--white); border: 2px dashed var(--violet); border-radius: 18px;
+      padding: 28px 40px; font-size: 18px; font-weight: 700; color: var(--violet);
+    }
+
+    input[type="file"] { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+
+    /* ── Mobile ──────────────────────────────────────────── */
+    @media (max-width: 860px) {
+      :root { --topbar-h: 56px; }
+      .topbar { padding: 0 14px; gap: 10px; }
+      .topbar .logo { height: 28px; }
+      .topbar .brand span { display: none; }
+      .topbar .privacy { display: none; }
+      .topbar .btn span.txt { display: none; }
+      .topbar .btn { padding: 0 12px; }
+
+      .topbar .modes { margin-left: 0; }
+      .topbar .modes button { padding: 0 10px; font-size: 12.5px; height: 34px; }
+      .topbar .modes button span { display: none; }
+      .home .head h1 { font-size: 22px; }
+      .mode-cards { grid-template-columns: 1fr; gap: 10px; }
+      .mode-card { min-height: 0; padding: 18px 18px 16px; border-radius: 14px; }
+      .mode-card .ico { width: 38px; height: 38px; }
+      .home .drop { padding: 14px 16px; font-size: 12.5px; }
+
+      .work { flex-direction: column; }
+      .side {
+        width: 100%; border-right: 0; border-bottom: 1px solid var(--border);
+        flex-direction: row; max-height: 132px;
+      }
+      .side h3 { display: none; }
+      .files {
+        width: 44%; max-height: none; border-bottom: 0; border-right: 1px solid var(--border);
+        padding: 8px 6px; overflow: auto;
+      }
+      .file { padding: 7px 8px; font-size: 12.5px; }
+      .file .meta { display: none; }
+      .file-add { display: none; }
+      .thumbs {
+        flex: 1; display: flex; gap: 6px; padding: 8px; overflow-x: auto; overflow-y: hidden;
+        align-items: flex-start;
+      }
+      .thumb { width: 78px; flex: none; padding: 2px; margin: 0; }
+      .thumb .frame { min-height: 70px; padding: 5px; }
+      .thumb .lbl { font-size: 10.5px; margin-top: 4px; }
+
+      .toolbar { padding: 8px 10px; gap: 6px; }
+      .toolbar .fname { display: none; }
+      .toolbar .sep { display: none; }
+      .toolbar .btn-sm span.txt { display: none; }
+      .toolbar .btn-sm { padding: 0 9px; }
+      .stage-inner { padding: 14px; }
+      .info { font-size: 11.5px; gap: 10px; padding: 8px 12px; }
+
+      .main { flex-direction: column; }
+      .dock { width: 100%; max-height: 48%; border-left: 0; border-top: 1px solid var(--border); }
+      .panel { padding: 14px 14px 18px; }
+    }
+  </style>
 </head>
-<body><p>업무 도구로 이동 중입니다… <a href="/ai-viewer/">바로 가기</a></p></body>
+<body>
+
+<header class="topbar">
+  <img class="logo" src="../assets/trinity-one-logo.png" alt="TRINITY ONE">
+  <div class="brand">
+    <strong>TRINITY ONE 업무 도구</strong>
+    <span>AI 파일 보기 · 누끼 · 4K·규격 저장 · 얼굴 블러 · 단축 링크</span>
+  </div>
+  <div class="modes" id="modes" role="group" aria-label="작업 선택">
+    <button type="button" data-mode="view" aria-pressed="true"><svg viewBox="0 0 24 24"><path d="M12 5C7 5 3 8.6 1.5 12 3 15.4 7 19 12 19s9-3.6 10.5-7C21 8.6 17 5 12 5Zm0 11.5a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9Zm0-7a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5Z"/></svg><span>파일 보기</span></button>
+    <button type="button" data-mode="bg" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Zm0 2a7 7 0 0 1 5.6 11.2L7.8 6.4A6.97 6.97 0 0 1 12 5Zm-5.6 2.8 9.8 9.8A7 7 0 0 1 6.4 7.8Z"/></svg><span>누끼</span></button>
+    <button type="button" data-mode="up" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M4 4h6v2H7.4l4.3 4.3-1.4 1.4L6 7.4V10H4V4Zm10 0h6v6h-2V7.4l-4.3 4.3-1.4-1.4L16.6 6H14V4ZM4 14h2v2.6l4.3-4.3 1.4 1.4L7.4 18H10v2H4v-6Zm14.6 4-4.3-4.3 1.4-1.4 4.3 4.3V14h2v6h-6v-2h2.6Z"/></svg><span>4K·규격 저장</span></button>
+    <button type="button" data-mode="blur" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M12 2a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6Zm0 9c4.4 0 8 2.2 8 5v3H4v-3c0-2.8 3.6-5 8-5Zm0 2c-3.5 0-6 1.6-6 3v1h12v-1c0-1.4-2.5-3-6-3Z" opacity=".5"/><path d="M4 4h4v2H6v2H4V4Zm12 0h4v4h-2V6h-2V4ZM4 16h2v2h2v2H4v-4Zm14 0h2v4h-4v-2h2v-2Z"/></svg><span>얼굴 블러</span></button>
+  </div>
+  <div class="spacer"></div>
+  <div class="privacy" title="파일은 이 브라우저 안에서만 처리되며 서버로 전송되지 않습니다.">
+    <svg viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5.25 3.4 10.15 8 11.35C16.6 21.15 20 16.25 20 11V5l-8-3Zm-1 14.2-3.5-3.5 1.4-1.4 2.1 2.1 4.6-4.6 1.4 1.4-6 6Z"/></svg>
+    파일은 내 브라우저 안에서만 열립니다
+  </div>
+  <button class="btn btn-primary" id="btnOpen" type="button">
+    <svg viewBox="0 0 24 24"><path d="M10 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-8l-2-2Z"/></svg>
+    <span class="txt">파일 열기</span>
+  </button>
+  <input type="file" id="fileInput" accept=".ai,.pdf,.svg,image/*,application/pdf,application/postscript,application/illustrator" multiple>
+</header>
+
+<main class="app" id="app">
+
+  <section class="empty" id="empty">
+    <div class="home">
+      <div class="head">
+        <span class="badge">TRINITY ONE · DESIGN TOOLS</span>
+        <h1>무엇을 할까요?</h1>
+        <p>작업을 고르면 파일 선택 창이 열립니다.<br class="m-only"> 처리는 모두 내 브라우저 안에서만 이루어집니다.</p>
+      </div>
+      <div class="mode-cards">
+        <button class="mode-card" type="button" data-pick="view">
+          <span class="ico"><svg viewBox="0 0 24 24"><path d="M12 5C7 5 3 8.6 1.5 12 3 15.4 7 19 12 19s9-3.6 10.5-7C21 8.6 17 5 12 5Zm0 11.5a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9Zm0-7a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5Z"/></svg></span>
+          <span class="step">01</span>
+          <h2>AI 파일 보기</h2>
+          <p>일러스트레이터가 없어도<br>디자이너가 보낸 .ai 파일을<br>바로 확인하고 저장합니다.</p>
+          <span class="fmt">.ai · .pdf · SVG · 이미지</span>
+          <span class="go">파일 선택 <svg viewBox="0 0 24 24"><path d="M8.6 16.6 10 18l6-6-6-6-1.4 1.4 4.6 4.6-4.6 4.6Z"/></svg></span>
+        </button>
+        <button class="mode-card" type="button" data-pick="bg">
+          <span class="ico"><svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Zm0 2a7 7 0 0 1 5.6 11.2L7.8 6.4A6.97 6.97 0 0 1 12 5Zm-5.6 2.8 9.8 9.8A7 7 0 0 1 6.4 7.8Z"/></svg></span>
+          <span class="step">02</span>
+          <h2>누끼 따기</h2>
+          <p>로고·포스터의 단색 배경은 즉시,<br>인물·제품 사진은 AI 모델로<br>배경을 지워 투명 PNG로 저장합니다.</p>
+          <span class="fmt">JPG · PNG · .ai · SVG</span>
+          <span class="go">파일 선택 <svg viewBox="0 0 24 24"><path d="M8.6 16.6 10 18l6-6-6-6-1.4 1.4 4.6 4.6-4.6 4.6Z"/></svg></span>
+        </button>
+        <button class="mode-card" type="button" data-pick="up">
+          <span class="ico"><svg viewBox="0 0 24 24"><path d="M4 4h6v2H7.4l4.3 4.3-1.4 1.4L6 7.4V10H4V4Zm10 0h6v6h-2V7.4l-4.3 4.3-1.4-1.4L16.6 6H14V4ZM4 14h2v2.6l4.3-4.3 1.4 1.4L7.4 18H10v2H4v-6Zm14.6 4-4.3-4.3 1.4-1.4 4.3 4.3V14h2v6h-6v-2h2.6Z"/></svg></span>
+          <span class="step">03</span>
+          <h2>4K·규격 저장</h2>
+          <p>4K 고해상도로 키우거나,<br>카톡·인스타 규격에 맞춰 자르고<br>여백·배경·용량까지 정해 저장합니다.</p>
+          <span class="fmt">JPG · PNG · .ai · .pdf · SVG</span>
+          <span class="go">파일 선택 <svg viewBox="0 0 24 24"><path d="M8.6 16.6 10 18l6-6-6-6-1.4 1.4 4.6 4.6-4.6 4.6Z"/></svg></span>
+        </button>
+        <button class="mode-card" type="button" data-pick="blur">
+          <span class="ico"><svg viewBox="0 0 24 24"><path d="M12 2a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6Zm0 9c4.4 0 8 2.2 8 5v3H4v-3c0-2.8 3.6-5 8-5Zm0 2c-3.5 0-6 1.6-6 3v1h12v-1c0-1.4-2.5-3-6-3Z" opacity=".5"/><path d="M4 4h4v2H6v2H4V4Zm12 0h4v4h-2V6h-2V4ZM4 16h2v2h2v2H4v-4Zm14 0h2v4h-4v-2h2v-2Z"/></svg></span>
+          <span class="step">04</span>
+          <h2>얼굴 블러</h2>
+          <p>강의·행사 사진의 참석자 얼굴을<br>AI가 자동으로 찾아 가립니다.<br>놓친 얼굴은 직접 추가하면 됩니다.</p>
+          <span class="fmt">JPG · PNG · WebP</span>
+          <span class="go">파일 선택 <svg viewBox="0 0 24 24"><path d="M8.6 16.6 10 18l6-6-6-6-1.4 1.4 4.6 4.6-4.6 4.6Z"/></svg></span>
+        </button>
+        <a class="mode-card link" href="../s/admin/">
+          <span class="ico"><svg viewBox="0 0 24 24"><path d="M10.6 13.4a1 1 0 0 1 0-1.4l2.8-2.8a1 1 0 1 1 1.4 1.4L12 13.4a1 1 0 0 1-1.4 0Zm-2.1 3.5a3 3 0 0 1 0-4.2l2.1-2.1-1.4-1.4-2.1 2.1a5 5 0 0 0 7.1 7.1l2.1-2.1-1.4-1.4-2.1 2.1a3 3 0 0 1-4.3 0Zm7-9.8a3 3 0 0 1 4.2 4.2l-2.1 2.1 1.4 1.4 2.1-2.1a5 5 0 0 0-7.1-7.1l-2.1 2.1 1.4 1.4 2.2-2Z"/></svg></span>
+          <span class="step">05</span>
+          <h2>단축 링크 만들기</h2>
+          <p>구글 폼·시트 같은 긴 링크를<br>trinityone.co.kr/s/코드로 줄이고<br>QR 코드까지 내려받습니다.</p>
+          <span class="fmt">모든 https 주소</span>
+          <span class="go">관리 페이지 열기 <svg viewBox="0 0 24 24"><path d="M8.6 16.6 10 18l6-6-6-6-1.4 1.4 4.6 4.6-4.6 4.6Z"/></svg></span>
+        </a>
+      </div>
+      <div class="drop" id="drop">
+        <svg viewBox="0 0 24 24"><path d="M19 13v6H5v-6H3v6a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6h-2Zm-6-.8 2.6-2.6L17 11l-5 5-5-5 1.4-1.4L11 12.2V3h2v9.2Z"/></svg>
+        <span>파일을 이 창에 <b>끌어다 놓거나 붙여넣기(Ctrl+V)</b> 하면 바로 열립니다.</span>
+        <span style="color:var(--ink-40)">지원: .ai(PDF 호환 저장본) · .pdf · JPG · PNG · WebP · SVG</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="work" id="work">
+    <aside class="side">
+      <h3>열린 파일</h3>
+      <div class="files" id="files"></div>
+      <h3>아트보드</h3>
+      <div class="thumbs" id="thumbs"></div>
+    </aside>
+
+    <div class="main">
+      <div class="stage-col">
+      <div class="toolbar">
+        <div class="group">
+          <button class="btn btn-ghost btn-sm btn-icon" id="btnPrev" type="button" title="이전 아트보드">
+            <svg viewBox="0 0 24 24"><path d="M15.4 7.4 14 6l-6 6 6 6 1.4-1.4L10.8 12l4.6-4.6Z"/></svg>
+          </button>
+          <span class="pg" id="pg">1 / 1</span>
+          <button class="btn btn-ghost btn-sm btn-icon" id="btnNext" type="button" title="다음 아트보드">
+            <svg viewBox="0 0 24 24"><path d="M8.6 16.6 10 18l6-6-6-6-1.4 1.4 4.6 4.6-4.6 4.6Z"/></svg>
+          </button>
+        </div>
+        <div class="sep"></div>
+        <div class="group">
+          <button class="btn btn-ghost btn-sm btn-icon" id="btnZoomOut" type="button" title="축소">
+            <svg viewBox="0 0 24 24"><path d="M5 11h14v2H5z"/></svg>
+          </button>
+          <button class="zoom" id="btnFit" type="button" title="화면에 맞춤 / 100% 전환">맞춤</button>
+          <button class="btn btn-ghost btn-sm btn-icon" id="btnZoomIn" type="button" title="확대">
+            <svg viewBox="0 0 24 24"><path d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6z"/></svg>
+          </button>
+        </div>
+        <div class="sep"></div>
+        <span class="fname" id="fname"></span>
+        <div class="spacer"></div>
+        <button class="btn btn-ghost btn-sm" id="btnBg" type="button" title="누끼 따기 (배경 제거)">
+          <svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Zm0 2a7 7 0 0 1 5.6 11.2L7.8 6.4A6.97 6.97 0 0 1 12 5Zm-5.6 2.8 9.8 9.8A7 7 0 0 1 6.4 7.8Z"/></svg>
+          <span class="txt">누끼</span>
+        </button>
+        <button class="btn btn-ghost btn-sm" id="btnSave" type="button" title="4K 고해상도 저장">
+          <svg viewBox="0 0 24 24"><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2Zm0 16H5v-2.6l3.5-3.5 2.5 2.5 5-5 3 3V19Zm0-8.4-3-3-5 5-2.5-2.5L5 13.6V5h14v5.6ZM8.5 10A1.5 1.5 0 1 0 8.5 7a1.5 1.5 0 0 0 0 3Z"/></svg>
+          <span class="txt">4K·규격</span>
+        </button>
+        <button class="btn btn-ghost btn-sm" id="btnPdf" type="button" title="이 파일을 PDF로 저장 (다른 사람에게 보낼 때)">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6Zm-1 7V3.5L18.5 9H13Zm-5 4h1.5a1.75 1.75 0 0 1 0 3.5H9V18H8v-5Zm1 2.5h.5a.75.75 0 0 0 0-1.5H9v1.5ZM12 13h1.6c1.4 0 2.2.9 2.2 2.5S15 18 13.6 18H12v-5Zm1 4h.5c.8 0 1.2-.5 1.2-1.5S14.3 14 13.5 14H13v3Zm3.7-4H19v1h-1.3v1H19v1h-1.3v2h-1V13Z"/></svg>
+          <span class="txt">PDF 저장</span>
+        </button>
+      </div>
+
+      <div class="stage" id="stage">
+        <div class="stage-inner">
+          <div class="sheet" id="sheet">
+            <canvas id="canvas"></canvas>
+            <div id="trimBox"></div>
+            <div id="cropBox" data-label="저장 영역"></div>
+            <div id="blurLayer"></div>
+            <div class="loading" id="loadingLbl">렌더링 중…</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="info" id="info"></div>
+      </div><!-- /stage-col -->
+
+      <aside class="dock" id="dock">
+      <!-- 이미지 저장 패널 -->
+      <div class="panel" id="savePanel">
+        <h4><span id="saveTitle">4K·규격 저장</span> <button class="x" type="button" data-close="savePanel" aria-label="닫기">×</button></h4>
+        <p class="lead" id="saveLead">용도를 고르면 크기와 비율이 맞춰집니다. 벡터 파일은 어떤 크기든 화질 손실이 없습니다.</p>
+
+        <div class="row">
+          <label class="lbl" for="selSize">용도 · 크기</label>
+          <select id="selSize">
+            <optgroup label="크기만 조정">
+              <option value="base">기본</option>
+              <option value="fit4k">4K에 맞춤 (3840×2160 안에 최대)</option>
+              <option value="long4k">긴 변 3840px</option>
+              <option value="x2">×2</option>
+              <option value="x4">×4</option>
+            </optgroup>
+            <optgroup label="카카오톡">
+              <option value="og">링크 미리보기(OG) 1200×630</option>
+              <option value="kakao_basic">채널 메시지 기본 800×800</option>
+              <option value="kakao_wide">채널 메시지 와이드 800×400</option>
+            </optgroup>
+            <optgroup label="인스타그램">
+              <option value="ig_portrait">피드 세로 1080×1350</option>
+              <option value="ig_square">피드 정사각 1080×1080</option>
+              <option value="ig_story">스토리·릴스 1080×1920</option>
+            </optgroup>
+            <optgroup label="기타">
+              <option value="yt">유튜브 썸네일 1280×720</option>
+              <option value="ppt">PPT·모니터 16:9 1920×1080</option>
+              <option value="custom">직접 입력…</option>
+            </optgroup>
+          </select>
+          <div class="inline" id="rowCustom" style="display:none">
+            <input type="number" id="inW" min="16" max="8192" value="1200" aria-label="가로 px"> <span class="hint">×</span>
+            <input type="number" id="inH" min="16" max="8192" value="630" aria-label="세로 px"> <span class="hint">px</span>
+          </div>
+          <p class="hint" id="sizeHint"></p>
+        </div>
+
+        <div class="row" id="rowFit">
+          <label class="lbl">비율 맞춤</label>
+          <div class="seg" id="segFit">
+            <button type="button" data-v="fill" aria-pressed="true">잘라서 채움</button>
+            <button type="button" data-v="pad" aria-pressed="false">여백 두고 맞춤</button>
+          </div>
+          <div class="range-row" id="rowPos">
+            <span>자를 위치</span>
+            <input type="range" id="rngPos" min="0" max="100" value="50">
+            <output id="outPos" style="min-width:44px">가운데</output>
+          </div>
+          <p class="hint" id="fitHint">미리보기의 보라색 틀을 끌어서 자를 위치를 바꿀 수 있습니다.</p>
+        </div>
+
+        <div class="row">
+          <label class="lbl">여백 · 배경</label>
+          <label class="check"><input type="checkbox" id="chkTrim"> 빈 여백 자동 잘라내기 (투명·단색 테두리)</label>
+          <div class="range-row" id="rowPad" style="display:none">
+            <span>남길 여백</span>
+            <input type="range" id="rngPad" min="0" max="25" value="5">
+            <output id="outPad">5%</output>
+          </div>
+          <div class="seg four" id="segBg">
+            <button type="button" data-v="transparent" aria-pressed="true">투명</button>
+            <button type="button" data-v="white" aria-pressed="false">흰색</button>
+            <button type="button" data-v="purple" aria-pressed="false">퍼플</button>
+            <button type="button" data-v="custom" aria-pressed="false">직접</button>
+          </div>
+          <div class="inline" id="rowBgColor" style="display:none">
+            <input type="color" id="inBgColor" value="#4A1BD0"> <span class="hint">배경색 선택</span>
+          </div>
+        </div>
+
+        <div class="row">
+          <label class="lbl">방향</label>
+          <div class="seg four" id="segOrient">
+            <button type="button" data-v="rotl" title="왼쪽으로 90° 회전">↺ 90°</button>
+            <button type="button" data-v="rotr" title="오른쪽으로 90° 회전">↻ 90°</button>
+            <button type="button" data-v="fliph" title="좌우 반전">좌우 반전</button>
+            <button type="button" data-v="flipv" title="상하 반전">상하 반전</button>
+          </div>
+        </div>
+
+        <div class="row">
+          <label class="lbl">워터마크</label>
+          <label class="check"><input type="checkbox" id="chkWm"> 워터마크 넣기 (화면과 저장에 함께 적용)</label>
+          <div id="wmOpts" style="display:none">
+            <div class="seg" id="segWmType" style="margin-top:8px">
+              <button type="button" data-v="logo" aria-pressed="true">TRINITY ONE 로고</button>
+              <button type="button" data-v="text" aria-pressed="false">텍스트</button>
+            </div>
+            <input type="text" id="inWmText" value="TRINITY ONE" maxlength="40" placeholder="워터마크 문구" style="margin-top:8px;display:none">
+            <div class="seg" id="segWmColor" style="margin-top:8px;display:none">
+              <button type="button" data-v="white" aria-pressed="true">흰색</button>
+              <button type="button" data-v="ink" aria-pressed="false">진한 색</button>
+              <button type="button" data-v="purple" aria-pressed="false">퍼플</button>
+            </div>
+            <div class="inline" style="margin-top:8px;align-items:flex-start">
+              <div>
+                <span class="hint">위치</span>
+                <div class="wm-grid" id="wmGrid">
+                  <button type="button" data-v="tl" aria-pressed="false" title="왼쪽 위"></button><button type="button" data-v="tc" aria-pressed="false" title="가운데 위"></button><button type="button" data-v="tr" aria-pressed="false" title="오른쪽 위"></button>
+                  <button type="button" data-v="ml" aria-pressed="false" title="왼쪽 가운데"></button><button type="button" data-v="mc" aria-pressed="false" title="정중앙"></button><button type="button" data-v="mr" aria-pressed="false" title="오른쪽 가운데"></button>
+                  <button type="button" data-v="bl" aria-pressed="false" title="왼쪽 아래"></button><button type="button" data-v="bc" aria-pressed="false" title="가운데 아래"></button><button type="button" data-v="br" aria-pressed="true" title="오른쪽 아래"></button>
+                </div>
+              </div>
+              <div style="flex:1;display:flex;flex-direction:column;gap:6px">
+                <div class="range-row"><span>크기</span><input type="range" id="rngWmSize" min="4" max="40" value="14"><output id="outWmSize">14%</output></div>
+                <div class="range-row"><span>진하기</span><input type="range" id="rngWmOp" min="10" max="100" value="60"><output id="outWmOp">60%</output></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <label class="lbl">형식 · 용량</label>
+          <div class="seg" id="segFmt">
+            <button type="button" data-v="png" aria-pressed="true">PNG</button>
+            <button type="button" data-v="jpg" aria-pressed="false">JPG</button>
+            <button type="button" data-v="webp" aria-pressed="false">WebP</button>
+          </div>
+          <select id="selLimit">
+            <option value="0">용량 제한 없음</option>
+            <option value="300">300KB 이하 (카톡 메시지·썸네일)</option>
+            <option value="1000">1MB 이하</option>
+            <option value="2000">2MB 이하</option>
+            <option value="5000">5MB 이하</option>
+          </select>
+          <p class="hint" id="fmtHint">PNG·WebP는 투명 배경을 유지합니다. JPG는 배경을 흰색(또는 선택한 색)으로 채웁니다.</p>
+        </div>
+
+        <div class="row" id="rowSharp">
+          <label class="lbl">선명도 보정 <span style="font-weight:500;letter-spacing:0;text-transform:none;color:var(--ink-40)">(사진 확대 시)</span></label>
+          <div class="seg" id="segSharp">
+            <button type="button" data-v="0" aria-pressed="true">원본 그대로</button>
+            <button type="button" data-v="0.35" aria-pressed="false">약하게</button>
+            <button type="button" data-v="0.7" aria-pressed="false">강하게</button>
+          </div>
+        </div>
+
+        <div class="row">
+          <label class="lbl">저장 범위</label>
+          <div class="seg" id="segRange">
+            <button type="button" data-v="page" aria-pressed="true">이 아트보드만</button>
+            <button type="button" data-v="doc" aria-pressed="false">이 파일 전체</button>
+            <button type="button" data-v="all" aria-pressed="false">열린 파일 전체</button>
+          </div>
+          <p class="hint" id="rangeHint"></p>
+        </div>
+
+        <div class="inline gap">
+          <button class="btn btn-primary" id="btnDoSave" type="button">저장</button>
+          <button class="btn btn-ghost" id="btnCopy" type="button" title="PNG로 클립보드에 복사 (카톡·PPT에 붙여넣기)">클립보드 복사</button>
+        </div>
+        <button class="btn btn-ghost btn-full" id="btnBatchStop" type="button" style="display:none;margin-top:8px">중지</button>
+        <div class="progress" id="saveProg"><i></i></div>
+        <div class="pstat" id="saveStat"></div>
+      </div>
+
+      <!-- 배경 제거 패널 -->
+      <div class="panel" id="bgPanel">
+        <h4>누끼 따기 (배경 제거) <button class="x" type="button" data-close="bgPanel" aria-label="닫기">×</button></h4>
+        <p class="lead">배경 종류에 맞는 방법을 골라 적용한 뒤, 아래 "투명 PNG로 저장"을 누르세요.</p>
+
+        <div id="secVector">
+          <p class="sec-title">파일의 투명 배경 사용 <span class="badge">AI·PDF·SVG</span></p>
+          <label class="check"><input type="checkbox" id="chkTransparent"> 흰 종이 대신 파일 원래의 투명 배경으로 표시·저장</label>
+          <p class="hint" style="margin-top:6px">디자인에 흰 사각형 배경이 깔려 있으면 이것만으로는 안 지워집니다. 아래 "단색 배경 제거"를 쓰세요.</p>
+          <div class="sec"></div>
+        </div>
+
+        <p class="sec-title">단색 배경 제거 <span class="badge">로고·포스터</span></p>
+        <div class="row">
+          <div class="range-row">
+            <span>허용 오차</span>
+            <input type="range" id="rngTol" min="1" max="100" value="28">
+            <output id="outTol">28</output>
+          </div>
+          <label class="check"><input type="checkbox" id="chkInner"> 안쪽에 닫힌 같은 색 영역도 제거 (글자 속 구멍 등)</label>
+          <div class="inline">
+            <span class="swatch" id="swatch" title="배경색"></span>
+            <span class="hint" id="refHint">배경색: 모서리에서 자동 감지</span>
+            <button class="btn btn-ghost btn-sm" id="btnPick" type="button" style="flex:none">이미지에서 선택</button>
+          </div>
+        </div>
+        <button class="btn btn-primary btn-full" id="btnChroma" type="button">단색 배경 제거 적용</button>
+
+        <div class="sec"></div>
+        <p class="sec-title">AI 누끼 <span class="badge">인물·사물 사진</span></p>
+        <p class="hint">브라우저에서 AI 모델이 직접 돌아갑니다. 처음 한 번만 약 <b>55MB</b>를 내려받고, 기기에 따라 10초에서 1분쯤 걸립니다. 사진은 여전히 외부로 전송되지 않습니다.</p>
+        <button class="btn btn-primary btn-full" id="btnAI" type="button" style="margin-top:8px">AI 누끼 실행</button>
+        <div class="progress" id="bgProg"><i></i></div>
+        <div class="pstat" id="bgStat"></div>
+
+        <div class="sec"></div>
+        <button class="btn btn-primary btn-full" id="btnBgSave" type="button">투명 PNG로 저장 (원본 크기)</button>
+        <div class="progress" id="bgSaveProg"><i></i></div>
+        <div class="pstat" id="bgSaveStat"></div>
+        <button class="btn btn-ghost btn-full" id="btnRevert" type="button" style="margin-top:10px">원본으로 되돌리기</button>
+        <p class="hint" style="margin-top:10px">더 큰 크기로 저장하려면 상단의 <b>4K·규격 저장</b>으로 전환하세요. 누끼 결과가 그대로 이어집니다.</p>
+
+        <div class="sec"></div>
+        <p class="sec-title">일괄 누끼 <span class="badge">ZIP</span></p>
+        <p class="hint" id="batchNukkiHint">위 설정 그대로 열린 모든 파일·아트보드를 처리한 뒤, 투명 PNG를 ZIP 하나로 내려받습니다.</p>
+        <div class="inline gap">
+          <button class="btn btn-ghost" id="btnBatchChroma" type="button">단색 배경 제거 → ZIP</button>
+          <button class="btn btn-ghost" id="btnBatchAI" type="button">AI 누끼 → ZIP</button>
+        </div>
+        <button class="btn btn-ghost btn-full" id="btnBatchNukkiStop" type="button" style="display:none;margin-top:8px">중지</button>
+        <div class="progress" id="batchProg"><i></i></div>
+        <div class="pstat" id="batchStat"></div>
+      </div>
+
+      <!-- 얼굴 블러 패널 -->
+      <div class="panel" id="blurPanel">
+        <h4>얼굴 블러 <button class="x" type="button" data-close="blurPanel" aria-label="닫기">×</button></h4>
+        <p class="lead">강의·행사 사진의 참석자 얼굴을 가립니다. 자동 감지 후 놓친 얼굴은 직접 추가하세요.</p>
+        <button class="btn btn-primary btn-full" id="btnFaces" type="button">얼굴 자동 감지</button>
+        <p class="hint" style="margin-top:6px">처음 한 번만 약 <b>7MB</b> 모델을 내려받습니다. 사진은 외부로 전송되지 않습니다.</p>
+        <div class="progress" id="blurProg"><i></i></div>
+        <div class="pstat" id="blurStat"></div>
+
+        <div class="sec"></div>
+        <div class="row">
+          <label class="lbl">영역 편집</label>
+          <div class="inline gap" style="margin-top:0">
+            <button class="btn btn-ghost" id="btnAddRegion" type="button">직접 추가 (드래그)</button>
+            <button class="btn btn-ghost" id="btnClearRegions" type="button">모두 지우기</button>
+          </div>
+          <p class="hint">미리보기에서 영역을 끌어 옮기고, × 를 눌러 지웁니다. 추가 모드에서는 빈 곳을 드래그해 새 영역을 그립니다.</p>
+        </div>
+        <div class="row">
+          <label class="lbl">블러 설정</label>
+          <div class="range-row"><span>세기</span><input type="range" id="rngBlur" min="1" max="10" value="6"><output id="outBlur">6</output></div>
+          <div class="range-row"><span>영역 여유</span><input type="range" id="rngBlurPad" min="0" max="60" value="20"><output id="outBlurPad">20%</output></div>
+          <div class="seg" id="segBlurShape">
+            <button type="button" data-v="ellipse" aria-pressed="true">타원 (자연스럽게)</button>
+            <button type="button" data-v="rect" aria-pressed="false">사각형</button>
+          </div>
+          <div class="seg" id="segBlurKind">
+            <button type="button" data-v="blur" aria-pressed="true">블러</button>
+            <button type="button" data-v="pixel" aria-pressed="false">모자이크</button>
+          </div>
+        </div>
+
+        <div class="sec"></div>
+        <button class="btn btn-primary btn-full" id="btnBlurSave" type="button">블러 적용해 저장 (원본 크기)</button>
+        <div class="progress" id="blurSaveProg"><i></i></div>
+        <div class="pstat" id="blurSaveStat"></div>
+        <p class="hint" style="margin-top:8px">규격을 바꾸거나 여러 장을 한 번에 저장하려면 <b>4K·규격 저장</b>으로 전환하세요. 블러가 그대로 적용됩니다.</p>
+
+        <div class="sec"></div>
+        <p class="sec-title">일괄 처리 <span class="badge">ZIP</span></p>
+        <p class="hint" id="batchBlurHint">열린 모든 파일에서 얼굴을 자동 감지해 블러를 적용한 뒤 ZIP으로 저장합니다.</p>
+        <button class="btn btn-ghost btn-full" id="btnBatchBlur" type="button">전체 얼굴 감지 → 블러 → ZIP</button>
+        <button class="btn btn-ghost btn-full" id="btnBatchBlurStop" type="button" style="display:none;margin-top:8px">중지</button>
+        <div class="progress" id="batchBlurProg"><i></i></div>
+        <div class="pstat" id="batchBlurStat"></div>
+      </div>
+      </aside>
+    </div>
+  </section>
+</main>
+
+<div class="dragover" id="dragover"><div>여기에 놓으면 파일이 열립니다</div></div>
+
+<div class="alert" id="alert" role="alert">
+  <button class="close" id="alertClose" type="button" aria-label="닫기">×</button>
+  <strong id="alertTitle"></strong>
+  <div id="alertBody"></div>
+</div>
+
+<script type="module">
+  import * as pdfjsLib from './pdf.min.mjs';
+  pdfjsLib.GlobalWorkerOptions.workerSrc = './pdf.worker.min.mjs';
+
+  // 한글 등 비내장 폰트용 CMap·표준 폰트는 필요한 파일에서만 온디맨드로 불러온다.
+  const PDFJS_VER = '4.10.38';
+  const CMAP_URL = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${PDFJS_VER}/cmaps/`;
+  const STD_FONT_URL = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${PDFJS_VER}/standard_fonts/`;
+  // AI 누끼 모델(@imgly/background-removal)은 버튼을 눌렀을 때만 내려받는다.
+  const BGRM_URL = 'https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.7.0/+esm';
+  // 얼굴 감지(face-api SSD MobileNet v1)도 버튼을 눌렀을 때만 내려받는다 (약 1.3MB + 5.6MB)
+  const FACEAPI_URL = 'https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.15/dist/face-api.esm.js';
+  const FACEAPI_MODEL_URL = 'https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.15/model/';
+
+  const $ = (id) => document.getElementById(id);
+  const app = $('app'), drop = $('drop'), filesEl = $('files'), thumbsEl = $('thumbs');
+  const stage = $('stage'), sheet = $('sheet'), canvas = $('canvas'), ctx = canvas.getContext('2d');
+  const pgEl = $('pg'), fnameEl = $('fname'), infoEl = $('info'), fitBtn = $('btnFit');
+  const fileInput = $('fileInput');
+
+  const ZOOM_STEPS = [0.1, 0.15, 0.25, 0.33, 0.5, 0.67, 0.75, 1, 1.25, 1.5, 2, 3, 4];
+  const MAX_CANVAS_PX = 4096 * 4096;   // 표시·저장 캔버스 상한 (iOS Safari 한계)
+  const MAX_CANVAS_SIDE = 8192;
+  const BASE_LONG = 3000;              // 벡터 파일 기본 저장 크기 (긴 변)
+  const SRC_LONG = 3000;               // 배경 제거용 래스터화 크기 (긴 변)
+
+  /**
+   * doc: { id, name, size, kind: 'pdf'|'image'|'svg', bytes?, pdf?, img?, w0, h0 (scale 1 크기),
+   *        numPages, meta, page, zoom, thumbs[], transparent:boolean, results:{[page]:{canvas,label}} }
+   */
+  const docs = [];
+  let current = null;
+  let renderTask = null;
+  let renderSeq = 0;
+  let nextId = 1;
+
+  // ── 유틸 ──────────────────────────────────────────────
+  const fmtSize = (n) => n < 1024 * 1024 ? `${(n / 1024).toFixed(0)} KB` : `${(n / 1024 / 1024).toFixed(1)} MB`;
+  const baseName = (name) => name.replace(/\.[^.]+$/, '');
+  const mm = (pt) => Math.round(pt / 72 * 25.4);
+  const yieldFrame = () => new Promise(r => setTimeout(r, 0));
+  const clamp255 = (v) => v < 0 ? 0 : (v > 255 ? 255 : Math.round(v));
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+  function showAlert(title, bodyHtml, kind = 'error') {
+    $('alertTitle').textContent = title;
+    $('alertBody').innerHTML = bodyHtml;
+    const el = $('alert');
+    el.classList.toggle('info', kind === 'info');
+    el.classList.add('show');
+    clearTimeout(showAlert._t);
+    if (kind === 'info') showAlert._t = setTimeout(hideAlert, 4500);
+  }
+  function hideAlert() { $('alert').classList.remove('show'); }
+  $('alertClose').addEventListener('click', hideAlert);
+
+  function sniff(bytes) {
+    const u = new Uint8Array(bytes, 0, Math.min(bytes.byteLength, 4096));
+    const head = new TextDecoder('latin1').decode(u);
+    if (head.includes('%PDF-')) return 'pdf';
+    if (head.startsWith('%!PS') || head.includes('%!PS-Adobe')) return 'postscript';
+    if (u[0] === 0x89 && u[1] === 0x50) return 'image';                     // PNG
+    if (u[0] === 0xFF && u[1] === 0xD8) return 'image';                     // JPEG
+    if (head.startsWith('GIF8') || head.startsWith('BM')) return 'image';   // GIF / BMP
+    if (head.startsWith('RIFF') && head.slice(8, 12) === 'WEBP') return 'image';
+    if (/^\s*(<\?xml|<!DOCTYPE svg|<svg)/i.test(head)) return 'svg';
+    if (head.startsWith('PK')) return 'zip';
+    return 'unknown';
+  }
+
+  function makeCanvas(w, h) {
+    const c = document.createElement('canvas');
+    c.width = Math.max(1, Math.floor(w)); c.height = Math.max(1, Math.floor(h));
+    return c;
+  }
+  function capDims(w, h, maxPx = MAX_CANVAS_PX) {
+    let k = 1;
+    if (w * h > maxPx) k = Math.sqrt(maxPx / (w * h));
+    if (w * k > MAX_CANVAS_SIDE) k = Math.min(k, MAX_CANVAS_SIDE / w);
+    if (h * k > MAX_CANVAS_SIDE) k = Math.min(k, MAX_CANVAS_SIDE / h);
+    return { w: Math.floor(w * k), h: Math.floor(h * k), k };
+  }
+
+  // ── 파일 열기 ─────────────────────────────────────────
+  async function openFiles(fileList) {
+    const files = Array.from(fileList || []).filter(f => f && f.size > 0);
+    if (!files.length) return;
+    hideAlert();
+    let lastOpened = null;
+    for (const f of files) {
+      try {
+        const doc = await loadDoc(f);
+        docs.push(doc);
+        lastOpened = doc;
+      } catch (err) {
+        console.warn('open failed:', f.name, err);
+        explainError(f, err);
+      }
+    }
+    if (lastOpened) {
+      app.classList.add('has-file');
+      document.body.classList.add('has-file');
+      renderFileList();
+      await selectDoc(lastOpened);
+      if (pendingMode) { setMode(pendingMode); pendingMode = null; }
+    } else {
+      pendingMode = null;
+    }
+  }
+
+  async function loadDoc(file) {
+    const bytes = await file.arrayBuffer();
+    const kind = sniff(bytes);
+    const base = { id: nextId++, name: file.name, size: file.size, page: 1, zoom: 'fit', thumbs: [], transparent: false, results: {}, meta: null, rot: 0, flipH: false, flipV: false, blur: {} };
+
+    if (kind === 'pdf') {
+      // pdf.js는 전달한 버퍼를 워커로 넘겨 버리므로 원본은 복사본을 보관한다.
+      const task = pdfjsLib.getDocument({
+        data: new Uint8Array(bytes.slice(0)),
+        cMapUrl: CMAP_URL, cMapPacked: true,
+        standardFontDataUrl: STD_FONT_URL,
+        isEvalSupported: false,
+      });
+      const pdf = await task.promise;
+      let meta = null;
+      try { meta = (await pdf.getMetadata()).info || null; } catch (_) { /* 메타데이터 없어도 무방 */ }
+      const p1 = await pdf.getPage(1);
+      const vp = p1.getViewport({ scale: 1 });
+      return { ...base, kind: 'pdf', bytes, pdf, numPages: pdf.numPages, meta, w0: vp.width, h0: vp.height };
+    }
+    if (kind === 'image') {
+      const bmp = await createImageBitmap(file, { imageOrientation: 'from-image' });
+      return { ...base, kind: 'image', img: bmp, numPages: 1, w0: bmp.width, h0: bmp.height };
+    }
+    if (kind === 'svg') {
+      const img = await loadSvg(file);
+      return { ...base, kind: 'svg', img: img.el, numPages: 1, w0: img.w, h0: img.h };
+    }
+    const e = new Error('not-supported'); e.kind = kind; throw e;
+  }
+
+  function loadSvg(file) {
+    return new Promise((res, rej) => {
+      const fr = new FileReader();
+      fr.onload = () => {
+        const text = fr.result;
+        const img = new Image();
+        const url = URL.createObjectURL(new Blob([text], { type: 'image/svg+xml' }));
+        img.onload = () => {
+          const m = /viewBox\s*=\s*["']\s*[\d.eE+-]+[\s,]+[\d.eE+-]+[\s,]+([\d.eE+-]+)[\s,]+([\d.eE+-]+)/.exec(text);
+          let w = m ? parseFloat(m[1]) : 0, h = m ? parseFloat(m[2]) : 0;
+          if (!w || !h) { w = img.naturalWidth; h = img.naturalHeight; }
+          if (!w || !h) { w = 1024; h = 1024; }
+          res({ el: img, w: Math.round(w), h: Math.round(h) });
+        };
+        img.onerror = () => rej(new Error('svg-load'));
+        img.src = url;
+      };
+      fr.onerror = () => rej(new Error('file-read'));
+      fr.readAsText(file);
+    });
+  }
+
+  function explainError(file, err) {
+    const name = `<b>${escapeHtml(file.name)}</b>`;
+    if (err && err.message === 'not-supported' && err.kind === 'postscript') {
+      showAlert('PDF 호환 옵션 없이 저장된 파일입니다',
+        `<p>${name} 은(는) 오래된 방식(PostScript 전용)으로 저장되어 브라우저에서 열 수 없습니다.</p>
+         <ol>
+           <li>보내 준 디자이너에게 <b>다시 저장</b>을 요청하세요.<br>저장할 때 <b>"PDF 호환 파일 만들기"</b>에 체크하면 됩니다.</li>
+           <li>또는 PDF·PNG로 내보내 달라고 요청하세요.</li>
+         </ol>`);
+      return;
+    }
+    if (err && err.message === 'not-supported' && err.kind === 'zip') {
+      showAlert('압축 파일로 보입니다',
+        `<p>${name} 은(는) 내부 구조가 압축(ZIP) 형식입니다. 먼저 압축을 풀고 안의 파일을 열어 주세요.</p>`);
+      return;
+    }
+    if (err && err.name === 'PasswordException') {
+      showAlert('암호가 걸린 파일입니다',
+        `<p>${name} 은(는) 열기 암호가 설정되어 있어 표시할 수 없습니다. 암호를 해제한 파일을 요청해 주세요.</p>`);
+      return;
+    }
+    showAlert('파일을 열 수 없습니다',
+      `<p>${name} 을(를) 읽는 중 문제가 생겼습니다. 파일이 손상되었거나 지원하지 않는 형식일 수 있습니다.</p>
+       <p style="margin-top:6px">지원 형식: "PDF 호환 파일 만들기"로 저장된 .ai, .pdf, JPG, PNG, WebP, GIF, SVG</p>`);
+  }
+
+  // ── 파일 목록 ─────────────────────────────────────────
+  function renderFileList() {
+    filesEl.innerHTML = '';
+    for (const d of docs) {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'file' + (d === current ? ' active' : '');
+      b.title = d.name;
+      const meta = d.kind === 'pdf' ? `${d.numPages}p` : (d.kind === 'svg' ? 'SVG' : 'IMG');
+      b.innerHTML = `<span class="name">${escapeHtml(d.name)}</span><span class="meta">${meta}</span><span class="rm" title="목록에서 닫기">×</span>`;
+      b.addEventListener('click', (e) => {
+        if (e.target.classList.contains('rm')) { closeDoc(d); return; }
+        selectDoc(d);
+      });
+      filesEl.appendChild(b);
+    }
+    const add = document.createElement('button');
+    add.type = 'button';
+    add.className = 'btn btn-ghost btn-sm file-add';
+    add.textContent = '+ 파일 추가';
+    add.addEventListener('click', () => fileInput.click());
+    filesEl.appendChild(add);
+    if (current) refreshRangeUI();
+  }
+
+  async function closeDoc(d) {
+    const i = docs.indexOf(d);
+    if (i < 0) return;
+    docs.splice(i, 1);
+    try { if (d.pdf) await d.pdf.destroy(); if (d.img && d.img.close) d.img.close(); } catch (_) {}
+    if (current === d) {
+      current = null;
+      if (docs.length) await selectDoc(docs[Math.min(i, docs.length - 1)]);
+      else { app.classList.remove('has-file'); document.body.classList.remove('has-file'); thumbsEl.innerHTML = ''; setMode('view'); }
+    }
+    renderFileList();
+  }
+
+  // ── 문서 선택 / 썸네일 ────────────────────────────────
+  async function selectDoc(d) {
+    if (current === d) return;
+    current = d;
+    stopPicking();
+    renderFileList();
+    fnameEl.textContent = d.name;
+    fnameEl.title = d.name;
+    $('btnPdf').style.display = d.kind === 'pdf' ? '' : 'none';
+    infoEl.innerHTML = '';
+    syncPanels();
+    await renderPage();
+    buildThumbs(d);   // 썸네일은 본문 표시 후 백그라운드로
+  }
+
+  /** 페이지 크기(scale 1 기준) */
+  async function pageSize(d, p) {
+    let w = d.w0, h = d.h0;
+    if (d.kind === 'pdf' && p !== 1) {
+      const page = await d.pdf.getPage(p);
+      const vp = page.getViewport({ scale: 1 });
+      w = vp.width; h = vp.height;
+    }
+    return orientedDims(w, h, d);
+  }
+  const orientedDims = (w, h, d) => (d.rot % 180) ? { w: h, h: w } : { w, h };
+
+  /** 회전·반전을 적용해 img를 (W×H) 출력 캔버스에 꽉 채워 그린다. W,H는 회전이 반영된 출력 크기 */
+  function drawOriented(c, img, W, H, d) {
+    c.save();
+    c.setTransform(1, 0, 0, 1, 0, 0);
+    if (d.flipH) { c.translate(W, 0); c.scale(-1, 1); }
+    if (d.flipV) { c.translate(0, H); c.scale(1, -1); }
+    c.imageSmoothingEnabled = true; c.imageSmoothingQuality = 'high';
+    switch (d.rot || 0) {
+      case 90: c.translate(W, 0); c.rotate(Math.PI / 2); c.drawImage(img, 0, 0, H, W); break;
+      case 180: c.translate(W, H); c.rotate(Math.PI); c.drawImage(img, 0, 0, W, H); break;
+      case 270: c.translate(0, H); c.rotate(-Math.PI / 2); c.drawImage(img, 0, 0, H, W); break;
+      default: c.drawImage(img, 0, 0, W, H);
+    }
+    c.restore();
+  }
+
+  /**
+   * 원본을 지정 배율로 캔버스에 그린다. transparent=true면 배경을 칠하지 않는다.
+   * pdf는 page.render, image/svg는 drawImage. 반환: {canvas, task?}
+   */
+  async function drawSource(d, p, scale, targetCanvas, transparent, pixelRatio = 1) {
+    const W = targetCanvas.width, H = targetCanvas.height;
+    if (d.kind === 'pdf') {
+      const page = await d.pdf.getPage(p);
+      const vp = page.getViewport({ scale, rotation: (page.rotate + (d.rot || 0)) % 360 });
+      const pr = pixelRatio;
+      // 반전은 출력 공간의 기본 변환 행렬로 처리
+      let transform = null;
+      if (d.flipH && d.flipV) transform = [-pr, 0, 0, -pr, W, H];
+      else if (d.flipH) transform = [-pr, 0, 0, pr, W, 0];
+      else if (d.flipV) transform = [pr, 0, 0, -pr, 0, H];
+      else if (pr !== 1) transform = [pr, 0, 0, pr, 0, 0];
+      return page.render({
+        canvasContext: targetCanvas.getContext('2d'),
+        viewport: vp,
+        transform,
+        background: transparent ? 'rgba(0,0,0,0)' : 'rgb(255,255,255)',
+      });
+    }
+    const c = targetCanvas.getContext('2d');
+    c.setTransform(1, 0, 0, 1, 0, 0);
+    c.clearRect(0, 0, W, H);
+    if (!transparent && d.kind === 'svg') { c.fillStyle = '#fff'; c.fillRect(0, 0, W, H); }
+    drawOriented(c, d.img, W, H, d);
+    return { promise: Promise.resolve(), cancel() {} };
+  }
+
+  async function buildThumbs(d) {
+    thumbsEl.innerHTML = '';
+    d.thumbs = [];
+    for (let p = 1; p <= d.numPages; p++) {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'thumb' + (p === d.page ? ' active' : '');
+      const lbl = d.kind === 'pdf' ? `아트보드 ${p}` : '이미지';
+      b.innerHTML = `<div class="frame"><canvas></canvas></div><span class="lbl">${lbl}</span>`;
+      b.addEventListener('click', () => { d.page = p; stopPicking(); syncPanels(); renderPage(); });
+      thumbsEl.appendChild(b);
+      d.thumbs.push(b);
+    }
+    const mine = d;
+    for (let p = 1; p <= d.numPages; p++) {
+      if (current !== mine) return;
+      try {
+        const sz = await pageSize(d, p);
+        const targetW = 150;
+        const scale = targetW / sz.w;
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const c = d.thumbs[p - 1].querySelector('canvas');
+        c.width = Math.ceil(sz.w * scale * dpr); c.height = Math.ceil(sz.h * scale * dpr);
+        c.style.width = `${Math.round(sz.w * scale)}px`;
+        await (await drawSource(d, p, scale, c, false, dpr)).promise;
+      } catch (e) { console.warn('thumb', p, e); }
+    }
+  }
+
+  function markActiveThumb() {
+    if (!current || !current.thumbs.length) return;
+    current.thumbs.forEach((t, i) => t.classList.toggle('active', i + 1 === current.page));
+    const active = current.thumbs[current.page - 1];
+    if (active && active.scrollIntoView) active.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  }
+
+  // ── 메인 렌더 ─────────────────────────────────────────
+  function fitScale(w, h) {
+    const pad = window.innerWidth <= 860 ? 28 : 56;
+    const availW = stage.clientWidth - pad;
+    const availH = stage.clientHeight - pad;
+    return Math.max(0.02, Math.min(availW / w, availH / h));
+  }
+
+  let lastFitScale = 1;
+
+  async function renderPage() {
+    const d = current;
+    if (!d) return;
+    const seq = ++renderSeq;
+    if (renderTask) { try { renderTask.cancel(); } catch (_) {} renderTask = null; }
+    sheet.classList.add('busy');
+    markActiveThumb();
+    pgEl.textContent = `${d.page} / ${d.numPages}`;
+    $('btnPrev').disabled = d.page <= 1;
+    $('btnNext').disabled = d.page >= d.numPages;
+
+    let sz;
+    try { sz = await pageSize(d, d.page); }
+    catch (e) { sheet.classList.remove('busy'); console.error(e); return; }
+    if (seq !== renderSeq) return;
+
+    const scale = d.zoom === 'fit' ? fitScale(sz.w, sz.h) : d.zoom;
+    if (d.zoom === 'fit') lastFitScale = scale;
+
+    const cssW = Math.max(1, Math.round(sz.w * scale));
+    const cssH = Math.max(1, Math.round(sz.h * scale));
+    let dpr = window.devicePixelRatio || 1;
+    let px = capDims(Math.ceil(cssW * dpr), Math.ceil(cssH * dpr));
+    dpr *= px.k;
+    canvas.width = px.w; canvas.height = px.h;
+    canvas.style.width = `${cssW}px`; canvas.style.height = `${cssH}px`;
+    sheet.style.width = `${cssW}px`; sheet.style.height = `${cssH}px`;
+
+    fitBtn.textContent = d.zoom === 'fit' ? `맞춤 ${Math.round(scale * 100)}%` : `${Math.round(scale * 100)}%`;
+
+    const result = d.results[d.page];
+    const transparentView = !!result || (d.transparent && d.kind !== 'image');
+    sheet.classList.toggle('checker', transparentView);
+
+    try {
+      if (result) {
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawOriented(ctx, result.canvas, canvas.width, canvas.height, d);
+      } else {
+        renderTask = await drawSource(d, d.page, scale, canvas, d.transparent, dpr);
+        await renderTask.promise;
+      }
+    } catch (e) {
+      if (!(e && e.name === 'RenderingCancelledException')) console.error(e);
+      return;
+    } finally {
+      if (seq === renderSeq) sheet.classList.remove('busy');
+    }
+    if (seq !== renderSeq) return;
+    applyBlur(canvas, d.blur[d.page]);
+    if (wm.on) { await ensureLogo(); if (seq !== renderSeq) return; drawWatermark(ctx, canvas.width, canvas.height); }
+    renderInfo(d, sz);
+    updateOverlay();
+    layoutBlurBoxes();
+  }
+
+  function renderInfo(d, sz) {
+    const parts = [];
+    parts.push(`<span><b>${escapeHtml(d.name)}</b></span>`);
+    parts.push(`<span>${fmtSize(d.size)}</span>`);
+    if (d.kind === 'pdf') {
+      parts.push(`<span>아트보드 ${d.numPages}개</span>`);
+      parts.push(`<span>${mm(sz.w)} × ${mm(sz.h)} mm (${Math.round(sz.w)} × ${Math.round(sz.h)} pt)</span>`);
+      const creator = d.meta && (d.meta.Creator || d.meta.Producer);
+      if (creator) {
+        const c = String(creator).trim();
+        parts.push(`<span title="${escapeHtml(c)}">${escapeHtml(c.length > 40 ? c.slice(0, 40) + '…' : c)}</span>`);
+      }
+      const dt = d.meta && d.meta.ModDate && parsePdfDate(d.meta.ModDate);
+      if (dt) parts.push(`<span>수정 ${dt}</span>`);
+    } else {
+      parts.push(`<span>${d.kind === 'svg' ? 'SVG 벡터' : '이미지'} ${Math.round(sz.w)} × ${Math.round(sz.h)} px</span>`);
+    }
+    const r = d.results[d.page];
+    if (r) parts.push(`<span class="tag">${escapeHtml(r.label)} 적용됨</span>`);
+    const bl = d.blur[d.page];
+    if (bl && bl.length) parts.push(`<span class="tag">얼굴 블러 ${bl.length}곳</span>`);
+    else if (d.transparent && d.kind !== 'image') parts.push(`<span class="tag">투명 배경</span>`);
+    infoEl.innerHTML = parts.join('<span class="dot"></span>');
+  }
+
+  function parsePdfDate(s) {
+    const m = /^D:(\d{4})(\d{2})(\d{2})(\d{2})?(\d{2})?/.exec(String(s));
+    if (!m) return null;
+    return `${m[1]}.${m[2]}.${m[3]}${m[4] ? ` ${m[4]}:${m[5] || '00'}` : ''}`;
+  }
+
+  // ── 줌 / 페이지 이동 ──────────────────────────────────
+  function currentScale() {
+    if (!current) return 1;
+    return current.zoom === 'fit' ? lastFitScale : current.zoom;
+  }
+  function zoomBy(dir) {
+    if (!current) return;
+    const s = currentScale();
+    let next;
+    if (dir > 0) next = ZOOM_STEPS.find(z => z > s + 0.001) ?? ZOOM_STEPS[ZOOM_STEPS.length - 1];
+    else next = [...ZOOM_STEPS].reverse().find(z => z < s - 0.001) ?? ZOOM_STEPS[0];
+    current.zoom = next;
+    renderPage();
+  }
+  function goPage(delta) {
+    if (!current) return;
+    const p = Math.min(current.numPages, Math.max(1, current.page + delta));
+    if (p === current.page) return;
+    current.page = p;
+    stopPicking(); syncPanels();
+    renderPage();
+  }
+
+  $('btnZoomIn').addEventListener('click', () => zoomBy(1));
+  $('btnZoomOut').addEventListener('click', () => zoomBy(-1));
+  fitBtn.addEventListener('click', () => {
+    if (!current) return;
+    current.zoom = current.zoom === 'fit' ? 1 : 'fit';
+    renderPage();
+  });
+  $('btnPrev').addEventListener('click', () => goPage(-1));
+  $('btnNext').addEventListener('click', () => goPage(1));
+
+  document.addEventListener('keydown', (e) => {
+    if (!current || e.target.matches('input,textarea,select')) return;
+    if (e.key === 'ArrowRight' || e.key === 'PageDown') { e.preventDefault(); goPage(1); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); goPage(-1); }
+    else if (e.key === '+' || e.key === '=') { e.preventDefault(); zoomBy(1); }
+    else if (e.key === '-') { e.preventDefault(); zoomBy(-1); }
+    else if (e.key === '0') { e.preventDefault(); current.zoom = 'fit'; renderPage(); }
+    else if (e.key === 'Escape') { if (adding) setAdding(false); else setMode('view'); }
+  });
+
+  stage.addEventListener('wheel', (e) => {
+    if (!(e.ctrlKey || e.metaKey) || !current) return;
+    e.preventDefault();
+    zoomBy(e.deltaY < 0 ? 1 : -1);
+  }, { passive: false });
+
+  let resizeT;
+  window.addEventListener('resize', () => {
+    if (!current || current.zoom !== 'fit') return;
+    clearTimeout(resizeT);
+    resizeT = setTimeout(renderPage, 120);
+  });
+
+  // ── 작업 모드: view(파일 보기) / bg(누끼) / up(4K 저장) ──
+  let mode = 'view';
+  let pendingMode = null;   // 홈 카드에서 고른 작업 (파일 열리면 적용)
+  function setMode(m) {
+    mode = m;
+    ['view', 'bg', 'up', 'blur'].forEach(k => app.classList.toggle(`mode-${k}`, k === m));
+    document.querySelectorAll('#modes button').forEach(b => b.setAttribute('aria-pressed', b.dataset.mode === m ? 'true' : 'false'));
+    $('savePanel').classList.toggle('show', m === 'up');
+    $('bgPanel').classList.toggle('show', m === 'bg');
+    $('blurPanel').classList.toggle('show', m === 'blur');
+    if (m !== 'blur') setAdding(false);
+    $('btnSave').classList.toggle('on', m === 'up');
+    $('btnBg').classList.toggle('on', m === 'bg');
+    if (m !== 'bg') stopPicking();
+    $('dock').scrollTop = 0;
+    if (m === 'up' && $('selSize').value === 'base' && !setMode._sizeTouched) $('selSize').value = 'fit4k';
+    syncPanels();
+    // 도크가 열리고 닫히면 스테이지 폭이 바뀌므로 맞춤 배율을 다시 계산
+    if (current && current.zoom === 'fit') setTimeout(renderPage, 30);
+  }
+  function closePanels() { setMode('view'); }
+  $('selSize').addEventListener('change', () => { setMode._sizeTouched = true; });
+  document.querySelectorAll('#modes button').forEach(b => b.addEventListener('click', () => setMode(b.dataset.mode)));
+  document.querySelectorAll('.mode-card[data-pick]').forEach(b => b.addEventListener('click', () => { pendingMode = b.dataset.pick; fileInput.click(); }));
+  $('btnSave').addEventListener('click', () => setMode(mode === 'up' ? 'view' : 'up'));
+  $('btnBg').addEventListener('click', () => setMode(mode === 'bg' ? 'view' : 'bg'));
+  document.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', () => setMode('view')));
+
+  function seg(id, cb) {
+    const el = $(id);
+    el.addEventListener('click', (e) => {
+      const b = e.target.closest('button'); if (!b) return;
+      el.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b ? 'true' : 'false'));
+      cb(b.dataset.v);
+    });
+  }
+  function segValue(id) { return $(id).querySelector('button[aria-pressed="true"]').dataset.v; }
+
+  // ── 저장·내보내기 옵션 ────────────────────────────────
+  const PRESETS = {
+    base: { kind: 'scale' }, fit4k: { kind: 'scale' }, long4k: { kind: 'scale' }, x2: { kind: 'scale' }, x4: { kind: 'scale' },
+    og: { w: 1200, h: 630, tag: 'og' }, kakao_basic: { w: 800, h: 800, tag: 'kakao' }, kakao_wide: { w: 800, h: 400, tag: 'kakao-wide' },
+    ig_portrait: { w: 1080, h: 1350, tag: 'insta' }, ig_square: { w: 1080, h: 1080, tag: 'square' }, ig_story: { w: 1080, h: 1920, tag: 'story' },
+    yt: { w: 1280, h: 720, tag: 'youtube' }, ppt: { w: 1920, h: 1080, tag: '16x9' }, custom: { custom: true, tag: 'custom' },
+  };
+  const BRAND_PURPLE = '#4A1BD0';
+  const exp = { fit: 'fill', pos: 50, trim: false, pad: 5, bg: 'transparent', bgColor: BRAND_PURPLE, fmt: 'png', limit: 0, sharp: 0 };
+  const clampInt = (v, lo, hi, dflt) => { const n = parseInt(v, 10); return Number.isFinite(n) ? Math.min(hi, Math.max(lo, n)) : dflt; };
+
+  /** 고정 규격이면 {w,h,tag}, 크기만 조정이면 null */
+  function presetDims(key) {
+    const k = key || $('selSize').value, p = PRESETS[k] || PRESETS.base;
+    if (p.kind === 'scale') return null;
+    if (p.custom) return { w: clampInt($('inW').value, 16, 8192, 1200), h: clampInt($('inH').value, 16, 8192, 630), tag: 'custom' };
+    return p;
+  }
+
+  seg('segFit', v => { exp.fit = v; refreshExportUI(); });
+  seg('segBg', v => { exp.bg = v; refreshExportUI(); });
+  seg('segFmt', v => { exp.fmt = v; refreshExportUI(); });
+  seg('segSharp', v => { exp.sharp = parseFloat(v); });
+  $('selLimit').addEventListener('change', () => { exp.limit = parseInt($('selLimit').value, 10) || 0; });
+  $('chkTrim').addEventListener('change', () => { exp.trim = $('chkTrim').checked; refreshExportUI(); });
+  $('rngPad').addEventListener('input', () => { exp.pad = parseInt($('rngPad').value, 10); $('outPad').textContent = `${exp.pad}%`; updateOverlay(); });
+  $('rngPos').addEventListener('input', () => { exp.pos = parseInt($('rngPos').value, 10); updatePosLabel(); updateOverlay(); });
+  $('inBgColor').addEventListener('input', () => { exp.bgColor = $('inBgColor').value; });
+  ['inW', 'inH'].forEach(id => $(id).addEventListener('input', refreshExportUI));
+  $('selSize').addEventListener('change', refreshExportUI);
+  function updatePosLabel() {
+    const v = exp.pos;
+    $('outPos').textContent = v === 50 ? '가운데' : v === 0 ? '시작' : v === 100 ? '끝' : `${v}%`;
+  }
+
+  // 회전·반전은 문서 상태로 저장되어 화면·저장에 함께 적용
+  $('segOrient').addEventListener('click', async (e) => {
+    const b = e.target.closest('button'); if (!b || !current) return;
+    const d = current, v = b.dataset.v;
+    if (v === 'rotl') d.rot = ((d.rot || 0) + 270) % 360;
+    else if (v === 'rotr') d.rot = ((d.rot || 0) + 90) % 360;
+    else if (v === 'fliph') d.flipH = !d.flipH;
+    else d.flipV = !d.flipV;
+    // 블러 영역(정규화 좌표)도 같은 변환을 적용해 얼굴 위에 그대로 남긴다
+    for (const k in d.blur) d.blur[k] = d.blur[k].map(r =>
+      v === 'rotr' ? { x: 1 - r.y - r.h, y: r.x, w: r.h, h: r.w }
+      : v === 'rotl' ? { x: r.y, y: 1 - r.x - r.w, w: r.h, h: r.w }
+      : v === 'fliph' ? { ...r, x: 1 - r.x - r.w }
+      : { ...r, y: 1 - r.y - r.h });
+    await renderPage();
+    buildThumbs(d);
+    updateSizeHint();
+  });
+
+  /** 현재 문서·옵션에 맞춰 패널 표시를 갱신 */
+  function syncPanels() {
+    const d = current; if (!d) return;
+    const isVector = d.kind !== 'image';
+    $('secVector').style.display = isVector ? '' : 'none';
+    $('chkTransparent').checked = !!d.transparent;
+    const baseOpt = $('selSize').querySelector('option[value="base"]');
+    baseOpt.textContent = (d.kind === 'image' || d.results[d.page]) ? '원본 크기' : `기본 (긴 변 ${BASE_LONG}px)`;
+    refreshExportUI();
+    refreshRangeUI();
+  }
+  function refreshExportUI() {
+    const fixed = presetDims();
+    $('rowCustom').style.display = $('selSize').value === 'custom' ? 'flex' : 'none';
+    $('rowFit').style.display = fixed ? '' : 'none';
+    $('rowPos').style.display = exp.fit === 'fill' ? 'flex' : 'none';
+    $('fitHint').style.display = exp.fit === 'fill' ? '' : 'none';
+    $('rowPad').style.display = exp.trim ? 'flex' : 'none';
+    $('rowBgColor').style.display = exp.bg === 'custom' ? 'flex' : 'none';
+    $('fmtHint').textContent = exp.fmt === 'jpg'
+      ? 'JPG는 투명을 지원하지 않아 배경을 흰색(또는 선택한 색)으로 채웁니다.'
+      : 'PNG·WebP는 투명 배경을 유지합니다. 용량 제한을 걸면 품질을 자동 조정합니다.';
+    updateSizeHint();
+    updateOverlay();
+  }
+
+  // ── 저장 크기 계산 ────────────────────────────────────
+  async function exportPlan(sizeOverride, doc, pageNo) {
+    const d = doc || current;
+    const page = pageNo || d.page;
+    const key = sizeOverride || $('selSize').value;
+    const sz = await pageSize(d, page);            // 회전 반영된 페이지 크기
+    const res = d.results[page];
+    const fixed = presetDims(key);
+    // 소스 픽셀 크기(회전 반영): 결과물 캔버스 / 사진 원본 / 벡터 "기본" 렌더 크기
+    let srcW, srcH;
+    if (res) ({ w: srcW, h: srcH } = orientedDims(res.canvas.width, res.canvas.height, d));
+    else if (d.kind === 'image') ({ w: srcW, h: srcH } = sz);
+    else { const k = BASE_LONG / Math.max(sz.w, sz.h); srcW = Math.round(sz.w * k); srcH = Math.round(sz.h * k); }
+    let s = 1, tw, th;
+    if (fixed) { tw = fixed.w; th = fixed.h; }
+    else {
+      if (key === 'fit4k') s = Math.min(3840 / srcW, 2160 / srcH);
+      else if (key === 'long4k') s = 3840 / Math.max(srcW, srcH);
+      else if (key === 'x2') s = 2;
+      else if (key === 'x4') s = 4;
+      tw = Math.round(srcW * s); th = Math.round(srcH * s);
+    }
+    const cap = capDims(tw, th);
+    const capped = cap.k < 1;
+    tw = cap.w; th = cap.h;
+    const vectorDirect = !fixed && !res && d.kind !== 'image';   // 벡터는 목표 크기로 바로 렌더
+    return { d, page, sz, res, srcW, srcH, tw, th, s, capped, vectorDirect, fixed, key };
+  }
+
+  async function updateSizeHint() {
+    if (!current) return;
+    try {
+      const p = await exportPlan();
+      let t = `${p.tw} × ${p.th} px`;
+      if (p.fixed) t += exp.fit === 'fill' ? ' · 비율에 맞게 잘라서 채움' : ' · 비율에 맞게 여백을 두고 배치';
+      else if (p.vectorDirect) t += ' · 벡터에서 바로 렌더링 (화질 손실 없음)';
+      else if (p.s > 1.001) t += ' · Lanczos-3 보간 확대';
+      else if (p.s < 0.999) t += ' · 축소';
+      if (exp.trim && !p.fixed) t += ' · 여백을 잘라내면 실제 크기는 줄어듭니다';
+      if (p.capped) t += ' · 브라우저 한계로 크기를 줄였습니다';
+      $('sizeHint').textContent = t;
+    } catch (e) { $('sizeHint').textContent = ''; }
+  }
+
+  // ── 미리보기 오버레이 (자를 영역 / 여백 잘라낸 영역) ──
+  let trimCache = { seq: -1, box: null };
+  function cachedTrimBox() {
+    if (trimCache.seq === renderSeq) return trimCache.box;
+    let box = null;
+    try { box = trimBox(canvas); } catch (_) {}
+    trimCache = { seq: renderSeq, box };
+    return box;
+  }
+  /** 화면 캔버스 좌표계(px)에서 여백 영역·자를 영역을 계산 */
+  function overlayGeom() {
+    if (!current || mode !== 'up') return null;
+    const fixed = presetDims();
+    if (!fixed && !exp.trim) return null;
+    const W = canvas.width, H = canvas.height;
+    let region = { x: 0, y: 0, w: W, h: H }, trimmed = false;
+    if (exp.trim) {
+      const box = cachedTrimBox();
+      if (box) {
+        const padPx = Math.round(Math.max(box.w, box.h) * exp.pad / 100);
+        region = { x: box.x - padPx, y: box.y - padPx, w: box.w + 2 * padPx, h: box.h + 2 * padPx };
+        trimmed = true;
+      }
+    }
+    let crop = null, axis = null, free = 0;
+    if (fixed && exp.fit === 'fill') {
+      const r = fixed.w / fixed.h, sr = region.w / region.h;
+      let cw = region.w, ch = region.h, x = region.x, y = region.y;
+      if (sr > r + 1e-4) { cw = region.h * r; free = region.w - cw; x += free * exp.pos / 100; axis = 'x'; }
+      else if (sr < r - 1e-4) { ch = region.w / r; free = region.h - ch; y += free * exp.pos / 100; axis = 'y'; }
+      crop = { x, y, w: cw, h: ch };
+    }
+    return { region, trimmed, crop, axis, free, k: parseFloat(canvas.style.width) / W };
+  }
+  function updateOverlay() {
+    const cb = $('cropBox'), tb = $('trimBox');
+    const g = overlayGeom();
+    if (!g) { cb.style.display = 'none'; tb.style.display = 'none'; return; }
+    const px = (v) => `${v * g.k}px`;
+    if (g.trimmed) {
+      tb.style.display = 'block';
+      tb.style.left = px(g.region.x); tb.style.top = px(g.region.y); tb.style.width = px(g.region.w); tb.style.height = px(g.region.h);
+    } else tb.style.display = 'none';
+    if (g.crop) {
+      cb.style.display = 'block';
+      cb.style.left = px(g.crop.x); cb.style.top = px(g.crop.y); cb.style.width = px(g.crop.w); cb.style.height = px(g.crop.h);
+      const f = presetDims(); cb.dataset.label = `${f.w} × ${f.h}`;
+    } else cb.style.display = 'none';
+  }
+  let cropDrag = null;
+  $('cropBox').addEventListener('pointerdown', (e) => {
+    const g = overlayGeom(); if (!g || !g.axis) return;
+    cropDrag = { x: e.clientX, y: e.clientY, pos: exp.pos, g };
+    e.currentTarget.setPointerCapture(e.pointerId); e.preventDefault();
+  });
+  $('cropBox').addEventListener('pointermove', (e) => {
+    if (!cropDrag) return;
+    const { g } = cropDrag;
+    const delta = g.axis === 'x' ? e.clientX - cropDrag.x : e.clientY - cropDrag.y;
+    exp.pos = Math.round(Math.min(100, Math.max(0, cropDrag.pos + delta / (g.free * g.k) * 100)));
+    $('rngPos').value = exp.pos; updatePosLabel(); updateOverlay();
+  });
+  ['pointerup', 'pointercancel'].forEach(ev => $('cropBox').addEventListener(ev, () => { cropDrag = null; }));
+
+  // ── 픽셀 처리 도구 ────────────────────────────────────
+  /** 투명(알파) 또는 단색 테두리를 제외한 내용 영역. 없으면 null */
+  function trimBox(cv) {
+    const w = cv.width, h = cv.height;
+    const img = cv.getContext('2d', { willReadFrequently: true }).getImageData(0, 0, w, h), d = img.data;
+    const corners = [0, (w - 1) * 4, (h - 1) * w * 4, ((h - 1) * w + w - 1) * 4];
+    const alphaMode = corners.some(q => d[q + 3] < 250);
+    let isContent;
+    if (alphaMode) isContent = (i) => d[i * 4 + 3] > 8;
+    else {
+      const ref = cornerColor(img), thr2 = (16 * 2.2) ** 2;
+      isContent = (i) => { const q = i * 4, dr = d[q] - ref[0], dg = d[q + 1] - ref[1], db = d[q + 2] - ref[2]; return dr * dr + dg * dg + db * db > thr2; };
+    }
+    let top = -1, bottom = -1, left = w, right = -1;
+    for (let y = 0; y < h && top < 0; y++) for (let x = 0; x < w; x++) if (isContent(y * w + x)) { top = y; break; }
+    if (top < 0) return null;
+    for (let y = h - 1; y >= top && bottom < 0; y--) for (let x = 0; x < w; x++) if (isContent(y * w + x)) { bottom = y; break; }
+    for (let y = top; y <= bottom; y++) {
+      for (let x = 0; x < left; x++) if (isContent(y * w + x)) { left = x; break; }
+      for (let x = w - 1; x > right; x--) if (isContent(y * w + x)) { right = x; break; }
+    }
+    if (right < left) return null;
+    return { x: left, y: top, w: right - left + 1, h: bottom - top + 1 };
+  }
+  function trimCanvas(cv, padPct) {
+    const box = trimBox(cv);
+    if (!box || (box.w === cv.width && box.h === cv.height && padPct === 0)) return cv;
+    const padPx = Math.round(Math.max(box.w, box.h) * padPct / 100);
+    const c = makeCanvas(box.w + 2 * padPx, box.h + 2 * padPx);
+    c.getContext('2d').drawImage(cv, box.x, box.y, box.w, box.h, padPx, padPx, box.w, box.h);
+    return c;
+  }
+  /** 목표 비율로 잘라내거나(fill) 여백을 두고(pad) 맞춘다 */
+  function fitToRatio(cv, tw, th, fitMode, pos) {
+    const w = cv.width, h = cv.height, r = tw / th, sr = w / h;
+    if (Math.abs(sr - r) < 1e-3) return cv;
+    if (fitMode === 'fill') {
+      let cw = w, ch = h, x = 0, y = 0;
+      if (sr > r) { cw = Math.round(h * r); x = Math.round((w - cw) * pos / 100); }
+      else { ch = Math.round(w / r); y = Math.round((h - ch) * pos / 100); }
+      const c = makeCanvas(cw, ch);
+      c.getContext('2d').drawImage(cv, x, y, cw, ch, 0, 0, cw, ch);
+      return c;
+    }
+    let nw = w, nh = h;
+    if (sr > r) nh = Math.round(w / r); else nw = Math.round(h * r);
+    const c = makeCanvas(nw, nh);
+    c.getContext('2d').drawImage(cv, Math.round((nw - w) / 2), Math.round((nh - h) / 2));
+    return c;
+  }
+  async function resampleTo(cv, tw, th, P) {
+    if (tw > cv.width + 1) {
+      const srcData = cv.getContext('2d', { willReadFrequently: true }).getImageData(0, 0, cv.width, cv.height);
+      const outData = await lanczosResize(srcData, tw, th, (r) => P(0.2 + r * 0.6, `확대 중 ${Math.round(r * 100)}%`));
+      const out = makeCanvas(tw, th); out.getContext('2d').putImageData(outData, 0, 0); return out;
+    }
+    if (tw < cv.width - 1 || th < cv.height - 1) return downscale(cv, tw, th);
+    return cv;
+  }
+  /** 배경 제거·회전을 반영한 소스 캔버스. 벡터는 longSide 크기로 래스터화 */
+  async function baseCanvas(d, p, res, longSide) {
+    if (res) {
+      const o = orientedDims(res.canvas.width, res.canvas.height, d);
+      const c = makeCanvas(o.w, o.h); drawOriented(c.getContext('2d'), res.canvas, o.w, o.h, d); return c;
+    }
+    if (d.kind === 'image') {
+      const cap = capDims(d.w0, d.h0), o = orientedDims(cap.w, cap.h, d);
+      const c = makeCanvas(o.w, o.h); drawOriented(c.getContext('2d'), d.img, o.w, o.h, d); return c;
+    }
+    const sz = await pageSize(d, p);
+    const scale = longSide / Math.max(sz.w, sz.h);
+    const c = makeCanvas(sz.w * scale, sz.h * scale);
+    await (await drawSource(d, p, scale, c, d.transparent)).promise;
+    return c;
+  }
+  const toBlob = (c, mime, q) => new Promise(res => c.toBlob(res, mime, q));
+  /** 형식·용량 제한에 맞춰 인코딩. PNG가 제한을 넘으면 WebP(투명 유지)로 대체 */
+  async function encodeWithLimit(out, fmt, limitKB, P) {
+    const limit = limitKB * 1024;
+    let note = '';
+    if (fmt === 'png') {
+      const b = await toBlob(out, 'image/png');
+      if (!limit || b.size <= limit) return { blob: b, ext: 'png', w: out.width, h: out.height, note };
+      fmt = 'webp'; note = 'PNG로는 용량 제한을 맞출 수 없어 WebP(투명 유지)로 저장했습니다. ';
+    }
+    const mime = fmt === 'jpg' ? 'image/jpeg' : 'image/webp', ext = fmt === 'jpg' ? 'jpg' : 'webp';
+    let c = out;
+    for (let round = 0; round < 5; round++) {
+      const first = await toBlob(c, mime, 0.95);
+      if (!first) throw new Error('encode');
+      if (!limit || first.size <= limit) return { blob: first, ext, w: c.width, h: c.height, note };
+      let lo = 0.4, hi = 0.95, best = null;
+      for (let i = 0; i < 7; i++) {
+        const q = (lo + hi) / 2, t = await toBlob(c, mime, q);
+        if (t.size <= limit) { best = t; lo = q; } else hi = q;
+      }
+      if (best) return { blob: best, ext, w: c.width, h: c.height, note: note + '용량 제한에 맞춰 압축 품질을 조정했습니다. ' };
+      c = downscale(c, Math.max(16, Math.round(c.width * 0.8)), Math.max(16, Math.round(c.height * 0.8)));
+      P(0.98, `용량 제한에 맞추기 위해 크기를 줄이는 중 (${c.width} × ${c.height})…`);
+    }
+    const b = await toBlob(c, mime, 0.4);
+    return { blob: b, ext, w: c.width, h: c.height, note: note + '용량 제한에 맞추기 위해 크기와 품질을 함께 줄였습니다. ' };
+  }
+
+  // ── 저장 실행 ─────────────────────────────────────────
+  function download(blob, filename) {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+  }
+
+  function setProg(progId, statId, ratio, text) {
+    const pr = $(progId); const st = $(statId);
+    if (ratio == null) { pr.classList.remove('show'); pr.firstElementChild.style.width = '0'; }
+    else { pr.classList.add('show'); pr.firstElementChild.style.width = `${Math.round(ratio * 100)}%`; }
+    st.textContent = text || '';
+  }
+
+  $('btnDoSave').addEventListener('click', () => {
+    if (!current) return;
+    if (saveRange === 'page') exportImage({ btnId: 'btnDoSave', progId: 'saveProg', statId: 'saveStat' });
+    else batchExport(saveRange);
+  });
+  $('btnBgSave').addEventListener('click', () => exportImage({ btnId: 'btnBgSave', progId: 'bgSaveProg', statId: 'bgSaveStat', sizeMode: 'base', fmt: 'png', sharp: 0, limit: 0, bg: 'transparent', trim: false }));
+  $('btnCopy').addEventListener('click', () => {
+    if (!current) return;
+    if (!navigator.clipboard || !window.ClipboardItem) {
+      showAlert('이 브라우저는 이미지 클립보드 복사를 지원하지 않습니다', '<p>대신 "저장"으로 파일을 내려받아 주세요.</p>'); return;
+    }
+    // Safari는 사용자 동작 안에서 Promise 형태로 넘겨야 허용된다
+    const blobP = exportImage({ btnId: 'btnCopy', progId: 'saveProg', statId: 'saveStat', fmt: 'png', limit: 0, returnBlob: true })
+      .then(r => { if (!r) throw new Error('export failed'); return r.blob; });
+    navigator.clipboard.write([new ClipboardItem({ 'image/png': blobP })])
+      .then(() => setProg('saveProg', 'saveStat', null, '클립보드에 복사했습니다. 카톡·PPT에 붙여넣기(Ctrl+V) 하세요.'))
+      .catch(e => { console.warn(e); showAlert('클립보드 복사에 실패했습니다', '<p>브라우저가 권한을 막았거나 지원하지 않습니다. "저장"으로 내려받아 주세요.</p>'); });
+  });
+
+  /** 파일 이름 규칙: 원본이름[-artboardN][-nukki|-transparent][-규격-WxH | -WxH].ext */
+  function exportName(p, enc, trim) {
+    const d = p.d;
+    const parts = [baseName(d.name)];
+    if (d.numPages > 1) parts.push(`artboard${p.page}`);
+    if (p.res) parts.push('nukki');
+    else if (d.transparent && d.kind !== 'image') parts.push('transparent');
+    if (d.blur[p.page] && d.blur[p.page].length) parts.push('blur');
+    if (p.fixed) parts.push(p.fixed.tag, `${enc.w}x${enc.h}`);
+    else if (p.key !== 'base' || trim) parts.push(`${enc.w}x${enc.h}`);
+    return `${parts.join('-')}.${enc.ext}`;
+  }
+
+  async function exportImage(opts) {
+    const d0 = opts.doc || current;
+    if (!d0) return;
+    const btn = opts.btnId ? $(opts.btnId) : null; if (btn) btn.disabled = true;
+    const P = opts.P || ((r, t) => setProg(opts.progId, opts.statId, r, t));
+    const fmt = opts.fmt || exp.fmt, sharp = opts.sharp ?? exp.sharp, limitKB = opts.limit ?? exp.limit;
+    const bg = opts.bg || exp.bg, trim = opts.trim ?? exp.trim;
+    try {
+      const p = await exportPlan(opts.sizeMode, d0, opts.page);
+      const d = p.d, page = p.page;
+      let out;
+      if (p.vectorDirect) {
+        P(0.2, '렌더링 중…');
+        out = makeCanvas(p.tw, p.th);
+        await (await drawSource(d, page, p.tw / p.sz.w, out, d.transparent)).promise;
+        applyBlur(out, d.blur[page]);
+        if (trim) out = trimCanvas(out, exp.pad);
+      } else {
+        P(0.1, '이미지 준비 중…');
+        const long = p.fixed ? Math.min(4096, Math.max(1600, Math.round(Math.max(p.tw, p.th) * 1.6))) : BASE_LONG;
+        let base = await baseCanvas(d, page, p.res, long);
+        applyBlur(base, d.blur[page]);
+        if (trim) base = trimCanvas(base, exp.pad);
+        if (p.fixed) base = fitToRatio(base, p.tw, p.th, exp.fit, exp.pos);
+        let tw = p.fixed ? p.tw : Math.round(base.width * p.s), th = p.fixed ? p.th : Math.round(base.height * p.s);
+        const cap = capDims(tw, th); tw = cap.w; th = cap.h;
+        out = await resampleTo(base, tw, th, P);
+        if (sharp > 0) {
+          const octx = out.getContext('2d', { willReadFrequently: true });
+          const sharpened = await unsharp(octx.getImageData(0, 0, out.width, out.height), sharp, (r) => P(0.8 + r * 0.1, '선명도 보정 중…'));
+          const c2 = makeCanvas(out.width, out.height);
+          c2.getContext('2d').putImageData(sharpened, 0, 0);
+          out = c2;
+        }
+      }
+      // 배경 채우기 (JPG는 항상)
+      if (bg !== 'transparent' || fmt === 'jpg') {
+        const color = bg === 'purple' ? BRAND_PURPLE : bg === 'custom' ? exp.bgColor : '#ffffff';
+        const flat = makeCanvas(out.width, out.height);
+        const fx = flat.getContext('2d');
+        fx.fillStyle = color; fx.fillRect(0, 0, flat.width, flat.height);
+        fx.drawImage(out, 0, 0);
+        out = flat;
+      }
+      if (wm.on && !opts.noWatermark) { await ensureLogo(); drawWatermark(out.getContext('2d'), out.width, out.height); }
+      P(0.95, '파일 만드는 중…');
+      const enc = await encodeWithLimit(out, fmt, limitKB, P);
+      if (!enc.blob) throw new Error('toBlob');
+      enc.name = exportName(p, enc, trim);
+      if (opts.returnBlob) { if (!opts.P) P(null, ''); return enc; }
+      download(enc.blob, enc.name);
+      P(null, `${enc.note}저장 완료 · ${enc.w} × ${enc.h} px · ${fmtSize(enc.blob.size)}`);
+      return enc;
+    } catch (e) {
+      if (opts.silent) throw e;
+      console.error(e);
+      P(null, '');
+      showAlert('저장에 실패했습니다', '<p>이미지가 너무 크거나 브라우저 메모리가 부족할 수 있습니다. 크기를 한 단계 줄여 다시 시도해 주세요.</p>');
+    } finally {
+      if (btn) btn.disabled = false;
+    }
+  }
+
+  // ── 일괄 저장 (ZIP) ───────────────────────────────────
+  let saveRange = 'page';
+  let batchCancel = false;
+  seg('segRange', v => { saveRange = v; refreshRangeUI(); });
+  function batchTargets(range, d0) {
+    const t = [];
+    if (range === 'doc') { for (let p = 1; p <= d0.numPages; p++) t.push({ d: d0, p }); }
+    else for (const d of docs) for (let p = 1; p <= d.numPages; p++) t.push({ d, p });
+    return t;
+  }
+  function refreshRangeUI() {
+    if (!current) return;
+    const n = saveRange === 'page' ? 1 : batchTargets(saveRange, current).length;
+    $('btnDoSave').textContent = saveRange === 'page' ? '저장' : `${n}장 ZIP으로 저장`;
+    $('btnCopy').disabled = saveRange !== 'page';
+    $('rangeHint').textContent = saveRange === 'page' ? ''
+      : saveRange === 'doc' ? `이 파일의 아트보드 ${n}개를 같은 설정으로 저장해 ZIP 하나로 묶습니다.`
+      : `열린 파일 ${docs.length}개(아트보드 ${n}장)를 같은 설정으로 저장해 ZIP 하나로 묶습니다.`;
+    const nAll = batchTargets('all', current).length;
+    $('batchNukkiHint').textContent = `위 설정 그대로 열린 파일 ${docs.length}개(아트보드 ${nAll}장)를 처리한 뒤, 투명 PNG를 ZIP 하나로 내려받습니다.`;
+  }
+  $('btnBatchStop').addEventListener('click', () => { batchCancel = true; });
+  $('btnBatchNukkiStop').addEventListener('click', () => { batchCancel = true; });
+
+  async function batchExport(range) {
+    const targets = batchTargets(range, current);
+    const n = targets.length;
+    batchCancel = false;
+    $('btnBatchStop').style.display = '';
+    $('btnDoSave').disabled = true;
+    const entries = [], used = new Set(); let failed = 0;
+    try {
+      for (let i = 0; i < n; i++) {
+        if (batchCancel) break;
+        const { d, p } = targets[i];
+        const label = `${i + 1} / ${n} · ${d.name}${d.numPages > 1 ? ` (아트보드 ${p})` : ''}`;
+        const P = (r, t) => setProg('saveProg', 'saveStat', (i + (r || 0)) / n, `${label}${t ? ' · ' + t : ''}`);
+        try {
+          const enc = await exportImage({ doc: d, page: p, returnBlob: true, silent: true, P });
+          let name = enc.name, k = 2;
+          while (used.has(name)) name = enc.name.replace(/(\.[^.]+)$/, `-${k++}$1`);
+          used.add(name);
+          entries.push({ name, blob: enc.blob });
+        } catch (e) { console.warn('batch item failed', d.name, p, e); failed++; }
+      }
+      if (!entries.length) { setProg('saveProg', 'saveStat', null, batchCancel ? '중지했습니다.' : '저장할 결과가 없습니다.'); return; }
+      setProg('saveProg', 'saveStat', 0.99, 'ZIP으로 묶는 중…');
+      const zip = await makeZip(entries);
+      const zipName = `${range === 'doc' ? baseName(current.name) : 'trinity-export'}-${entries.length}p.zip`;
+      download(zip, zipName);
+      setProg('saveProg', 'saveStat', null, `${batchCancel ? '중지 · ' : ''}ZIP 저장 완료 · ${entries.length}장${failed ? ` (실패 ${failed})` : ''} · ${fmtSize(zip.size)}`);
+    } catch (e) {
+      console.error(e);
+      setProg('saveProg', 'saveStat', null, '');
+      showAlert('일괄 저장에 실패했습니다', '<p>브라우저 메모리가 부족할 수 있습니다. 파일 수나 크기를 줄여 다시 시도해 주세요.</p>');
+    } finally {
+      $('btnBatchStop').style.display = 'none';
+      $('btnDoSave').disabled = false;
+    }
+  }
+
+  /** 압축 없이(store) 담는 ZIP 생성. PNG·JPG는 이미 압축되어 있어 충분하다 */
+  const CRC_TABLE = (() => {
+    const t = new Uint32Array(256);
+    for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1); t[n] = c >>> 0; }
+    return t;
+  })();
+  function crc32(u8) {
+    let c = 0xFFFFFFFF;
+    for (let i = 0; i < u8.length; i++) c = CRC_TABLE[(c ^ u8[i]) & 0xFF] ^ (c >>> 8);
+    return (c ^ 0xFFFFFFFF) >>> 0;
+  }
+  async function makeZip(entries) {
+    const te = new TextEncoder();
+    const parts = [], central = [];
+    let offset = 0;
+    const now = new Date();
+    const dosTime = (now.getHours() << 11) | (now.getMinutes() << 5) | (now.getSeconds() >> 1);
+    const dosDate = ((now.getFullYear() - 1980) << 9) | ((now.getMonth() + 1) << 5) | now.getDate();
+    for (const e of entries) {
+      const data = new Uint8Array(await e.blob.arrayBuffer());
+      const name = te.encode(e.name);
+      const crc = crc32(data);
+      const lh = new DataView(new ArrayBuffer(30));
+      lh.setUint32(0, 0x04034b50, true); lh.setUint16(4, 20, true); lh.setUint16(6, 0x0800, true); lh.setUint16(8, 0, true);
+      lh.setUint16(10, dosTime, true); lh.setUint16(12, dosDate, true); lh.setUint32(14, crc, true);
+      lh.setUint32(18, data.length, true); lh.setUint32(22, data.length, true); lh.setUint16(26, name.length, true); lh.setUint16(28, 0, true);
+      parts.push(lh.buffer, name, data);
+      const ch = new DataView(new ArrayBuffer(46));
+      ch.setUint32(0, 0x02014b50, true); ch.setUint16(4, 20, true); ch.setUint16(6, 20, true); ch.setUint16(8, 0x0800, true); ch.setUint16(10, 0, true);
+      ch.setUint16(12, dosTime, true); ch.setUint16(14, dosDate, true); ch.setUint32(16, crc, true);
+      ch.setUint32(20, data.length, true); ch.setUint32(24, data.length, true); ch.setUint16(28, name.length, true);
+      ch.setUint16(30, 0, true); ch.setUint16(32, 0, true); ch.setUint16(34, 0, true); ch.setUint16(36, 0, true); ch.setUint32(38, 0, true); ch.setUint32(42, offset, true);
+      central.push(ch.buffer, name);
+      offset += 30 + name.length + data.length;
+      await yieldFrame();
+    }
+    const cdSize = central.reduce((a, b) => a + b.byteLength, 0);
+    const eocd = new DataView(new ArrayBuffer(22));
+    eocd.setUint32(0, 0x06054b50, true); eocd.setUint16(4, 0, true); eocd.setUint16(6, 0, true);
+    eocd.setUint16(8, entries.length, true); eocd.setUint16(10, entries.length, true);
+    eocd.setUint32(12, cdSize, true); eocd.setUint32(16, offset, true); eocd.setUint16(20, 0, true);
+    return new Blob([...parts, ...central, eocd.buffer], { type: 'application/zip' });
+  }
+
+  // ── 워터마크 ──────────────────────────────────────────
+  const wm = { on: false, type: 'logo', text: 'TRINITY ONE', pos: 'br', size: 14, opacity: 60, color: 'white' };
+  let logoImg = null, logoReady = null;
+  function ensureLogo() {
+    if (logoReady) return logoReady;
+    logoImg = new Image();
+    logoImg.src = '../assets/trinity-one-logo.png';
+    logoReady = Promise.all([
+      logoImg.decode().catch(() => {}),
+      document.fonts ? document.fonts.load('700 20px Pretendard').catch(() => {}) : Promise.resolve(),
+    ]);
+    return logoReady;
+  }
+  function drawWatermark(c, W, H) {
+    if (!wm.on) return;
+    const long = Math.max(W, H), margin = long * 0.03;
+    let w, h;
+    c.save();
+    c.globalAlpha = wm.opacity / 100;
+    if (wm.type === 'logo') {
+      if (!logoImg || !logoImg.naturalWidth) { c.restore(); return; }
+      h = long * wm.size / 100; w = h * logoImg.naturalWidth / logoImg.naturalHeight;
+    } else {
+      const fs = Math.max(8, long * wm.size / 100 * 0.42);
+      c.font = `700 ${fs}px Pretendard, -apple-system, "Segoe UI", sans-serif`;
+      c.textBaseline = 'top';
+      const m = c.measureText(wm.text || ' ');
+      w = m.width; h = fs * 1.15;
+    }
+    const col = wm.pos[1], row = wm.pos[0];
+    const x = col === 'l' ? margin : col === 'c' ? (W - w) / 2 : W - w - margin;
+    const y = row === 't' ? margin : row === 'm' ? (H - h) / 2 : H - h - margin;
+    if (wm.type === 'logo') c.drawImage(logoImg, x, y, w, h);
+    else {
+      c.fillStyle = wm.color === 'white' ? '#ffffff' : wm.color === 'purple' ? BRAND_PURPLE : '#160E2E';
+      c.shadowColor = wm.color === 'white' ? 'rgba(0,0,0,.45)' : 'rgba(255,255,255,.55)';
+      c.shadowBlur = h * 0.18;
+      c.fillText(wm.text, x, y);
+    }
+    c.restore();
+  }
+  function refreshWmUI() {
+    $('wmOpts').style.display = wm.on ? '' : 'none';
+    $('inWmText').style.display = wm.type === 'text' ? '' : 'none';
+    $('segWmColor').style.display = wm.type === 'text' ? '' : 'none';
+    document.querySelectorAll('#wmGrid button').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === wm.pos ? 'true' : 'false'));
+  }
+  const wmRerender = () => { if (current) renderPage(); };
+  $('chkWm').addEventListener('change', () => { wm.on = $('chkWm').checked; refreshWmUI(); wmRerender(); });
+  seg('segWmType', v => { wm.type = v; refreshWmUI(); wmRerender(); });
+  seg('segWmColor', v => { wm.color = v; wmRerender(); });
+  $('inWmText').addEventListener('input', () => { wm.text = $('inWmText').value; wmRerender(); });
+  $('wmGrid').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; wm.pos = b.dataset.v; refreshWmUI(); wmRerender(); });
+  $('rngWmSize').addEventListener('input', () => { wm.size = parseInt($('rngWmSize').value, 10); $('outWmSize').textContent = `${wm.size}%`; wmRerender(); });
+  $('rngWmOp').addEventListener('input', () => { wm.opacity = parseInt($('rngWmOp').value, 10); $('outWmOp').textContent = `${wm.opacity}%`; wmRerender(); });
+
+  // ── 얼굴 블러 ─────────────────────────────────────────
+  const blurCfg = { strength: 6, pad: 20, shape: 'ellipse', kind: 'blur' };
+  /** 정규화 영역(0..1)을 캔버스에 블러/모자이크로 적용 */
+  function applyBlur(cv, regions) {
+    if (!regions || !regions.length) return;
+    const W = cv.width, H = cv.height, c = cv.getContext('2d');
+    for (const r of regions) {
+      const bw = r.w * W, bh = r.h * H;
+      const padX = bw * blurCfg.pad / 100, padY = bh * blurCfg.pad / 100;
+      const x0 = Math.max(0, Math.floor(r.x * W - padX)), y0 = Math.max(0, Math.floor(r.y * H - padY));
+      const x1 = Math.min(W, Math.ceil(r.x * W + bw + padX)), y1 = Math.min(H, Math.ceil(r.y * H + bh + padY));
+      const w = x1 - x0, h = y1 - y0;
+      if (w < 2 || h < 2) continue;
+      const tmp = makeCanvas(w, h), tc = tmp.getContext('2d');
+      if (blurCfg.kind === 'pixel') {
+        const cells = Math.max(3, Math.round(14 - blurCfg.strength));
+        const block = Math.max(2, Math.max(w, h) / cells);
+        const sw = Math.max(1, Math.round(w / block)), sh = Math.max(1, Math.round(h / block));
+        const small = makeCanvas(sw, sh), sc = small.getContext('2d');
+        sc.imageSmoothingEnabled = true; sc.drawImage(cv, x0, y0, w, h, 0, 0, sw, sh);
+        tc.imageSmoothingEnabled = false; tc.drawImage(small, 0, 0, sw, sh, 0, 0, w, h);
+      } else {
+        // 축소→확대 반복으로 가우시안에 가까운 블러 (모든 브라우저 동일 결과)
+        const factor = 2 + blurCfg.strength * 1.6;
+        let cur = makeCanvas(w, h); cur.getContext('2d').drawImage(cv, x0, y0, w, h, 0, 0, w, h);
+        for (let pass = 0; pass < 2; pass++) {
+          const sw = Math.max(1, Math.round(w / factor)), sh = Math.max(1, Math.round(h / factor));
+          const small = makeCanvas(sw, sh), sc = small.getContext('2d');
+          sc.imageSmoothingEnabled = true; sc.imageSmoothingQuality = 'high'; sc.drawImage(cur, 0, 0, sw, sh);
+          const big = makeCanvas(w, h), bc = big.getContext('2d');
+          bc.imageSmoothingEnabled = true; bc.imageSmoothingQuality = 'high'; bc.drawImage(small, 0, 0, w, h);
+          cur = big;
+        }
+        tc.drawImage(cur, 0, 0);
+      }
+      if (blurCfg.shape === 'ellipse') {
+        tc.globalCompositeOperation = 'destination-in';
+        tc.save(); tc.translate(w / 2, h / 2); tc.scale(w / 2, h / 2);
+        const g = tc.createRadialGradient(0, 0, 0, 0, 0, 1);
+        g.addColorStop(0, 'rgba(0,0,0,1)'); g.addColorStop(0.7, 'rgba(0,0,0,1)'); g.addColorStop(1, 'rgba(0,0,0,0)');
+        tc.fillStyle = g; tc.fillRect(-1, -1, 2, 2); tc.restore();
+      }
+      c.drawImage(tmp, x0, y0);
+    }
+  }
+
+  let faceapi = null;
+  async function ensureFaceApi(P) {
+    if (faceapi) return faceapi;
+    P(0.03, '얼굴 감지 모듈 불러오는 중… (처음 한 번, 약 7MB)');
+    const m = await import(/* @vite-ignore */ FACEAPI_URL);
+    // 그래픽(WebGL) 가속을 우선 쓰고, 안 되면 CPU로 실행한다 (느리지만 결과는 같다)
+    let backendOk = false;
+    try { backendOk = await m.tf.setBackend('webgl'); } catch (_) {}
+    if (backendOk) { try { await m.tf.ready(); } catch (_) { backendOk = false; } }
+    if (!backendOk || m.tf.getBackend() !== 'webgl') { await m.tf.setBackend('cpu'); await m.tf.ready(); }
+    P(0.12, `모델 내려받는 중… (${m.tf.getBackend() === 'webgl' ? '그래픽 가속' : 'CPU 모드'})`);
+    await m.nets.ssdMobilenetv1.loadFromUri(FACEAPI_MODEL_URL);
+    faceapi = m;
+    return m;
+  }
+  /** (문서, 페이지)에서 얼굴을 찾아 블러 영역으로 저장. 반환: 찾은 수 */
+  async function detectFaces(d, p, P) {
+    const fa = await ensureFaceApi(P);
+    P(0.35, '이미지 준비 중…');
+    const src = await baseCanvas(d, p, d.results[p], 1600);
+    P(0.45, '얼굴 찾는 중…');
+    let dets;
+    try {
+      dets = await fa.detectAllFaces(src, new fa.SsdMobilenetv1Options({ minConfidence: 0.3 }));
+    } catch (e) {
+      if (fa.tf.getBackend() === 'cpu') throw e;
+      console.warn('그래픽 가속 감지 실패, CPU로 재시도', e);
+      await fa.tf.setBackend('cpu'); await fa.tf.ready();
+      dets = await fa.detectAllFaces(src, new fa.SsdMobilenetv1Options({ minConfidence: 0.3 }));
+    }
+    d.blur[p] = dets.map(dt => ({ x: dt.box.x / src.width, y: dt.box.y / src.height, w: dt.box.width / src.width, h: dt.box.height / src.height }));
+    return d.blur[p].length;
+  }
+  $('btnFaces').addEventListener('click', async () => {
+    if (!current) return;
+    const btn = $('btnFaces'); btn.disabled = true;
+    try {
+      const n = await detectFaces(current, current.page, (r, t) => setProg('blurProg', 'blurStat', r, t));
+      await renderPage();
+      setProg('blurProg', 'blurStat', null, n ? `얼굴 ${n}곳을 찾아 블러를 적용했습니다. 놓친 곳은 "직접 추가"로 그려 주세요.` : '얼굴을 찾지 못했습니다. "직접 추가"로 영역을 그려 주세요.');
+    } catch (e) {
+      console.error(e);
+      setProg('blurProg', 'blurStat', null, '');
+      showAlert('얼굴 감지를 실행하지 못했습니다', '<p>모델을 내려받지 못했거나 브라우저가 지원하지 않습니다. 인터넷 연결을 확인하고 최신 크롬·엣지·사파리에서 다시 시도해 주세요. "직접 추가"로 영역을 그려 가릴 수도 있습니다.</p>');
+    } finally { btn.disabled = false; }
+  });
+
+  // 영역 편집 오버레이
+  let adding = false, blurDrag = null;
+  function setAdding(on) {
+    adding = on;
+    stage.classList.toggle('adding', on);
+    $('btnAddRegion').classList.toggle('on', on);
+    $('btnAddRegion').textContent = on ? '추가 모드 끝내기' : '직접 추가 (드래그)';
+  }
+  $('btnAddRegion').addEventListener('click', () => setAdding(!adding));
+  $('btnClearRegions').addEventListener('click', () => { if (!current) return; current.blur[current.page] = []; renderPage(); });
+  function layoutBlurBoxes() {
+    const layer = $('blurLayer');
+    layer.innerHTML = '';
+    if (!current || mode !== 'blur') return;
+    const regs = current.blur[current.page] || [];
+    const cssW = parseFloat(canvas.style.width), cssH = parseFloat(canvas.style.height);
+    regs.forEach((r, i) => {
+      const padX = r.w * blurCfg.pad / 100, padY = r.h * blurCfg.pad / 100;
+      const el = document.createElement('div');
+      el.className = 'blur-box' + (blurCfg.shape === 'ellipse' ? ' ellipse' : '');
+      el.dataset.i = i;
+      el.style.left = `${(r.x - padX) * cssW}px`; el.style.top = `${(r.y - padY) * cssH}px`;
+      el.style.width = `${(r.w + 2 * padX) * cssW}px`; el.style.height = `${(r.h + 2 * padY) * cssH}px`;
+      el.innerHTML = '<button type="button" class="del" title="이 영역 지우기">×</button>';
+      layer.appendChild(el);
+    });
+  }
+  const layerPos = (e) => {
+    const rc = canvas.getBoundingClientRect();
+    return { x: Math.min(1, Math.max(0, (e.clientX - rc.left) / rc.width)), y: Math.min(1, Math.max(0, (e.clientY - rc.top) / rc.height)) };
+  };
+  $('blurLayer').addEventListener('pointerdown', (e) => {
+    if (!current || mode !== 'blur') return;
+    const regs = current.blur[current.page] || (current.blur[current.page] = []);
+    const del = e.target.closest('.del');
+    if (del) { regs.splice(parseInt(del.parentElement.dataset.i, 10), 1); renderPage(); e.preventDefault(); return; }
+    const box = e.target.closest('.blur-box');
+    const pt = layerPos(e);
+    if (box) {
+      const i = parseInt(box.dataset.i, 10);
+      blurDrag = { kind: 'move', i, start: pt, orig: { ...regs[i] }, el: box };
+    } else if (adding) {
+      const el = document.createElement('div');
+      el.className = 'blur-box drawing' + (blurCfg.shape === 'ellipse' ? ' ellipse' : '');
+      $('blurLayer').appendChild(el);
+      blurDrag = { kind: 'draw', start: pt, el };
+    } else return;
+    $('blurLayer').setPointerCapture(e.pointerId);
+    e.preventDefault();
+  });
+  $('blurLayer').addEventListener('pointermove', (e) => {
+    if (!blurDrag) return;
+    const pt = layerPos(e);
+    const cssW = parseFloat(canvas.style.width), cssH = parseFloat(canvas.style.height);
+    if (blurDrag.kind === 'move') {
+      const r = blurDrag.orig, regs = current.blur[current.page];
+      const nx = Math.min(1 - r.w, Math.max(0, r.x + pt.x - blurDrag.start.x));
+      const ny = Math.min(1 - r.h, Math.max(0, r.y + pt.y - blurDrag.start.y));
+      regs[blurDrag.i] = { ...r, x: nx, y: ny };
+      const padX = r.w * blurCfg.pad / 100, padY = r.h * blurCfg.pad / 100;
+      blurDrag.el.style.left = `${(nx - padX) * cssW}px`; blurDrag.el.style.top = `${(ny - padY) * cssH}px`;
+    } else {
+      const x = Math.min(pt.x, blurDrag.start.x), y = Math.min(pt.y, blurDrag.start.y);
+      const w = Math.abs(pt.x - blurDrag.start.x), h = Math.abs(pt.y - blurDrag.start.y);
+      blurDrag.rect = { x, y, w, h };
+      blurDrag.el.style.left = `${x * cssW}px`; blurDrag.el.style.top = `${y * cssH}px`;
+      blurDrag.el.style.width = `${w * cssW}px`; blurDrag.el.style.height = `${h * cssH}px`;
+    }
+  });
+  const endBlurDrag = () => {
+    if (!blurDrag) return;
+    if (blurDrag.kind === 'draw') {
+      blurDrag.el.remove();
+      const r = blurDrag.rect;
+      if (r && r.w > 0.005 && r.h > 0.005) {
+        // 드래그한 사각형을 "여유 포함" 크기로 보고, 저장되는 기본 영역은 여유를 뺀 크기로 환산
+        const k = 1 + 2 * blurCfg.pad / 100;
+        const w = r.w / k, h = r.h / k;
+        (current.blur[current.page] = current.blur[current.page] || []).push({ x: r.x + (r.w - w) / 2, y: r.y + (r.h - h) / 2, w, h });
+      }
+    }
+    blurDrag = null;
+    renderPage();
+  };
+  ['pointerup', 'pointercancel'].forEach(ev => $('blurLayer').addEventListener(ev, endBlurDrag));
+
+  const blurRerender = () => { if (current) renderPage(); };
+  $('rngBlur').addEventListener('input', () => { blurCfg.strength = parseInt($('rngBlur').value, 10); $('outBlur').textContent = blurCfg.strength; blurRerender(); });
+  $('rngBlurPad').addEventListener('input', () => { blurCfg.pad = parseInt($('rngBlurPad').value, 10); $('outBlurPad').textContent = `${blurCfg.pad}%`; blurRerender(); });
+  seg('segBlurShape', v => { blurCfg.shape = v; blurRerender(); });
+  seg('segBlurKind', v => { blurCfg.kind = v; blurRerender(); });
+
+  const blurFmt = (d, p) => (d.results[p] || (d.transparent && d.kind !== 'image')) ? 'png' : 'jpg';
+  $('btnBlurSave').addEventListener('click', () => {
+    if (!current) return;
+    exportImage({ btnId: 'btnBlurSave', progId: 'blurSaveProg', statId: 'blurSaveStat', sizeMode: 'base', fmt: blurFmt(current, current.page), sharp: 0, limit: 0, bg: 'transparent', trim: false });
+  });
+
+  $('btnBatchBlurStop').addEventListener('click', () => { batchCancel = true; });
+  $('btnBatchBlur').addEventListener('click', async () => {
+    if (!current) return;
+    const targets = batchTargets('all', current), n = targets.length;
+    batchCancel = false;
+    $('btnBatchBlur').disabled = true; $('btnBatchBlurStop').style.display = '';
+    const entries = [], used = new Set(); let failed = 0, faces = 0;
+    try {
+      for (let i = 0; i < n; i++) {
+        if (batchCancel) break;
+        const { d, p } = targets[i];
+        const label = `${i + 1} / ${n} · ${d.name}${d.numPages > 1 ? ` (아트보드 ${p})` : ''}`;
+        const P = (r, t) => setProg('batchBlurProg', 'batchBlurStat', (i + (r || 0) * 0.8) / n, `${label}${t ? ' · ' + t : ''}`);
+        try {
+          faces += await detectFaces(d, p, P);
+          if (d === current && p === current.page) await renderPage();
+          const enc = await exportImage({ doc: d, page: p, sizeMode: 'base', fmt: blurFmt(d, p), sharp: 0, limit: 0, bg: 'transparent', trim: false, returnBlob: true, silent: true, P: (r, t) => P(0.8 + (r || 0) * 0.2, t) });
+          let name = enc.name, k = 2;
+          while (used.has(name)) name = enc.name.replace(/(\.[^.]+)$/, `-${k++}$1`);
+          used.add(name);
+          entries.push({ name, blob: enc.blob });
+        } catch (e) { console.warn('batch blur failed', d.name, p, e); failed++; }
+      }
+      if (!entries.length) { setProg('batchBlurProg', 'batchBlurStat', null, batchCancel ? '중지했습니다.' : '처리된 결과가 없습니다.'); return; }
+      setProg('batchBlurProg', 'batchBlurStat', 0.99, 'ZIP으로 묶는 중…');
+      const zip = await makeZip(entries);
+      download(zip, `blur-${entries.length}p.zip`);
+      setProg('batchBlurProg', 'batchBlurStat', null, `${batchCancel ? '중지 · ' : ''}ZIP 저장 완료 · ${entries.length}장 · 얼굴 ${faces}곳${failed ? ` (실패 ${failed})` : ''} · ${fmtSize(zip.size)}`);
+    } catch (e) {
+      console.error(e);
+      setProg('batchBlurProg', 'batchBlurStat', null, '');
+      showAlert('일괄 블러에 실패했습니다', '<p>브라우저 메모리가 부족할 수 있습니다. 파일 수를 줄여 다시 시도해 주세요.</p>');
+    } finally {
+      $('btnBatchBlur').disabled = false; $('btnBatchBlurStop').style.display = 'none';
+    }
+  });
+
+  $('btnPdf').addEventListener('click', () => {
+    if (!current || current.kind !== 'pdf') return;
+    download(new Blob([current.bytes], { type: 'application/pdf' }), `${baseName(current.name)}.pdf`);
+    showAlert('PDF로 저장했습니다', '<p>.ai 파일 안에 들어 있는 PDF 데이터를 그대로 꺼낸 것이라 원본 품질 그대로입니다.</p>', 'info');
+  });
+
+  /** 다단계 축소 (계단 현상 방지) */
+  function downscale(src, tw, th) {
+    let cur = src, w = src.width, h = src.height;
+    while (w / 2 > tw && h / 2 > th) {
+      w = Math.floor(w / 2); h = Math.floor(h / 2);
+      const c = makeCanvas(w, h); const cc = c.getContext('2d');
+      cc.imageSmoothingEnabled = true; cc.imageSmoothingQuality = 'high';
+      cc.drawImage(cur, 0, 0, w, h); cur = c;
+    }
+    const out = makeCanvas(tw, th); const oc = out.getContext('2d');
+    oc.imageSmoothingEnabled = true; oc.imageSmoothingQuality = 'high';
+    oc.drawImage(cur, 0, 0, tw, th);
+    return out;
+  }
+
+  // ── Lanczos-3 리샘플링 (원본 4K 업스케일러에서 이식) ──
+  function lanczosKernel(x) {
+    if (x === 0) return 1;
+    const ax = Math.abs(x); if (ax >= 3) return 0;
+    const px = Math.PI * x;
+    return 3 * Math.sin(px) * Math.sin(px / 3) / (px * px);
+  }
+  function buildWeights(srcLen, dstLen) {
+    const scale = dstLen / srcLen, out = new Array(dstLen);
+    for (let i = 0; i < dstLen; i++) {
+      const center = (i + 0.5) / scale - 0.5;
+      const lo = Math.max(0, Math.floor(center) - 2);
+      const hi = Math.min(srcLen - 1, Math.floor(center) + 3);
+      const idx = [], w = []; let sum = 0;
+      for (let j = lo; j <= hi; j++) {
+        const wt = lanczosKernel(center - j);
+        if (wt !== 0) { idx.push(j); w.push(wt); sum += wt; }
+      }
+      for (let j = 0; j < w.length; j++) w[j] /= sum;
+      out[i] = { idx, w };
+    }
+    return out;
+  }
+  async function lanczosResize(src, dstW, dstH, onProgress) {
+    const srcW = src.width, srcH = src.height, d = src.data;
+    const wx = buildWeights(srcW, dstW), wy = buildWeights(srcH, dstH);
+    const mid = new Float32Array(dstW * srcH * 4);
+    const CHUNK = 64; let done = 0; const total = srcH + dstH;
+    for (let y = 0; y < srcH; y++) {
+      const rowOff = y * srcW * 4, midOff = y * dstW * 4;
+      for (let x = 0; x < dstW; x++) {
+        const cw = wx[x]; let r = 0, g = 0, b = 0, al = 0;
+        for (let k = 0; k < cw.idx.length; k++) {
+          const p = rowOff + cw.idx[k] * 4, ws = cw.w[k] * (d[p + 3] / 255);
+          r += d[p] * ws; g += d[p + 1] * ws; b += d[p + 2] * ws; al += 255 * ws;
+        }
+        const q = midOff + x * 4;
+        mid[q] = r; mid[q + 1] = g; mid[q + 2] = b; mid[q + 3] = al;
+      }
+      if (++done % CHUNK === 0) { onProgress(done / total); await yieldFrame(); }
+    }
+    const out = new ImageData(dstW, dstH), od = out.data;
+    for (let y = 0; y < dstH; y++) {
+      const ch = wy[y], outOff = y * dstW * 4;
+      for (let x = 0; x < dstW; x++) {
+        let r = 0, g = 0, b = 0, al = 0;
+        for (let k = 0; k < ch.idx.length; k++) {
+          const p = (ch.idx[k] * dstW + x) * 4, wv = ch.w[k];
+          r += mid[p] * wv; g += mid[p + 1] * wv; b += mid[p + 2] * wv; al += mid[p + 3] * wv;
+        }
+        const q = outOff + x * 4;
+        if (al > 0.0001) {
+          const inv = 255 / al;
+          od[q] = clamp255(r * inv); od[q + 1] = clamp255(g * inv); od[q + 2] = clamp255(b * inv);
+        } else { od[q] = 0; od[q + 1] = 0; od[q + 2] = 0; }
+        od[q + 3] = clamp255(al);
+      }
+      if (++done % CHUNK === 0) { onProgress(done / total); await yieldFrame(); }
+    }
+    onProgress(1);
+    return out;
+  }
+  async function unsharp(img, amount, onProgress) {
+    const w = img.width, h = img.height, s = img.data;
+    const out = new ImageData(w, h), o = out.data;
+    for (let y = 0; y < h; y++) {
+      const up = (y > 0 ? y - 1 : 0) * w * 4, row = y * w * 4, dn = (y < h - 1 ? y + 1 : y) * w * 4;
+      for (let x = 0; x < w; x++) {
+        const l = (x > 0 ? x - 1 : 0) * 4, c0 = x * 4, r = (x < w - 1 ? x + 1 : x) * 4;
+        for (let c = 0; c < 3; c++) {
+          const v = s[row + c0 + c] * (1 + 4 * amount) - amount * (s[up + c0 + c] + s[dn + c0 + c] + s[row + l + c] + s[row + r + c]);
+          o[row + c0 + c] = v < 0 ? 0 : (v > 255 ? 255 : v);
+        }
+        o[row + c0 + 3] = s[row + c0 + 3];
+      }
+      if (y % 96 === 0) { if (onProgress) onProgress(y / h); await yieldFrame(); }
+    }
+    if (onProgress) onProgress(1);
+    return out;
+  }
+
+  // ── 배경 제거 ─────────────────────────────────────────
+  /** 배경 제거용 소스 캔버스: 사진은 원본(상한 내), 벡터는 SRC_LONG 크기로 래스터화 */
+  async function sourceCanvas(d, p, { forAI = false } = {}) {
+    if (d.kind === 'image') {
+      const cap = capDims(d.w0, d.h0);
+      const c = makeCanvas(cap.w, cap.h);
+      const cc = c.getContext('2d'); cc.imageSmoothingQuality = 'high';
+      cc.drawImage(d.img, 0, 0, cap.w, cap.h);
+      return c;
+    }
+    const sz = await pageSize(d, p);
+    const long = forAI ? 2048 : SRC_LONG;
+    const scale = long / Math.max(sz.w, sz.h);
+    const c = makeCanvas(sz.w * scale, sz.h * scale);
+    // 벡터 파일의 투명 배경은 그대로 살린다 (AI 모델에는 흰 배경이 유리하므로 forAI면 칠함)
+    await (await drawSource(d, p, scale, c, d.transparent && !forAI)).promise;
+    return c;
+  }
+
+  function setResult(d, p, canvas, label) {
+    d.results[p] = { canvas, label };
+    syncPanels();
+    renderPage();
+  }
+
+  $('chkTransparent').addEventListener('change', () => {
+    if (!current) return;
+    current.transparent = $('chkTransparent').checked;
+    renderPage(); updateSizeHint();
+  });
+
+  $('rngTol').addEventListener('input', () => { $('outTol').textContent = $('rngTol').value; });
+  $('chkInner').addEventListener('change', () => {});
+
+  // 배경색 선택
+  let refColor = null;     // null = 모서리 자동
+  let picking = false;
+  function setRef(c) {
+    refColor = c;
+    $('swatch').style.background = c ? `rgb(${c[0]},${c[1]},${c[2]})` : 'transparent';
+    $('refHint').textContent = c ? `배경색: rgb(${c[0]}, ${c[1]}, ${c[2]})  ·  자동으로 되돌리려면 다시 선택 후 취소` : '배경색: 모서리에서 자동 감지';
+  }
+  function stopPicking() {
+    picking = false; stage.classList.remove('picking');
+    $('btnPick').textContent = '이미지에서 선택';
+  }
+  $('btnPick').addEventListener('click', () => {
+    if (picking) { stopPicking(); setRef(null); return; }
+    picking = true; stage.classList.add('picking');
+    $('btnPick').textContent = '취소 (자동 감지로)';
+    showAlert('이미지에서 지울 배경색을 클릭하세요', '<p>클릭한 지점의 색을 기준으로 단색 배경을 제거합니다.</p>', 'info');
+  });
+  canvas.addEventListener('click', (e) => {
+    if (!picking) return;
+    const r = canvas.getBoundingClientRect();
+    const x = Math.floor((e.clientX - r.left) / r.width * canvas.width);
+    const y = Math.floor((e.clientY - r.top) / r.height * canvas.height);
+    const px = ctx.getImageData(x, y, 1, 1).data;
+    setRef([px[0], px[1], px[2]]);
+    stopPicking(); hideAlert();
+    $('bgPanel').classList.add('show'); $('btnBg').classList.add('on');
+  });
+
+  /** 단색 배경 제거를 (문서, 페이지)에 적용하고 결과를 저장. 반환: 투명 처리 비율 */
+  async function runChroma(d, p, P) {
+    P(0.1, '배경 분석 중…');
+    const src = d.results[p] ? d.results[p].canvas : await sourceCanvas(d, p);
+    const sctx = src.getContext('2d', { willReadFrequently: true });
+    const img = sctx.getImageData(0, 0, src.width, src.height);
+    await yieldFrame();
+    const tol = parseInt($('rngTol').value, 10);
+    const inner = $('chkInner').checked;
+    const removed = await chromaRemove(img, { tol, inner, ref: refColor }, (r) => P(0.1 + r * 0.85, `배경 제거 중 ${Math.round(r * 100)}%`));
+    const out = makeCanvas(img.width, img.height);
+    out.getContext('2d').putImageData(removed.data, 0, 0);
+    d.results[p] = { canvas: out, label: '단색 배경 제거' };
+    return removed.ratio;
+  }
+  $('btnChroma').addEventListener('click', async () => {
+    if (!current) return;
+    const btn = $('btnChroma'); btn.disabled = true;
+    try {
+      const d = current, p = d.page;
+      const ratio = await runChroma(d, p, (r, t) => setProg('bgProg', 'bgStat', r, t));
+      syncPanels(); renderPage();
+      setProg('bgProg', 'bgStat', null, `완료 · 전체의 ${Math.round(ratio * 100)}%를 투명 처리`);
+      if (ratio < 0.02) showAlert('지워진 영역이 거의 없습니다', '<p>허용 오차를 올리거나, "이미지에서 선택"으로 배경색을 직접 지정해 보세요. 사진처럼 배경이 복잡하면 AI 누끼를 쓰세요.</p>', 'info');
+    } catch (e) {
+      console.error(e);
+      setProg('bgProg', 'bgStat', null, '');
+      showAlert('배경 제거에 실패했습니다', '<p>이미지가 너무 크거나 메모리가 부족할 수 있습니다.</p>');
+    } finally { btn.disabled = false; }
+  });
+
+  /** 열린 모든 파일·아트보드에 누끼를 적용하고 투명 PNG ZIP으로 저장 */
+  async function batchNukki(kind) {
+    if (!current) return;
+    const targets = batchTargets('all', current), n = targets.length;
+    batchCancel = false;
+    $('btnBatchChroma').disabled = true; $('btnBatchAI').disabled = true;
+    $('btnBatchNukkiStop').style.display = '';
+    const entries = [], used = new Set(); let failed = 0;
+    try {
+      for (let i = 0; i < n; i++) {
+        if (batchCancel) break;
+        const { d, p } = targets[i];
+        const label = `${i + 1} / ${n} · ${d.name}${d.numPages > 1 ? ` (아트보드 ${p})` : ''}`;
+        const P = (r, t) => setProg('batchProg', 'batchStat', (i + (r || 0) * 0.85) / n, `${label}${t ? ' · ' + t : ''}`);
+        try {
+          if (kind === 'ai') await runAI(d, p, P); else await runChroma(d, p, P);
+          if (d === current && p === current.page) { syncPanels(); renderPage(); }
+          const enc = await exportImage({ doc: d, page: p, sizeMode: 'base', fmt: 'png', limit: 0, bg: 'transparent', trim: false, sharp: 0, returnBlob: true, silent: true, P: (r, t) => P(0.85 + (r || 0) * 0.15, t) });
+          let name = enc.name, k = 2;
+          while (used.has(name)) name = enc.name.replace(/(\.[^.]+)$/, `-${k++}$1`);
+          used.add(name);
+          entries.push({ name, blob: enc.blob });
+        } catch (e) { console.warn('batch nukki failed', d.name, p, e); failed++; }
+      }
+      if (!entries.length) { setProg('batchProg', 'batchStat', null, batchCancel ? '중지했습니다.' : '처리된 결과가 없습니다.'); return; }
+      setProg('batchProg', 'batchStat', 0.99, 'ZIP으로 묶는 중…');
+      const zip = await makeZip(entries);
+      download(zip, `nukki-${entries.length}p.zip`);
+      setProg('batchProg', 'batchStat', null, `${batchCancel ? '중지 · ' : ''}ZIP 저장 완료 · ${entries.length}장${failed ? ` (실패 ${failed})` : ''} · ${fmtSize(zip.size)}`);
+    } catch (e) {
+      console.error(e);
+      setProg('batchProg', 'batchStat', null, '');
+      showAlert('일괄 누끼에 실패했습니다', '<p>브라우저 메모리가 부족할 수 있습니다. 파일 수를 줄여 다시 시도해 주세요.</p>');
+    } finally {
+      $('btnBatchChroma').disabled = false; $('btnBatchAI').disabled = false;
+      $('btnBatchNukkiStop').style.display = 'none';
+    }
+  }
+  $('btnBatchChroma').addEventListener('click', () => batchNukki('chroma'));
+  $('btnBatchAI').addEventListener('click', () => batchNukki('ai'));
+
+  /**
+   * 단색 배경 제거: 기준색과의 거리로 알파를 만든다.
+   * inner=false면 가장자리에서 이어진 영역만(플러드 필), true면 전체.
+   * 경계는 tol~soft 구간에서 부드럽게, 색 번짐(despill) 보정.
+   */
+  async function chromaRemove(img, { tol, inner, ref }, onProgress) {
+    const w = img.width, h = img.height, d = img.data, n = w * h;
+    if (!ref) ref = cornerColor(img);
+    const thr = tol * 2.2, soft = thr * 1.6;
+    const thr2 = thr * thr, soft2 = soft * soft;
+    const dist2 = new Float32Array(n);
+    for (let i = 0, q = 0; i < n; i++, q += 4) {
+      const dr = d[q] - ref[0], dg = d[q + 1] - ref[1], db = d[q + 2] - ref[2];
+      dist2[i] = dr * dr + dg * dg + db * db;
+      if ((i & 0xFFFFF) === 0) { onProgress(i / n * 0.4); await yieldFrame(); }
+    }
+    const mark = new Uint8Array(n);   // 1 = 배경 후보
+    if (inner) {
+      for (let i = 0; i < n; i++) if (dist2[i] <= soft2) mark[i] = 1;
+    } else {
+      const queue = new Int32Array(n); let qh = 0, qt = 0;
+      const push = (i) => { if (!mark[i] && dist2[i] <= soft2) { mark[i] = 1; queue[qt++] = i; } };
+      for (let x = 0; x < w; x++) { push(x); push((h - 1) * w + x); }
+      for (let y = 0; y < h; y++) { push(y * w); push(y * w + w - 1); }
+      let step = 0;
+      while (qh < qt) {
+        const i = queue[qh++];
+        const x = i % w, y = (i - x) / w;
+        if (x > 0) push(i - 1);
+        if (x < w - 1) push(i + 1);
+        if (y > 0) push(i - w);
+        if (y < h - 1) push(i + w);
+        if ((++step & 0x3FFFF) === 0) { onProgress(0.4 + Math.min(qh / n, 1) * 0.4); await yieldFrame(); }
+      }
+    }
+    let removed = 0;
+    const out = new ImageData(w, h), o = out.data;
+    o.set(d);
+    for (let i = 0, q = 0; i < n; i++, q += 4) {
+      if (!mark[i]) continue;
+      const ds = dist2[i];
+      let a; // 0..1 남길 비율
+      if (ds <= thr2) a = 0;
+      else a = (Math.sqrt(ds) - thr) / (soft - thr);
+      if (a <= 0) { o[q + 3] = 0; removed++; continue; }
+      if (a >= 1) continue;
+      // 경계 픽셀: 배경색 성분을 빼서(despill) 원래 색을 복원한 뒤 알파 적용
+      o[q] = clamp255((d[q] - (1 - a) * ref[0]) / a);
+      o[q + 1] = clamp255((d[q + 1] - (1 - a) * ref[1]) / a);
+      o[q + 2] = clamp255((d[q + 2] - (1 - a) * ref[2]) / a);
+      o[q + 3] = Math.round(d[q + 3] * a);
+      removed += 1 - a;
+    }
+    onProgress(1);
+    return { data: out, ratio: removed / n };
+  }
+  function cornerColor(img) {
+    const w = img.width, h = img.height, d = img.data, s = Math.max(2, Math.min(8, Math.floor(Math.min(w, h) / 40)));
+    const corners = [[0, 0], [w - s, 0], [0, h - s], [w - s, h - s]].map(([cx, cy]) => {
+      let r = 0, g = 0, b = 0, c = 0;
+      for (let y = cy; y < cy + s; y++) for (let x = cx; x < cx + s; x++) {
+        const q = (y * w + x) * 4; if (d[q + 3] < 8) continue;
+        r += d[q]; g += d[q + 1]; b += d[q + 2]; c++;
+      }
+      return c ? [r / c, g / c, b / c] : null;
+    }).filter(Boolean);
+    if (!corners.length) return [255, 255, 255];
+    // 서로 가장 가까운 모서리 쌍의 평균 = 진짜 배경일 확률이 높다
+    let best = corners[0], bestD = Infinity;
+    for (const a of corners) {
+      let sum = 0;
+      for (const b of corners) sum += Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]);
+      if (sum < bestD) { bestD = sum; best = a; }
+    }
+    return best.map(Math.round);
+  }
+
+  // AI 누끼
+  let bgrmModule = null;
+  /** AI 누끼를 (문서, 페이지)에 적용하고 결과를 저장 */
+  async function runAI(d, p, P) {
+    P(0.02, '이미지 준비 중…');
+    const src = d.results[p] ? d.results[p].canvas : await sourceCanvas(d, p, { forAI: true });
+    const blob = await new Promise(res => src.toBlob(res, 'image/png'));
+    P(0.05, 'AI 모듈 불러오는 중…');
+    if (!bgrmModule) bgrmModule = await import(/* @vite-ignore */ BGRM_URL);
+    const fetched = {};
+    const progress = (key, cur, total) => {
+      if (key.startsWith('fetch:')) {
+        fetched[key] = [cur, total];
+        let c = 0, t = 0; for (const k in fetched) { c += fetched[k][0]; t += fetched[k][1]; }
+        const r = t ? c / t : 0;
+        P(0.05 + r * 0.45, `모델 내려받는 중 ${Math.round(r * 100)}% (${fmtSize(c)} / ${fmtSize(t)})`);
+      } else {
+        P(0.55 + (total ? cur / total : 0.5) * 0.4, 'AI가 배경을 분리하는 중… (기기에 따라 최대 1분)');
+      }
+    };
+    const cfg = { model: 'isnet_quint8', progress, output: { format: 'image/png', quality: 1 } };
+    let out;
+    try {
+      if (navigator.gpu) out = await bgrmModule.removeBackground(blob, { ...cfg, device: 'gpu' });
+      else out = await bgrmModule.removeBackground(blob, cfg);
+    } catch (e) {
+      console.warn('gpu 경로 실패, cpu로 재시도', e);
+      out = await bgrmModule.removeBackground(blob, cfg);
+    }
+    const bmp = await createImageBitmap(out);
+    const c = makeCanvas(bmp.width, bmp.height);
+    c.getContext('2d').drawImage(bmp, 0, 0);
+    bmp.close();
+    d.results[p] = { canvas: c, label: 'AI 누끼' };
+  }
+  $('btnAI').addEventListener('click', async () => {
+    if (!current) return;
+    const btn = $('btnAI'); btn.disabled = true;
+    const d = current, p = d.page;
+    try {
+      await runAI(d, p, (r, t) => setProg('bgProg', 'bgStat', r, t));
+      syncPanels(); renderPage();
+      setProg('bgProg', 'bgStat', null, '완료 · "투명 PNG로 저장"을 누르거나 4K·규격 저장으로 넘어가세요');
+    } catch (e) {
+      console.error(e);
+      setProg('bgProg', 'bgStat', null, '');
+      showAlert('AI 누끼를 실행하지 못했습니다',
+        '<p>모델을 내려받지 못했거나 브라우저가 지원하지 않습니다. 인터넷 연결을 확인하고 최신 크롬·엣지·사파리에서 다시 시도해 주세요.</p>');
+    } finally { btn.disabled = false; }
+  });
+
+  $('btnRevert').addEventListener('click', () => {
+    if (!current) return;
+    delete current.results[current.page];
+    setProg('bgProg', 'bgStat', null, '');
+    syncPanels(); renderPage();
+  });
+
+  // ── 입력: 버튼 / 드래그 앤 드롭 / 붙여넣기 ────────────
+  $('btnOpen').addEventListener('click', () => fileInput.click());
+  fileInput.addEventListener('change', () => { openFiles(fileInput.files); fileInput.value = ''; });
+
+  let dragDepth = 0;
+  const dragover = $('dragover');
+  const hasFiles = (e) => e.dataTransfer && Array.from(e.dataTransfer.types || []).includes('Files');
+  window.addEventListener('dragenter', (e) => {
+    if (!hasFiles(e)) return;
+    e.preventDefault(); dragDepth++;
+    dragover.classList.add('show'); drop.classList.add('over');
+  });
+  window.addEventListener('dragover', (e) => { if (hasFiles(e)) { e.preventDefault(); e.dataTransfer.dropEffect = 'copy'; } });
+  window.addEventListener('dragleave', (e) => {
+    if (!hasFiles(e)) return;
+    dragDepth = Math.max(0, dragDepth - 1);
+    if (dragDepth === 0) { dragover.classList.remove('show'); drop.classList.remove('over'); }
+  });
+  window.addEventListener('drop', (e) => {
+    if (!hasFiles(e)) return;
+    e.preventDefault(); dragDepth = 0;
+    dragover.classList.remove('show'); drop.classList.remove('over');
+    openFiles(e.dataTransfer.files);
+  });
+  document.addEventListener('paste', (e) => {
+    const files = Array.from(e.clipboardData?.files || []);
+    if (files.length) openFiles(files);
+  });
+
+  // 개발 편의: ?src=경로 로 파일을 바로 열 수 있다 (같은 출처 파일만)
+  const src = new URLSearchParams(location.search).get('src');
+  if (src) {
+    fetch(src).then(r => r.ok ? r.blob() : Promise.reject(new Error(r.status)))
+      .then(b => openFiles([new File([b], src.split('/').pop() || 'file.ai')]))
+      .catch(err => showAlert('파일을 불러오지 못했습니다', `<p>${escapeHtml(String(err))}</p>`));
+  }
+</script>
+</body>
 </html>
