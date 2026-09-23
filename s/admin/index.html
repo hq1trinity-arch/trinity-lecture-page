@@ -128,9 +128,11 @@
         <h3>처음 한 번: GitHub 토큰 연결</h3>
         <ol>
           <li><a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">GitHub 토큰 만들기</a> 페이지를 엽니다 (hq1trinity-arch 계정으로 로그인).</li>
-          <li>Token name은 <b>trinity-shortlinks</b>, Expiration은 <b>1년</b>, Repository access는 <b>Only select repositories → trinity-lecture-page</b>.</li>
-          <li>Permissions → Repository permissions에서 <b>Contents: Read and write</b>만 켜고 Generate token.</li>
-          <li>생성된 토큰(github_pat_로 시작)을 아래에 붙여 넣고 저장합니다. 토큰은 <b>이 브라우저에만</b> 저장되며 어디로도 전송되지 않습니다.</li>
+          <li>Token name은 <b>trinity-shortlinks</b>, Expiration은 Custom으로 <b>1년 뒤</b>. Resource owner가 <b>hq1trinity-arch</b>인지 확인합니다.</li>
+          <li>Repository access에서 <b>Only select repositories</b>를 먼저 고르고, 드롭다운에서 <b>trinity-lecture-page</b>를 선택합니다. 이걸 골라야 아래에 권한 항목이 나타납니다.</li>
+          <li>새로 나타난 Permissions에서 <b>Add permissions</b>(또는 Repository permissions 펼치기) → <b>Contents</b>를 찾아 <b>Read and write</b>로 바꿉니다. Metadata가 자동으로 함께 켜지는 건 그대로 둡니다.</li>
+          <li><b>Generate token</b>을 누르고, github_pat_로 시작하는 값을 바로 아래에 붙여 넣어 저장합니다. 화면을 벗어나면 다시 볼 수 없습니다. 토큰은 <b>이 브라우저에만</b> 저장되며 어디로도 전송되지 않습니다.</li>
+          <li style="color:var(--ink-40)">권한 항목이 끝내 안 보이면 왼쪽 메뉴 <b>Tokens (classic)</b>에서 <b>repo</b> 하나만 체크해 만든 토큰(ghp_로 시작)을 써도 됩니다.</li>
         </ol>
         <div class="inline" style="margin-top:10px">
           <input type="password" id="inToken" placeholder="github_pat_…" autocomplete="off">
