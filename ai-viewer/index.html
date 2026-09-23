@@ -128,7 +128,7 @@
     .drop .hint { margin: 22px 0 0; font-size: 12.5px; color: var(--ink-40); line-height: 1.6; }
     .drop .hint b { color: var(--ink-60); font-weight: 600; }
 
-    .home { width: min(860px, 100%); }
+    .home { width: min(1120px, 100%); }
     .home .head { text-align: center; margin-bottom: 22px; }
     .home .head .badge {
       display: inline-block; font-size: 11.5px; font-weight: 700; letter-spacing: .12em;
@@ -136,7 +136,8 @@
     }
     .home .head h1 { margin: 0 0 8px; font-size: 26px; font-weight: 700; letter-spacing: -.02em; line-height: 1.3; }
     .home .head p { margin: 0; font-size: 14.5px; color: var(--ink-60); line-height: 1.6; }
-    .mode-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .mode-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+    @media (max-width: 1100px) and (min-width: 861px) { .mode-cards { grid-template-columns: repeat(2, 1fr); } }
     .mode-card {
       background: var(--white); border: 1px solid var(--border); border-radius: 18px;
       padding: 24px 22px 22px; text-align: left; color: var(--ink);
@@ -224,10 +225,10 @@
       width: 340px; flex: none; display: none; overflow: auto;
       background: var(--white); border-left: 1px solid var(--border);
     }
-    .app.mode-bg .dock, .app.mode-up .dock { display: block; }
+    .app.mode-bg .dock, .app.mode-up .dock, .app.mode-blur .dock { display: block; }
     @media (max-width: 1500px) {
-      .app.mode-bg .toolbar .fname, .app.mode-up .toolbar .fname,
-      .app.mode-bg .toolbar .sep:last-of-type, .app.mode-up .toolbar .sep:last-of-type { display: none; }
+      .app.mode-bg .toolbar .fname, .app.mode-up .toolbar .fname, .app.mode-blur .toolbar .fname,
+      .app.mode-bg .toolbar .sep:last-of-type, .app.mode-up .toolbar .sep:last-of-type, .app.mode-blur .toolbar .sep:last-of-type { display: none; }
     }
 
     .toolbar {
@@ -294,6 +295,26 @@
       padding: 2px 7px; border-radius: 6px; white-space: nowrap;
     }
     #trimBox { position: absolute; display: none; box-sizing: border-box; border: 1.5px dashed var(--lavender); pointer-events: none; z-index: 1; }
+    #blurLayer { position: absolute; inset: 0; display: none; z-index: 3; touch-action: none; }
+    .app.mode-blur #blurLayer { display: block; }
+    .app.mode-blur .stage.adding, .app.mode-blur .stage.adding #blurLayer { cursor: crosshair; }
+    .blur-box {
+      position: absolute; box-sizing: border-box; cursor: move; touch-action: none;
+      border: 2px solid #fff; outline: 2px dashed var(--violet); background: rgba(74,27,208,.10);
+    }
+    .blur-box.ellipse { border-radius: 50%; }
+    .blur-box .del {
+      position: absolute; right: -11px; top: -11px; width: 22px; height: 22px; border-radius: 50%;
+      border: 2px solid #fff; background: var(--violet); color: #fff; font-size: 13px; line-height: 18px;
+      text-align: center; padding: 0; cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,.25);
+    }
+    .blur-box.drawing { pointer-events: none; }
+    .wm-grid { display: grid; grid-template-columns: repeat(3, 28px); gap: 4px; margin-top: 8px; }
+    .wm-grid button {
+      width: 28px; height: 22px; border: 1px solid var(--border); border-radius: 6px; background: var(--white); padding: 0;
+    }
+    .wm-grid button[aria-pressed="true"] { background: var(--violet); border-color: var(--violet); }
+    .panel input[type="text"] { height: 34px; }
     .sheet .loading {
       position: absolute; inset: 0; display: none; align-items: center; justify-content: center;
       background: rgba(255,255,255,.55); font-size: 13px; color: var(--violet); font-weight: 600;
@@ -462,6 +483,7 @@
     <button type="button" data-mode="view" aria-pressed="true"><svg viewBox="0 0 24 24"><path d="M12 5C7 5 3 8.6 1.5 12 3 15.4 7 19 12 19s9-3.6 10.5-7C21 8.6 17 5 12 5Zm0 11.5a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9Zm0-7a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5Z"/></svg><span>파일 보기</span></button>
     <button type="button" data-mode="bg" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Zm0 2a7 7 0 0 1 5.6 11.2L7.8 6.4A6.97 6.97 0 0 1 12 5Zm-5.6 2.8 9.8 9.8A7 7 0 0 1 6.4 7.8Z"/></svg><span>누끼</span></button>
     <button type="button" data-mode="up" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M4 4h6v2H7.4l4.3 4.3-1.4 1.4L6 7.4V10H4V4Zm10 0h6v6h-2V7.4l-4.3 4.3-1.4-1.4L16.6 6H14V4ZM4 14h2v2.6l4.3-4.3 1.4 1.4L7.4 18H10v2H4v-6Zm14.6 4-4.3-4.3 1.4-1.4 4.3 4.3V14h2v6h-6v-2h2.6Z"/></svg><span>4K·규격 저장</span></button>
+    <button type="button" data-mode="blur" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M12 2a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6Zm0 9c4.4 0 8 2.2 8 5v3H4v-3c0-2.8 3.6-5 8-5Zm0 2c-3.5 0-6 1.6-6 3v1h12v-1c0-1.4-2.5-3-6-3Z" opacity=".5"/><path d="M4 4h4v2H6v2H4V4Zm12 0h4v4h-2V6h-2V4ZM4 16h2v2h2v2H4v-4Zm14 0h2v4h-4v-2h2v-2Z"/></svg><span>얼굴 블러</span></button>
   </div>
   <div class="spacer"></div>
   <div class="privacy" title="파일은 이 브라우저 안에서만 처리되며 서버로 전송되지 않습니다.">
@@ -507,6 +529,14 @@
           <h2>4K·규격 저장</h2>
           <p>4K 고해상도로 키우거나,<br>카톡·인스타 규격에 맞춰 자르고<br>여백·배경·용량까지 정해 저장합니다.</p>
           <span class="fmt">JPG · PNG · .ai · .pdf · SVG</span>
+          <span class="go">파일 선택 <svg viewBox="0 0 24 24"><path d="M8.6 16.6 10 18l6-6-6-6-1.4 1.4 4.6 4.6-4.6 4.6Z"/></svg></span>
+        </button>
+        <button class="mode-card" type="button" data-pick="blur">
+          <span class="ico"><svg viewBox="0 0 24 24"><path d="M12 2a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6Zm0 9c4.4 0 8 2.2 8 5v3H4v-3c0-2.8 3.6-5 8-5Zm0 2c-3.5 0-6 1.6-6 3v1h12v-1c0-1.4-2.5-3-6-3Z" opacity=".5"/><path d="M4 4h4v2H6v2H4V4Zm12 0h4v4h-2V6h-2V4ZM4 16h2v2h2v2H4v-4Zm14 0h2v4h-4v-2h2v-2Z"/></svg></span>
+          <span class="step">04</span>
+          <h2>얼굴 블러</h2>
+          <p>강의·행사 사진의 참석자 얼굴을<br>AI가 자동으로 찾아 가립니다.<br>놓친 얼굴은 직접 추가하면 됩니다.</p>
+          <span class="fmt">JPG · PNG · WebP</span>
           <span class="go">파일 선택 <svg viewBox="0 0 24 24"><path d="M8.6 16.6 10 18l6-6-6-6-1.4 1.4 4.6 4.6-4.6 4.6Z"/></svg></span>
         </button>
       </div>
@@ -571,6 +601,7 @@
             <canvas id="canvas"></canvas>
             <div id="trimBox"></div>
             <div id="cropBox" data-label="저장 영역"></div>
+            <div id="blurLayer"></div>
             <div class="loading" id="loadingLbl">렌더링 중…</div>
           </div>
         </div>
@@ -658,6 +689,37 @@
             <button type="button" data-v="rotr" title="오른쪽으로 90° 회전">↻ 90°</button>
             <button type="button" data-v="fliph" title="좌우 반전">좌우 반전</button>
             <button type="button" data-v="flipv" title="상하 반전">상하 반전</button>
+          </div>
+        </div>
+
+        <div class="row">
+          <label class="lbl">워터마크</label>
+          <label class="check"><input type="checkbox" id="chkWm"> 워터마크 넣기 (화면과 저장에 함께 적용)</label>
+          <div id="wmOpts" style="display:none">
+            <div class="seg" id="segWmType" style="margin-top:8px">
+              <button type="button" data-v="logo" aria-pressed="true">TRINITY ONE 로고</button>
+              <button type="button" data-v="text" aria-pressed="false">텍스트</button>
+            </div>
+            <input type="text" id="inWmText" value="TRINITY ONE" maxlength="40" placeholder="워터마크 문구" style="margin-top:8px;display:none">
+            <div class="seg" id="segWmColor" style="margin-top:8px;display:none">
+              <button type="button" data-v="white" aria-pressed="true">흰색</button>
+              <button type="button" data-v="ink" aria-pressed="false">진한 색</button>
+              <button type="button" data-v="purple" aria-pressed="false">퍼플</button>
+            </div>
+            <div class="inline" style="margin-top:8px;align-items:flex-start">
+              <div>
+                <span class="hint">위치</span>
+                <div class="wm-grid" id="wmGrid">
+                  <button type="button" data-v="tl" aria-pressed="false" title="왼쪽 위"></button><button type="button" data-v="tc" aria-pressed="false" title="가운데 위"></button><button type="button" data-v="tr" aria-pressed="false" title="오른쪽 위"></button>
+                  <button type="button" data-v="ml" aria-pressed="false" title="왼쪽 가운데"></button><button type="button" data-v="mc" aria-pressed="false" title="정중앙"></button><button type="button" data-v="mr" aria-pressed="false" title="오른쪽 가운데"></button>
+                  <button type="button" data-v="bl" aria-pressed="false" title="왼쪽 아래"></button><button type="button" data-v="bc" aria-pressed="false" title="가운데 아래"></button><button type="button" data-v="br" aria-pressed="true" title="오른쪽 아래"></button>
+                </div>
+              </div>
+              <div style="flex:1;display:flex;flex-direction:column;gap:6px">
+                <div class="range-row"><span>크기</span><input type="range" id="rngWmSize" min="4" max="40" value="14"><output id="outWmSize">14%</output></div>
+                <div class="range-row"><span>진하기</span><input type="range" id="rngWmOp" min="10" max="100" value="60"><output id="outWmOp">60%</output></div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -759,6 +821,53 @@
         <div class="progress" id="batchProg"><i></i></div>
         <div class="pstat" id="batchStat"></div>
       </div>
+
+      <!-- 얼굴 블러 패널 -->
+      <div class="panel" id="blurPanel">
+        <h4>얼굴 블러 <button class="x" type="button" data-close="blurPanel" aria-label="닫기">×</button></h4>
+        <p class="lead">강의·행사 사진의 참석자 얼굴을 가립니다. 자동 감지 후 놓친 얼굴은 직접 추가하세요.</p>
+        <button class="btn btn-primary btn-full" id="btnFaces" type="button">얼굴 자동 감지</button>
+        <p class="hint" style="margin-top:6px">처음 한 번만 약 <b>7MB</b> 모델을 내려받습니다. 사진은 외부로 전송되지 않습니다.</p>
+        <div class="progress" id="blurProg"><i></i></div>
+        <div class="pstat" id="blurStat"></div>
+
+        <div class="sec"></div>
+        <div class="row">
+          <label class="lbl">영역 편집</label>
+          <div class="inline gap" style="margin-top:0">
+            <button class="btn btn-ghost" id="btnAddRegion" type="button">직접 추가 (드래그)</button>
+            <button class="btn btn-ghost" id="btnClearRegions" type="button">모두 지우기</button>
+          </div>
+          <p class="hint">미리보기에서 영역을 끌어 옮기고, × 를 눌러 지웁니다. 추가 모드에서는 빈 곳을 드래그해 새 영역을 그립니다.</p>
+        </div>
+        <div class="row">
+          <label class="lbl">블러 설정</label>
+          <div class="range-row"><span>세기</span><input type="range" id="rngBlur" min="1" max="10" value="6"><output id="outBlur">6</output></div>
+          <div class="range-row"><span>영역 여유</span><input type="range" id="rngBlurPad" min="0" max="60" value="20"><output id="outBlurPad">20%</output></div>
+          <div class="seg" id="segBlurShape">
+            <button type="button" data-v="ellipse" aria-pressed="true">타원 (자연스럽게)</button>
+            <button type="button" data-v="rect" aria-pressed="false">사각형</button>
+          </div>
+          <div class="seg" id="segBlurKind">
+            <button type="button" data-v="blur" aria-pressed="true">블러</button>
+            <button type="button" data-v="pixel" aria-pressed="false">모자이크</button>
+          </div>
+        </div>
+
+        <div class="sec"></div>
+        <button class="btn btn-primary btn-full" id="btnBlurSave" type="button">블러 적용해 저장 (원본 크기)</button>
+        <div class="progress" id="blurSaveProg"><i></i></div>
+        <div class="pstat" id="blurSaveStat"></div>
+        <p class="hint" style="margin-top:8px">규격을 바꾸거나 여러 장을 한 번에 저장하려면 <b>4K·규격 저장</b>으로 전환하세요. 블러가 그대로 적용됩니다.</p>
+
+        <div class="sec"></div>
+        <p class="sec-title">일괄 처리 <span class="badge">ZIP</span></p>
+        <p class="hint" id="batchBlurHint">열린 모든 파일에서 얼굴을 자동 감지해 블러를 적용한 뒤 ZIP으로 저장합니다.</p>
+        <button class="btn btn-ghost btn-full" id="btnBatchBlur" type="button">전체 얼굴 감지 → 블러 → ZIP</button>
+        <button class="btn btn-ghost btn-full" id="btnBatchBlurStop" type="button" style="display:none;margin-top:8px">중지</button>
+        <div class="progress" id="batchBlurProg"><i></i></div>
+        <div class="pstat" id="batchBlurStat"></div>
+      </div>
       </aside>
     </div>
   </section>
@@ -782,6 +891,9 @@
   const STD_FONT_URL = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${PDFJS_VER}/standard_fonts/`;
   // AI 누끼 모델(@imgly/background-removal)은 버튼을 눌렀을 때만 내려받는다.
   const BGRM_URL = 'https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.7.0/+esm';
+  // 얼굴 감지(face-api SSD MobileNet v1)도 버튼을 눌렀을 때만 내려받는다 (약 1.3MB + 5.6MB)
+  const FACEAPI_URL = 'https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.15/dist/face-api.esm.js';
+  const FACEAPI_MODEL_URL = 'https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.15/model/';
 
   const $ = (id) => document.getElementById(id);
   const app = $('app'), drop = $('drop'), filesEl = $('files'), thumbsEl = $('thumbs');
@@ -884,7 +996,7 @@
   async function loadDoc(file) {
     const bytes = await file.arrayBuffer();
     const kind = sniff(bytes);
-    const base = { id: nextId++, name: file.name, size: file.size, page: 1, zoom: 'fit', thumbs: [], transparent: false, results: {}, meta: null, rot: 0, flipH: false, flipV: false };
+    const base = { id: nextId++, name: file.name, size: file.size, page: 1, zoom: 'fit', thumbs: [], transparent: false, results: {}, meta: null, rot: 0, flipH: false, flipV: false, blur: {} };
 
     if (kind === 'pdf') {
       // pdf.js는 전달한 버퍼를 워커로 넘겨 버리므로 원본은 복사본을 보관한다.
@@ -1168,8 +1280,11 @@
       if (seq === renderSeq) sheet.classList.remove('busy');
     }
     if (seq !== renderSeq) return;
+    applyBlur(canvas, d.blur[d.page]);
+    if (wm.on) { await ensureLogo(); if (seq !== renderSeq) return; drawWatermark(ctx, canvas.width, canvas.height); }
     renderInfo(d, sz);
     updateOverlay();
+    layoutBlurBoxes();
   }
 
   function renderInfo(d, sz) {
@@ -1191,6 +1306,8 @@
     }
     const r = d.results[d.page];
     if (r) parts.push(`<span class="tag">${escapeHtml(r.label)} 적용됨</span>`);
+    const bl = d.blur[d.page];
+    if (bl && bl.length) parts.push(`<span class="tag">얼굴 블러 ${bl.length}곳</span>`);
     else if (d.transparent && d.kind !== 'image') parts.push(`<span class="tag">투명 배경</span>`);
     infoEl.innerHTML = parts.join('<span class="dot"></span>');
   }
@@ -1241,7 +1358,7 @@
     else if (e.key === '+' || e.key === '=') { e.preventDefault(); zoomBy(1); }
     else if (e.key === '-') { e.preventDefault(); zoomBy(-1); }
     else if (e.key === '0') { e.preventDefault(); current.zoom = 'fit'; renderPage(); }
-    else if (e.key === 'Escape') { setMode('view'); }
+    else if (e.key === 'Escape') { if (adding) setAdding(false); else setMode('view'); }
   });
 
   stage.addEventListener('wheel', (e) => {
@@ -1262,10 +1379,12 @@
   let pendingMode = null;   // 홈 카드에서 고른 작업 (파일 열리면 적용)
   function setMode(m) {
     mode = m;
-    ['view', 'bg', 'up'].forEach(k => app.classList.toggle(`mode-${k}`, k === m));
+    ['view', 'bg', 'up', 'blur'].forEach(k => app.classList.toggle(`mode-${k}`, k === m));
     document.querySelectorAll('#modes button').forEach(b => b.setAttribute('aria-pressed', b.dataset.mode === m ? 'true' : 'false'));
     $('savePanel').classList.toggle('show', m === 'up');
     $('bgPanel').classList.toggle('show', m === 'bg');
+    $('blurPanel').classList.toggle('show', m === 'blur');
+    if (m !== 'blur') setAdding(false);
     $('btnSave').classList.toggle('on', m === 'up');
     $('btnBg').classList.toggle('on', m === 'bg');
     if (m !== 'bg') stopPicking();
@@ -1331,11 +1450,17 @@
   // 회전·반전은 문서 상태로 저장되어 화면·저장에 함께 적용
   $('segOrient').addEventListener('click', async (e) => {
     const b = e.target.closest('button'); if (!b || !current) return;
-    const d = current;
-    if (b.dataset.v === 'rotl') d.rot = ((d.rot || 0) + 270) % 360;
-    else if (b.dataset.v === 'rotr') d.rot = ((d.rot || 0) + 90) % 360;
-    else if (b.dataset.v === 'fliph') d.flipH = !d.flipH;
+    const d = current, v = b.dataset.v;
+    if (v === 'rotl') d.rot = ((d.rot || 0) + 270) % 360;
+    else if (v === 'rotr') d.rot = ((d.rot || 0) + 90) % 360;
+    else if (v === 'fliph') d.flipH = !d.flipH;
     else d.flipV = !d.flipV;
+    // 블러 영역(정규화 좌표)도 같은 변환을 적용해 얼굴 위에 그대로 남긴다
+    for (const k in d.blur) d.blur[k] = d.blur[k].map(r =>
+      v === 'rotr' ? { x: 1 - r.y - r.h, y: r.x, w: r.h, h: r.w }
+      : v === 'rotl' ? { x: r.y, y: 1 - r.x - r.w, w: r.h, h: r.w }
+      : v === 'fliph' ? { ...r, x: 1 - r.x - r.w }
+      : { ...r, y: 1 - r.y - r.h });
     await renderPage();
     buildThumbs(d);
     updateSizeHint();
@@ -1622,6 +1747,7 @@
     if (d.numPages > 1) parts.push(`artboard${p.page}`);
     if (p.res) parts.push('nukki');
     else if (d.transparent && d.kind !== 'image') parts.push('transparent');
+    if (d.blur[p.page] && d.blur[p.page].length) parts.push('blur');
     if (p.fixed) parts.push(p.fixed.tag, `${enc.w}x${enc.h}`);
     else if (p.key !== 'base' || trim) parts.push(`${enc.w}x${enc.h}`);
     return `${parts.join('-')}.${enc.ext}`;
@@ -1642,11 +1768,13 @@
         P(0.2, '렌더링 중…');
         out = makeCanvas(p.tw, p.th);
         await (await drawSource(d, page, p.tw / p.sz.w, out, d.transparent)).promise;
+        applyBlur(out, d.blur[page]);
         if (trim) out = trimCanvas(out, exp.pad);
       } else {
         P(0.1, '이미지 준비 중…');
         const long = p.fixed ? Math.min(4096, Math.max(1600, Math.round(Math.max(p.tw, p.th) * 1.6))) : BASE_LONG;
         let base = await baseCanvas(d, page, p.res, long);
+        applyBlur(base, d.blur[page]);
         if (trim) base = trimCanvas(base, exp.pad);
         if (p.fixed) base = fitToRatio(base, p.tw, p.th, exp.fit, exp.pos);
         let tw = p.fixed ? p.tw : Math.round(base.width * p.s), th = p.fixed ? p.th : Math.round(base.height * p.s);
@@ -1669,6 +1797,7 @@
         fx.drawImage(out, 0, 0);
         out = flat;
       }
+      if (wm.on && !opts.noWatermark) { await ensureLogo(); drawWatermark(out.getContext('2d'), out.width, out.height); }
       P(0.95, '파일 만드는 중…');
       const enc = await encodeWithLimit(out, fmt, limitKB, P);
       if (!enc.blob) throw new Error('toBlob');
@@ -1791,6 +1920,290 @@
     eocd.setUint32(12, cdSize, true); eocd.setUint32(16, offset, true); eocd.setUint16(20, 0, true);
     return new Blob([...parts, ...central, eocd.buffer], { type: 'application/zip' });
   }
+
+  // ── 워터마크 ──────────────────────────────────────────
+  const wm = { on: false, type: 'logo', text: 'TRINITY ONE', pos: 'br', size: 14, opacity: 60, color: 'white' };
+  let logoImg = null, logoReady = null;
+  function ensureLogo() {
+    if (logoReady) return logoReady;
+    logoImg = new Image();
+    logoImg.src = '../assets/trinity-one-logo.png';
+    logoReady = Promise.all([
+      logoImg.decode().catch(() => {}),
+      document.fonts ? document.fonts.load('700 20px Pretendard').catch(() => {}) : Promise.resolve(),
+    ]);
+    return logoReady;
+  }
+  function drawWatermark(c, W, H) {
+    if (!wm.on) return;
+    const long = Math.max(W, H), margin = long * 0.03;
+    let w, h;
+    c.save();
+    c.globalAlpha = wm.opacity / 100;
+    if (wm.type === 'logo') {
+      if (!logoImg || !logoImg.naturalWidth) { c.restore(); return; }
+      h = long * wm.size / 100; w = h * logoImg.naturalWidth / logoImg.naturalHeight;
+    } else {
+      const fs = Math.max(8, long * wm.size / 100 * 0.42);
+      c.font = `700 ${fs}px Pretendard, -apple-system, "Segoe UI", sans-serif`;
+      c.textBaseline = 'top';
+      const m = c.measureText(wm.text || ' ');
+      w = m.width; h = fs * 1.15;
+    }
+    const col = wm.pos[1], row = wm.pos[0];
+    const x = col === 'l' ? margin : col === 'c' ? (W - w) / 2 : W - w - margin;
+    const y = row === 't' ? margin : row === 'm' ? (H - h) / 2 : H - h - margin;
+    if (wm.type === 'logo') c.drawImage(logoImg, x, y, w, h);
+    else {
+      c.fillStyle = wm.color === 'white' ? '#ffffff' : wm.color === 'purple' ? BRAND_PURPLE : '#160E2E';
+      c.shadowColor = wm.color === 'white' ? 'rgba(0,0,0,.45)' : 'rgba(255,255,255,.55)';
+      c.shadowBlur = h * 0.18;
+      c.fillText(wm.text, x, y);
+    }
+    c.restore();
+  }
+  function refreshWmUI() {
+    $('wmOpts').style.display = wm.on ? '' : 'none';
+    $('inWmText').style.display = wm.type === 'text' ? '' : 'none';
+    $('segWmColor').style.display = wm.type === 'text' ? '' : 'none';
+    document.querySelectorAll('#wmGrid button').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === wm.pos ? 'true' : 'false'));
+  }
+  const wmRerender = () => { if (current) renderPage(); };
+  $('chkWm').addEventListener('change', () => { wm.on = $('chkWm').checked; refreshWmUI(); wmRerender(); });
+  seg('segWmType', v => { wm.type = v; refreshWmUI(); wmRerender(); });
+  seg('segWmColor', v => { wm.color = v; wmRerender(); });
+  $('inWmText').addEventListener('input', () => { wm.text = $('inWmText').value; wmRerender(); });
+  $('wmGrid').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; wm.pos = b.dataset.v; refreshWmUI(); wmRerender(); });
+  $('rngWmSize').addEventListener('input', () => { wm.size = parseInt($('rngWmSize').value, 10); $('outWmSize').textContent = `${wm.size}%`; wmRerender(); });
+  $('rngWmOp').addEventListener('input', () => { wm.opacity = parseInt($('rngWmOp').value, 10); $('outWmOp').textContent = `${wm.opacity}%`; wmRerender(); });
+
+  // ── 얼굴 블러 ─────────────────────────────────────────
+  const blurCfg = { strength: 6, pad: 20, shape: 'ellipse', kind: 'blur' };
+  /** 정규화 영역(0..1)을 캔버스에 블러/모자이크로 적용 */
+  function applyBlur(cv, regions) {
+    if (!regions || !regions.length) return;
+    const W = cv.width, H = cv.height, c = cv.getContext('2d');
+    for (const r of regions) {
+      const bw = r.w * W, bh = r.h * H;
+      const padX = bw * blurCfg.pad / 100, padY = bh * blurCfg.pad / 100;
+      const x0 = Math.max(0, Math.floor(r.x * W - padX)), y0 = Math.max(0, Math.floor(r.y * H - padY));
+      const x1 = Math.min(W, Math.ceil(r.x * W + bw + padX)), y1 = Math.min(H, Math.ceil(r.y * H + bh + padY));
+      const w = x1 - x0, h = y1 - y0;
+      if (w < 2 || h < 2) continue;
+      const tmp = makeCanvas(w, h), tc = tmp.getContext('2d');
+      if (blurCfg.kind === 'pixel') {
+        const cells = Math.max(3, Math.round(14 - blurCfg.strength));
+        const block = Math.max(2, Math.max(w, h) / cells);
+        const sw = Math.max(1, Math.round(w / block)), sh = Math.max(1, Math.round(h / block));
+        const small = makeCanvas(sw, sh), sc = small.getContext('2d');
+        sc.imageSmoothingEnabled = true; sc.drawImage(cv, x0, y0, w, h, 0, 0, sw, sh);
+        tc.imageSmoothingEnabled = false; tc.drawImage(small, 0, 0, sw, sh, 0, 0, w, h);
+      } else {
+        // 축소→확대 반복으로 가우시안에 가까운 블러 (모든 브라우저 동일 결과)
+        const factor = 2 + blurCfg.strength * 1.6;
+        let cur = makeCanvas(w, h); cur.getContext('2d').drawImage(cv, x0, y0, w, h, 0, 0, w, h);
+        for (let pass = 0; pass < 2; pass++) {
+          const sw = Math.max(1, Math.round(w / factor)), sh = Math.max(1, Math.round(h / factor));
+          const small = makeCanvas(sw, sh), sc = small.getContext('2d');
+          sc.imageSmoothingEnabled = true; sc.imageSmoothingQuality = 'high'; sc.drawImage(cur, 0, 0, sw, sh);
+          const big = makeCanvas(w, h), bc = big.getContext('2d');
+          bc.imageSmoothingEnabled = true; bc.imageSmoothingQuality = 'high'; bc.drawImage(small, 0, 0, w, h);
+          cur = big;
+        }
+        tc.drawImage(cur, 0, 0);
+      }
+      if (blurCfg.shape === 'ellipse') {
+        tc.globalCompositeOperation = 'destination-in';
+        tc.save(); tc.translate(w / 2, h / 2); tc.scale(w / 2, h / 2);
+        const g = tc.createRadialGradient(0, 0, 0, 0, 0, 1);
+        g.addColorStop(0, 'rgba(0,0,0,1)'); g.addColorStop(0.7, 'rgba(0,0,0,1)'); g.addColorStop(1, 'rgba(0,0,0,0)');
+        tc.fillStyle = g; tc.fillRect(-1, -1, 2, 2); tc.restore();
+      }
+      c.drawImage(tmp, x0, y0);
+    }
+  }
+
+  let faceapi = null;
+  async function ensureFaceApi(P) {
+    if (faceapi) return faceapi;
+    P(0.03, '얼굴 감지 모듈 불러오는 중… (처음 한 번, 약 7MB)');
+    const m = await import(/* @vite-ignore */ FACEAPI_URL);
+    // 그래픽(WebGL) 가속을 우선 쓰고, 안 되면 CPU로 실행한다 (느리지만 결과는 같다)
+    let backendOk = false;
+    try { backendOk = await m.tf.setBackend('webgl'); } catch (_) {}
+    if (backendOk) { try { await m.tf.ready(); } catch (_) { backendOk = false; } }
+    if (!backendOk || m.tf.getBackend() !== 'webgl') { await m.tf.setBackend('cpu'); await m.tf.ready(); }
+    P(0.12, `모델 내려받는 중… (${m.tf.getBackend() === 'webgl' ? '그래픽 가속' : 'CPU 모드'})`);
+    await m.nets.ssdMobilenetv1.loadFromUri(FACEAPI_MODEL_URL);
+    faceapi = m;
+    return m;
+  }
+  /** (문서, 페이지)에서 얼굴을 찾아 블러 영역으로 저장. 반환: 찾은 수 */
+  async function detectFaces(d, p, P) {
+    const fa = await ensureFaceApi(P);
+    P(0.35, '이미지 준비 중…');
+    const src = await baseCanvas(d, p, d.results[p], 1600);
+    P(0.45, '얼굴 찾는 중…');
+    let dets;
+    try {
+      dets = await fa.detectAllFaces(src, new fa.SsdMobilenetv1Options({ minConfidence: 0.3 }));
+    } catch (e) {
+      if (fa.tf.getBackend() === 'cpu') throw e;
+      console.warn('그래픽 가속 감지 실패, CPU로 재시도', e);
+      await fa.tf.setBackend('cpu'); await fa.tf.ready();
+      dets = await fa.detectAllFaces(src, new fa.SsdMobilenetv1Options({ minConfidence: 0.3 }));
+    }
+    d.blur[p] = dets.map(dt => ({ x: dt.box.x / src.width, y: dt.box.y / src.height, w: dt.box.width / src.width, h: dt.box.height / src.height }));
+    return d.blur[p].length;
+  }
+  $('btnFaces').addEventListener('click', async () => {
+    if (!current) return;
+    const btn = $('btnFaces'); btn.disabled = true;
+    try {
+      const n = await detectFaces(current, current.page, (r, t) => setProg('blurProg', 'blurStat', r, t));
+      await renderPage();
+      setProg('blurProg', 'blurStat', null, n ? `얼굴 ${n}곳을 찾아 블러를 적용했습니다. 놓친 곳은 "직접 추가"로 그려 주세요.` : '얼굴을 찾지 못했습니다. "직접 추가"로 영역을 그려 주세요.');
+    } catch (e) {
+      console.error(e);
+      setProg('blurProg', 'blurStat', null, '');
+      showAlert('얼굴 감지를 실행하지 못했습니다', '<p>모델을 내려받지 못했거나 브라우저가 지원하지 않습니다. 인터넷 연결을 확인하고 최신 크롬·엣지·사파리에서 다시 시도해 주세요. "직접 추가"로 영역을 그려 가릴 수도 있습니다.</p>');
+    } finally { btn.disabled = false; }
+  });
+
+  // 영역 편집 오버레이
+  let adding = false, blurDrag = null;
+  function setAdding(on) {
+    adding = on;
+    stage.classList.toggle('adding', on);
+    $('btnAddRegion').classList.toggle('on', on);
+    $('btnAddRegion').textContent = on ? '추가 모드 끝내기' : '직접 추가 (드래그)';
+  }
+  $('btnAddRegion').addEventListener('click', () => setAdding(!adding));
+  $('btnClearRegions').addEventListener('click', () => { if (!current) return; current.blur[current.page] = []; renderPage(); });
+  function layoutBlurBoxes() {
+    const layer = $('blurLayer');
+    layer.innerHTML = '';
+    if (!current || mode !== 'blur') return;
+    const regs = current.blur[current.page] || [];
+    const cssW = parseFloat(canvas.style.width), cssH = parseFloat(canvas.style.height);
+    regs.forEach((r, i) => {
+      const padX = r.w * blurCfg.pad / 100, padY = r.h * blurCfg.pad / 100;
+      const el = document.createElement('div');
+      el.className = 'blur-box' + (blurCfg.shape === 'ellipse' ? ' ellipse' : '');
+      el.dataset.i = i;
+      el.style.left = `${(r.x - padX) * cssW}px`; el.style.top = `${(r.y - padY) * cssH}px`;
+      el.style.width = `${(r.w + 2 * padX) * cssW}px`; el.style.height = `${(r.h + 2 * padY) * cssH}px`;
+      el.innerHTML = '<button type="button" class="del" title="이 영역 지우기">×</button>';
+      layer.appendChild(el);
+    });
+  }
+  const layerPos = (e) => {
+    const rc = canvas.getBoundingClientRect();
+    return { x: Math.min(1, Math.max(0, (e.clientX - rc.left) / rc.width)), y: Math.min(1, Math.max(0, (e.clientY - rc.top) / rc.height)) };
+  };
+  $('blurLayer').addEventListener('pointerdown', (e) => {
+    if (!current || mode !== 'blur') return;
+    const regs = current.blur[current.page] || (current.blur[current.page] = []);
+    const del = e.target.closest('.del');
+    if (del) { regs.splice(parseInt(del.parentElement.dataset.i, 10), 1); renderPage(); e.preventDefault(); return; }
+    const box = e.target.closest('.blur-box');
+    const pt = layerPos(e);
+    if (box) {
+      const i = parseInt(box.dataset.i, 10);
+      blurDrag = { kind: 'move', i, start: pt, orig: { ...regs[i] }, el: box };
+    } else if (adding) {
+      const el = document.createElement('div');
+      el.className = 'blur-box drawing' + (blurCfg.shape === 'ellipse' ? ' ellipse' : '');
+      $('blurLayer').appendChild(el);
+      blurDrag = { kind: 'draw', start: pt, el };
+    } else return;
+    $('blurLayer').setPointerCapture(e.pointerId);
+    e.preventDefault();
+  });
+  $('blurLayer').addEventListener('pointermove', (e) => {
+    if (!blurDrag) return;
+    const pt = layerPos(e);
+    const cssW = parseFloat(canvas.style.width), cssH = parseFloat(canvas.style.height);
+    if (blurDrag.kind === 'move') {
+      const r = blurDrag.orig, regs = current.blur[current.page];
+      const nx = Math.min(1 - r.w, Math.max(0, r.x + pt.x - blurDrag.start.x));
+      const ny = Math.min(1 - r.h, Math.max(0, r.y + pt.y - blurDrag.start.y));
+      regs[blurDrag.i] = { ...r, x: nx, y: ny };
+      const padX = r.w * blurCfg.pad / 100, padY = r.h * blurCfg.pad / 100;
+      blurDrag.el.style.left = `${(nx - padX) * cssW}px`; blurDrag.el.style.top = `${(ny - padY) * cssH}px`;
+    } else {
+      const x = Math.min(pt.x, blurDrag.start.x), y = Math.min(pt.y, blurDrag.start.y);
+      const w = Math.abs(pt.x - blurDrag.start.x), h = Math.abs(pt.y - blurDrag.start.y);
+      blurDrag.rect = { x, y, w, h };
+      blurDrag.el.style.left = `${x * cssW}px`; blurDrag.el.style.top = `${y * cssH}px`;
+      blurDrag.el.style.width = `${w * cssW}px`; blurDrag.el.style.height = `${h * cssH}px`;
+    }
+  });
+  const endBlurDrag = () => {
+    if (!blurDrag) return;
+    if (blurDrag.kind === 'draw') {
+      blurDrag.el.remove();
+      const r = blurDrag.rect;
+      if (r && r.w > 0.005 && r.h > 0.005) {
+        // 드래그한 사각형을 "여유 포함" 크기로 보고, 저장되는 기본 영역은 여유를 뺀 크기로 환산
+        const k = 1 + 2 * blurCfg.pad / 100;
+        const w = r.w / k, h = r.h / k;
+        (current.blur[current.page] = current.blur[current.page] || []).push({ x: r.x + (r.w - w) / 2, y: r.y + (r.h - h) / 2, w, h });
+      }
+    }
+    blurDrag = null;
+    renderPage();
+  };
+  ['pointerup', 'pointercancel'].forEach(ev => $('blurLayer').addEventListener(ev, endBlurDrag));
+
+  const blurRerender = () => { if (current) renderPage(); };
+  $('rngBlur').addEventListener('input', () => { blurCfg.strength = parseInt($('rngBlur').value, 10); $('outBlur').textContent = blurCfg.strength; blurRerender(); });
+  $('rngBlurPad').addEventListener('input', () => { blurCfg.pad = parseInt($('rngBlurPad').value, 10); $('outBlurPad').textContent = `${blurCfg.pad}%`; blurRerender(); });
+  seg('segBlurShape', v => { blurCfg.shape = v; blurRerender(); });
+  seg('segBlurKind', v => { blurCfg.kind = v; blurRerender(); });
+
+  const blurFmt = (d, p) => (d.results[p] || (d.transparent && d.kind !== 'image')) ? 'png' : 'jpg';
+  $('btnBlurSave').addEventListener('click', () => {
+    if (!current) return;
+    exportImage({ btnId: 'btnBlurSave', progId: 'blurSaveProg', statId: 'blurSaveStat', sizeMode: 'base', fmt: blurFmt(current, current.page), sharp: 0, limit: 0, bg: 'transparent', trim: false });
+  });
+
+  $('btnBatchBlurStop').addEventListener('click', () => { batchCancel = true; });
+  $('btnBatchBlur').addEventListener('click', async () => {
+    if (!current) return;
+    const targets = batchTargets('all', current), n = targets.length;
+    batchCancel = false;
+    $('btnBatchBlur').disabled = true; $('btnBatchBlurStop').style.display = '';
+    const entries = [], used = new Set(); let failed = 0, faces = 0;
+    try {
+      for (let i = 0; i < n; i++) {
+        if (batchCancel) break;
+        const { d, p } = targets[i];
+        const label = `${i + 1} / ${n} · ${d.name}${d.numPages > 1 ? ` (아트보드 ${p})` : ''}`;
+        const P = (r, t) => setProg('batchBlurProg', 'batchBlurStat', (i + (r || 0) * 0.8) / n, `${label}${t ? ' · ' + t : ''}`);
+        try {
+          faces += await detectFaces(d, p, P);
+          if (d === current && p === current.page) await renderPage();
+          const enc = await exportImage({ doc: d, page: p, sizeMode: 'base', fmt: blurFmt(d, p), sharp: 0, limit: 0, bg: 'transparent', trim: false, returnBlob: true, silent: true, P: (r, t) => P(0.8 + (r || 0) * 0.2, t) });
+          let name = enc.name, k = 2;
+          while (used.has(name)) name = enc.name.replace(/(\.[^.]+)$/, `-${k++}$1`);
+          used.add(name);
+          entries.push({ name, blob: enc.blob });
+        } catch (e) { console.warn('batch blur failed', d.name, p, e); failed++; }
+      }
+      if (!entries.length) { setProg('batchBlurProg', 'batchBlurStat', null, batchCancel ? '중지했습니다.' : '처리된 결과가 없습니다.'); return; }
+      setProg('batchBlurProg', 'batchBlurStat', 0.99, 'ZIP으로 묶는 중…');
+      const zip = await makeZip(entries);
+      download(zip, `blur-${entries.length}p.zip`);
+      setProg('batchBlurProg', 'batchBlurStat', null, `${batchCancel ? '중지 · ' : ''}ZIP 저장 완료 · ${entries.length}장 · 얼굴 ${faces}곳${failed ? ` (실패 ${failed})` : ''} · ${fmtSize(zip.size)}`);
+    } catch (e) {
+      console.error(e);
+      setProg('batchBlurProg', 'batchBlurStat', null, '');
+      showAlert('일괄 블러에 실패했습니다', '<p>브라우저 메모리가 부족할 수 있습니다. 파일 수를 줄여 다시 시도해 주세요.</p>');
+    } finally {
+      $('btnBatchBlur').disabled = false; $('btnBatchBlurStop').style.display = 'none';
+    }
+  });
 
   $('btnPdf').addEventListener('click', () => {
     if (!current || current.kind !== 'pdf') return;
