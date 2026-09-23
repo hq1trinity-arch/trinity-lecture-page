@@ -225,6 +225,10 @@
       background: var(--white); border-left: 1px solid var(--border);
     }
     .app.mode-bg .dock, .app.mode-up .dock { display: block; }
+    @media (max-width: 1500px) {
+      .app.mode-bg .toolbar .fname, .app.mode-up .toolbar .fname,
+      .app.mode-bg .toolbar .sep:last-of-type, .app.mode-up .toolbar .sep:last-of-type { display: none; }
+    }
 
     .toolbar {
       display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
@@ -683,10 +687,21 @@
           </div>
         </div>
 
+        <div class="row">
+          <label class="lbl">저장 범위</label>
+          <div class="seg" id="segRange">
+            <button type="button" data-v="page" aria-pressed="true">이 아트보드만</button>
+            <button type="button" data-v="doc" aria-pressed="false">이 파일 전체</button>
+            <button type="button" data-v="all" aria-pressed="false">열린 파일 전체</button>
+          </div>
+          <p class="hint" id="rangeHint"></p>
+        </div>
+
         <div class="inline gap">
           <button class="btn btn-primary" id="btnDoSave" type="button">저장</button>
           <button class="btn btn-ghost" id="btnCopy" type="button" title="PNG로 클립보드에 복사 (카톡·PPT에 붙여넣기)">클립보드 복사</button>
         </div>
+        <button class="btn btn-ghost btn-full" id="btnBatchStop" type="button" style="display:none;margin-top:8px">중지</button>
         <div class="progress" id="saveProg"><i></i></div>
         <div class="pstat" id="saveStat"></div>
       </div>
@@ -731,7 +746,18 @@
         <div class="progress" id="bgSaveProg"><i></i></div>
         <div class="pstat" id="bgSaveStat"></div>
         <button class="btn btn-ghost btn-full" id="btnRevert" type="button" style="margin-top:10px">원본으로 되돌리기</button>
-        <p class="hint" style="margin-top:10px">더 큰 크기로 저장하려면 상단의 <b>4K 저장</b>으로 전환하세요. 누끼 결과가 그대로 이어집니다.</p>
+        <p class="hint" style="margin-top:10px">더 큰 크기로 저장하려면 상단의 <b>4K·규격 저장</b>으로 전환하세요. 누끼 결과가 그대로 이어집니다.</p>
+
+        <div class="sec"></div>
+        <p class="sec-title">일괄 누끼 <span class="badge">ZIP</span></p>
+        <p class="hint" id="batchNukkiHint">위 설정 그대로 열린 모든 파일·아트보드를 처리한 뒤, 투명 PNG를 ZIP 하나로 내려받습니다.</p>
+        <div class="inline gap">
+          <button class="btn btn-ghost" id="btnBatchChroma" type="button">단색 배경 제거 → ZIP</button>
+          <button class="btn btn-ghost" id="btnBatchAI" type="button">AI 누끼 → ZIP</button>
+        </div>
+        <button class="btn btn-ghost btn-full" id="btnBatchNukkiStop" type="button" style="display:none;margin-top:8px">중지</button>
+        <div class="progress" id="batchProg"><i></i></div>
+        <div class="pstat" id="batchStat"></div>
       </div>
       </aside>
     </div>
@@ -956,6 +982,7 @@
     add.textContent = '+ 파일 추가';
     add.addEventListener('click', () => fileInput.click());
     filesEl.appendChild(add);
+    if (current) refreshRangeUI();
   }
 
   async function closeDoc(d) {
@@ -1323,6 +1350,7 @@
     const baseOpt = $('selSize').querySelector('option[value="base"]');
     baseOpt.textContent = (d.kind === 'image' || d.results[d.page]) ? '원본 크기' : `기본 (긴 변 ${BASE_LONG}px)`;
     refreshExportUI();
+    refreshRangeUI();
   }
   function refreshExportUI() {
     const fixed = presetDims();
@@ -1340,11 +1368,12 @@
   }
 
   // ── 저장 크기 계산 ────────────────────────────────────
-  async function exportPlan(sizeOverride) {
-    const d = current;
+  async function exportPlan(sizeOverride, doc, pageNo) {
+    const d = doc || current;
+    const page = pageNo || d.page;
     const key = sizeOverride || $('selSize').value;
-    const sz = await pageSize(d, d.page);          // 회전 반영된 페이지 크기
-    const res = d.results[d.page];
+    const sz = await pageSize(d, page);            // 회전 반영된 페이지 크기
+    const res = d.results[page];
     const fixed = presetDims(key);
     // 소스 픽셀 크기(회전 반영): 결과물 캔버스 / 사진 원본 / 벡터 "기본" 렌더 크기
     let srcW, srcH;
@@ -1364,7 +1393,7 @@
     const capped = cap.k < 1;
     tw = cap.w; th = cap.h;
     const vectorDirect = !fixed && !res && d.kind !== 'image';   // 벡터는 목표 크기로 바로 렌더
-    return { d, sz, res, srcW, srcH, tw, th, s, capped, vectorDirect, fixed, key };
+    return { d, page, sz, res, srcW, srcH, tw, th, s, capped, vectorDirect, fixed, key };
   }
 
   async function updateSizeHint() {
@@ -1567,7 +1596,11 @@
     st.textContent = text || '';
   }
 
-  $('btnDoSave').addEventListener('click', () => exportImage({ btnId: 'btnDoSave', progId: 'saveProg', statId: 'saveStat' }));
+  $('btnDoSave').addEventListener('click', () => {
+    if (!current) return;
+    if (saveRange === 'page') exportImage({ btnId: 'btnDoSave', progId: 'saveProg', statId: 'saveStat' });
+    else batchExport(saveRange);
+  });
   $('btnBgSave').addEventListener('click', () => exportImage({ btnId: 'btnBgSave', progId: 'bgSaveProg', statId: 'bgSaveStat', sizeMode: 'base', fmt: 'png', sharp: 0, limit: 0, bg: 'transparent', trim: false }));
   $('btnCopy').addEventListener('click', () => {
     if (!current) return;
@@ -1582,25 +1615,38 @@
       .catch(e => { console.warn(e); showAlert('클립보드 복사에 실패했습니다', '<p>브라우저가 권한을 막았거나 지원하지 않습니다. "저장"으로 내려받아 주세요.</p>'); });
   });
 
+  /** 파일 이름 규칙: 원본이름[-artboardN][-nukki|-transparent][-규격-WxH | -WxH].ext */
+  function exportName(p, enc, trim) {
+    const d = p.d;
+    const parts = [baseName(d.name)];
+    if (d.numPages > 1) parts.push(`artboard${p.page}`);
+    if (p.res) parts.push('nukki');
+    else if (d.transparent && d.kind !== 'image') parts.push('transparent');
+    if (p.fixed) parts.push(p.fixed.tag, `${enc.w}x${enc.h}`);
+    else if (p.key !== 'base' || trim) parts.push(`${enc.w}x${enc.h}`);
+    return `${parts.join('-')}.${enc.ext}`;
+  }
+
   async function exportImage(opts) {
-    if (!current) return;
-    const btn = $(opts.btnId); btn.disabled = true;
-    const P = (r, t) => setProg(opts.progId, opts.statId, r, t);
+    const d0 = opts.doc || current;
+    if (!d0) return;
+    const btn = opts.btnId ? $(opts.btnId) : null; if (btn) btn.disabled = true;
+    const P = opts.P || ((r, t) => setProg(opts.progId, opts.statId, r, t));
     const fmt = opts.fmt || exp.fmt, sharp = opts.sharp ?? exp.sharp, limitKB = opts.limit ?? exp.limit;
     const bg = opts.bg || exp.bg, trim = opts.trim ?? exp.trim;
     try {
-      const p = await exportPlan(opts.sizeMode);
-      const d = p.d;
+      const p = await exportPlan(opts.sizeMode, d0, opts.page);
+      const d = p.d, page = p.page;
       let out;
       if (p.vectorDirect) {
         P(0.2, '렌더링 중…');
         out = makeCanvas(p.tw, p.th);
-        await (await drawSource(d, d.page, p.tw / p.sz.w, out, d.transparent)).promise;
+        await (await drawSource(d, page, p.tw / p.sz.w, out, d.transparent)).promise;
         if (trim) out = trimCanvas(out, exp.pad);
       } else {
         P(0.1, '이미지 준비 중…');
         const long = p.fixed ? Math.min(4096, Math.max(1600, Math.round(Math.max(p.tw, p.th) * 1.6))) : BASE_LONG;
-        let base = await baseCanvas(d, d.page, p.res, long);
+        let base = await baseCanvas(d, page, p.res, long);
         if (trim) base = trimCanvas(base, exp.pad);
         if (p.fixed) base = fitToRatio(base, p.tw, p.th, exp.fit, exp.pos);
         let tw = p.fixed ? p.tw : Math.round(base.width * p.s), th = p.fixed ? p.th : Math.round(base.height * p.s);
@@ -1626,23 +1672,124 @@
       P(0.95, '파일 만드는 중…');
       const enc = await encodeWithLimit(out, fmt, limitKB, P);
       if (!enc.blob) throw new Error('toBlob');
-      if (opts.returnBlob) { P(null, ''); return enc; }
-      const parts = [baseName(d.name)];
-      if (d.numPages > 1) parts.push(`artboard${d.page}`);
-      if (p.res) parts.push('nukki');
-      else if (d.transparent && d.kind !== 'image') parts.push('transparent');
-      if (p.fixed) parts.push(p.fixed.tag, `${enc.w}x${enc.h}`);
-      else if (p.key !== 'base' || trim) parts.push(`${enc.w}x${enc.h}`);
-      download(enc.blob, `${parts.join('-')}.${enc.ext}`);
+      enc.name = exportName(p, enc, trim);
+      if (opts.returnBlob) { if (!opts.P) P(null, ''); return enc; }
+      download(enc.blob, enc.name);
       P(null, `${enc.note}저장 완료 · ${enc.w} × ${enc.h} px · ${fmtSize(enc.blob.size)}`);
       return enc;
     } catch (e) {
+      if (opts.silent) throw e;
       console.error(e);
       P(null, '');
       showAlert('저장에 실패했습니다', '<p>이미지가 너무 크거나 브라우저 메모리가 부족할 수 있습니다. 크기를 한 단계 줄여 다시 시도해 주세요.</p>');
     } finally {
-      btn.disabled = false;
+      if (btn) btn.disabled = false;
     }
+  }
+
+  // ── 일괄 저장 (ZIP) ───────────────────────────────────
+  let saveRange = 'page';
+  let batchCancel = false;
+  seg('segRange', v => { saveRange = v; refreshRangeUI(); });
+  function batchTargets(range, d0) {
+    const t = [];
+    if (range === 'doc') { for (let p = 1; p <= d0.numPages; p++) t.push({ d: d0, p }); }
+    else for (const d of docs) for (let p = 1; p <= d.numPages; p++) t.push({ d, p });
+    return t;
+  }
+  function refreshRangeUI() {
+    if (!current) return;
+    const n = saveRange === 'page' ? 1 : batchTargets(saveRange, current).length;
+    $('btnDoSave').textContent = saveRange === 'page' ? '저장' : `${n}장 ZIP으로 저장`;
+    $('btnCopy').disabled = saveRange !== 'page';
+    $('rangeHint').textContent = saveRange === 'page' ? ''
+      : saveRange === 'doc' ? `이 파일의 아트보드 ${n}개를 같은 설정으로 저장해 ZIP 하나로 묶습니다.`
+      : `열린 파일 ${docs.length}개(아트보드 ${n}장)를 같은 설정으로 저장해 ZIP 하나로 묶습니다.`;
+    const nAll = batchTargets('all', current).length;
+    $('batchNukkiHint').textContent = `위 설정 그대로 열린 파일 ${docs.length}개(아트보드 ${nAll}장)를 처리한 뒤, 투명 PNG를 ZIP 하나로 내려받습니다.`;
+  }
+  $('btnBatchStop').addEventListener('click', () => { batchCancel = true; });
+  $('btnBatchNukkiStop').addEventListener('click', () => { batchCancel = true; });
+
+  async function batchExport(range) {
+    const targets = batchTargets(range, current);
+    const n = targets.length;
+    batchCancel = false;
+    $('btnBatchStop').style.display = '';
+    $('btnDoSave').disabled = true;
+    const entries = [], used = new Set(); let failed = 0;
+    try {
+      for (let i = 0; i < n; i++) {
+        if (batchCancel) break;
+        const { d, p } = targets[i];
+        const label = `${i + 1} / ${n} · ${d.name}${d.numPages > 1 ? ` (아트보드 ${p})` : ''}`;
+        const P = (r, t) => setProg('saveProg', 'saveStat', (i + (r || 0)) / n, `${label}${t ? ' · ' + t : ''}`);
+        try {
+          const enc = await exportImage({ doc: d, page: p, returnBlob: true, silent: true, P });
+          let name = enc.name, k = 2;
+          while (used.has(name)) name = enc.name.replace(/(\.[^.]+)$/, `-${k++}$1`);
+          used.add(name);
+          entries.push({ name, blob: enc.blob });
+        } catch (e) { console.warn('batch item failed', d.name, p, e); failed++; }
+      }
+      if (!entries.length) { setProg('saveProg', 'saveStat', null, batchCancel ? '중지했습니다.' : '저장할 결과가 없습니다.'); return; }
+      setProg('saveProg', 'saveStat', 0.99, 'ZIP으로 묶는 중…');
+      const zip = await makeZip(entries);
+      const zipName = `${range === 'doc' ? baseName(current.name) : 'trinity-export'}-${entries.length}p.zip`;
+      download(zip, zipName);
+      setProg('saveProg', 'saveStat', null, `${batchCancel ? '중지 · ' : ''}ZIP 저장 완료 · ${entries.length}장${failed ? ` (실패 ${failed})` : ''} · ${fmtSize(zip.size)}`);
+    } catch (e) {
+      console.error(e);
+      setProg('saveProg', 'saveStat', null, '');
+      showAlert('일괄 저장에 실패했습니다', '<p>브라우저 메모리가 부족할 수 있습니다. 파일 수나 크기를 줄여 다시 시도해 주세요.</p>');
+    } finally {
+      $('btnBatchStop').style.display = 'none';
+      $('btnDoSave').disabled = false;
+    }
+  }
+
+  /** 압축 없이(store) 담는 ZIP 생성. PNG·JPG는 이미 압축되어 있어 충분하다 */
+  const CRC_TABLE = (() => {
+    const t = new Uint32Array(256);
+    for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1); t[n] = c >>> 0; }
+    return t;
+  })();
+  function crc32(u8) {
+    let c = 0xFFFFFFFF;
+    for (let i = 0; i < u8.length; i++) c = CRC_TABLE[(c ^ u8[i]) & 0xFF] ^ (c >>> 8);
+    return (c ^ 0xFFFFFFFF) >>> 0;
+  }
+  async function makeZip(entries) {
+    const te = new TextEncoder();
+    const parts = [], central = [];
+    let offset = 0;
+    const now = new Date();
+    const dosTime = (now.getHours() << 11) | (now.getMinutes() << 5) | (now.getSeconds() >> 1);
+    const dosDate = ((now.getFullYear() - 1980) << 9) | ((now.getMonth() + 1) << 5) | now.getDate();
+    for (const e of entries) {
+      const data = new Uint8Array(await e.blob.arrayBuffer());
+      const name = te.encode(e.name);
+      const crc = crc32(data);
+      const lh = new DataView(new ArrayBuffer(30));
+      lh.setUint32(0, 0x04034b50, true); lh.setUint16(4, 20, true); lh.setUint16(6, 0x0800, true); lh.setUint16(8, 0, true);
+      lh.setUint16(10, dosTime, true); lh.setUint16(12, dosDate, true); lh.setUint32(14, crc, true);
+      lh.setUint32(18, data.length, true); lh.setUint32(22, data.length, true); lh.setUint16(26, name.length, true); lh.setUint16(28, 0, true);
+      parts.push(lh.buffer, name, data);
+      const ch = new DataView(new ArrayBuffer(46));
+      ch.setUint32(0, 0x02014b50, true); ch.setUint16(4, 20, true); ch.setUint16(6, 20, true); ch.setUint16(8, 0x0800, true); ch.setUint16(10, 0, true);
+      ch.setUint16(12, dosTime, true); ch.setUint16(14, dosDate, true); ch.setUint32(16, crc, true);
+      ch.setUint32(20, data.length, true); ch.setUint32(24, data.length, true); ch.setUint16(28, name.length, true);
+      ch.setUint16(30, 0, true); ch.setUint16(32, 0, true); ch.setUint16(34, 0, true); ch.setUint16(36, 0, true); ch.setUint32(38, 0, true); ch.setUint32(42, offset, true);
+      central.push(ch.buffer, name);
+      offset += 30 + name.length + data.length;
+      await yieldFrame();
+    }
+    const cdSize = central.reduce((a, b) => a + b.byteLength, 0);
+    const eocd = new DataView(new ArrayBuffer(22));
+    eocd.setUint32(0, 0x06054b50, true); eocd.setUint16(4, 0, true); eocd.setUint16(6, 0, true);
+    eocd.setUint16(8, entries.length, true); eocd.setUint16(10, entries.length, true);
+    eocd.setUint32(12, cdSize, true); eocd.setUint32(16, offset, true); eocd.setUint16(20, 0, true);
+    return new Blob([...parts, ...central, eocd.buffer], { type: 'application/zip' });
   }
 
   $('btnPdf').addEventListener('click', () => {
@@ -1810,30 +1957,77 @@
     $('bgPanel').classList.add('show'); $('btnBg').classList.add('on');
   });
 
+  /** 단색 배경 제거를 (문서, 페이지)에 적용하고 결과를 저장. 반환: 투명 처리 비율 */
+  async function runChroma(d, p, P) {
+    P(0.1, '배경 분석 중…');
+    const src = d.results[p] ? d.results[p].canvas : await sourceCanvas(d, p);
+    const sctx = src.getContext('2d', { willReadFrequently: true });
+    const img = sctx.getImageData(0, 0, src.width, src.height);
+    await yieldFrame();
+    const tol = parseInt($('rngTol').value, 10);
+    const inner = $('chkInner').checked;
+    const removed = await chromaRemove(img, { tol, inner, ref: refColor }, (r) => P(0.1 + r * 0.85, `배경 제거 중 ${Math.round(r * 100)}%`));
+    const out = makeCanvas(img.width, img.height);
+    out.getContext('2d').putImageData(removed.data, 0, 0);
+    d.results[p] = { canvas: out, label: '단색 배경 제거' };
+    return removed.ratio;
+  }
   $('btnChroma').addEventListener('click', async () => {
     if (!current) return;
     const btn = $('btnChroma'); btn.disabled = true;
-    setProg('bgProg', 'bgStat', 0.1, '배경 분석 중…');
     try {
       const d = current, p = d.page;
-      const src = d.results[p] ? d.results[p].canvas : await sourceCanvas(d, p);
-      const sctx = src.getContext('2d', { willReadFrequently: true });
-      const img = sctx.getImageData(0, 0, src.width, src.height);
-      await yieldFrame();
-      const tol = parseInt($('rngTol').value, 10);
-      const inner = $('chkInner').checked;
-      const removed = await chromaRemove(img, { tol, inner, ref: refColor }, (r) => setProg('bgProg', 'bgStat', 0.1 + r * 0.85, `배경 제거 중 ${Math.round(r * 100)}%`));
-      const out = makeCanvas(img.width, img.height);
-      out.getContext('2d').putImageData(removed.data, 0, 0);
-      setResult(d, p, out, '단색 배경 제거');
-      setProg('bgProg', 'bgStat', null, `완료 · 전체의 ${Math.round(removed.ratio * 100)}%를 투명 처리`);
-      if (removed.ratio < 0.02) showAlert('지워진 영역이 거의 없습니다', '<p>허용 오차를 올리거나, "이미지에서 선택"으로 배경색을 직접 지정해 보세요. 사진처럼 배경이 복잡하면 AI 누끼를 쓰세요.</p>', 'info');
+      const ratio = await runChroma(d, p, (r, t) => setProg('bgProg', 'bgStat', r, t));
+      syncPanels(); renderPage();
+      setProg('bgProg', 'bgStat', null, `완료 · 전체의 ${Math.round(ratio * 100)}%를 투명 처리`);
+      if (ratio < 0.02) showAlert('지워진 영역이 거의 없습니다', '<p>허용 오차를 올리거나, "이미지에서 선택"으로 배경색을 직접 지정해 보세요. 사진처럼 배경이 복잡하면 AI 누끼를 쓰세요.</p>', 'info');
     } catch (e) {
       console.error(e);
       setProg('bgProg', 'bgStat', null, '');
       showAlert('배경 제거에 실패했습니다', '<p>이미지가 너무 크거나 메모리가 부족할 수 있습니다.</p>');
     } finally { btn.disabled = false; }
   });
+
+  /** 열린 모든 파일·아트보드에 누끼를 적용하고 투명 PNG ZIP으로 저장 */
+  async function batchNukki(kind) {
+    if (!current) return;
+    const targets = batchTargets('all', current), n = targets.length;
+    batchCancel = false;
+    $('btnBatchChroma').disabled = true; $('btnBatchAI').disabled = true;
+    $('btnBatchNukkiStop').style.display = '';
+    const entries = [], used = new Set(); let failed = 0;
+    try {
+      for (let i = 0; i < n; i++) {
+        if (batchCancel) break;
+        const { d, p } = targets[i];
+        const label = `${i + 1} / ${n} · ${d.name}${d.numPages > 1 ? ` (아트보드 ${p})` : ''}`;
+        const P = (r, t) => setProg('batchProg', 'batchStat', (i + (r || 0) * 0.85) / n, `${label}${t ? ' · ' + t : ''}`);
+        try {
+          if (kind === 'ai') await runAI(d, p, P); else await runChroma(d, p, P);
+          if (d === current && p === current.page) { syncPanels(); renderPage(); }
+          const enc = await exportImage({ doc: d, page: p, sizeMode: 'base', fmt: 'png', limit: 0, bg: 'transparent', trim: false, sharp: 0, returnBlob: true, silent: true, P: (r, t) => P(0.85 + (r || 0) * 0.15, t) });
+          let name = enc.name, k = 2;
+          while (used.has(name)) name = enc.name.replace(/(\.[^.]+)$/, `-${k++}$1`);
+          used.add(name);
+          entries.push({ name, blob: enc.blob });
+        } catch (e) { console.warn('batch nukki failed', d.name, p, e); failed++; }
+      }
+      if (!entries.length) { setProg('batchProg', 'batchStat', null, batchCancel ? '중지했습니다.' : '처리된 결과가 없습니다.'); return; }
+      setProg('batchProg', 'batchStat', 0.99, 'ZIP으로 묶는 중…');
+      const zip = await makeZip(entries);
+      download(zip, `nukki-${entries.length}p.zip`);
+      setProg('batchProg', 'batchStat', null, `${batchCancel ? '중지 · ' : ''}ZIP 저장 완료 · ${entries.length}장${failed ? ` (실패 ${failed})` : ''} · ${fmtSize(zip.size)}`);
+    } catch (e) {
+      console.error(e);
+      setProg('batchProg', 'batchStat', null, '');
+      showAlert('일괄 누끼에 실패했습니다', '<p>브라우저 메모리가 부족할 수 있습니다. 파일 수를 줄여 다시 시도해 주세요.</p>');
+    } finally {
+      $('btnBatchChroma').disabled = false; $('btnBatchAI').disabled = false;
+      $('btnBatchNukkiStop').style.display = 'none';
+    }
+  }
+  $('btnBatchChroma').addEventListener('click', () => batchNukki('chroma'));
+  $('btnBatchAI').addEventListener('click', () => batchNukki('ai'));
 
   /**
    * 단색 배경 제거: 기준색과의 거리로 알파를 만든다.
@@ -1914,42 +2108,47 @@
 
   // AI 누끼
   let bgrmModule = null;
+  /** AI 누끼를 (문서, 페이지)에 적용하고 결과를 저장 */
+  async function runAI(d, p, P) {
+    P(0.02, '이미지 준비 중…');
+    const src = d.results[p] ? d.results[p].canvas : await sourceCanvas(d, p, { forAI: true });
+    const blob = await new Promise(res => src.toBlob(res, 'image/png'));
+    P(0.05, 'AI 모듈 불러오는 중…');
+    if (!bgrmModule) bgrmModule = await import(/* @vite-ignore */ BGRM_URL);
+    const fetched = {};
+    const progress = (key, cur, total) => {
+      if (key.startsWith('fetch:')) {
+        fetched[key] = [cur, total];
+        let c = 0, t = 0; for (const k in fetched) { c += fetched[k][0]; t += fetched[k][1]; }
+        const r = t ? c / t : 0;
+        P(0.05 + r * 0.45, `모델 내려받는 중 ${Math.round(r * 100)}% (${fmtSize(c)} / ${fmtSize(t)})`);
+      } else {
+        P(0.55 + (total ? cur / total : 0.5) * 0.4, 'AI가 배경을 분리하는 중… (기기에 따라 최대 1분)');
+      }
+    };
+    const cfg = { model: 'isnet_quint8', progress, output: { format: 'image/png', quality: 1 } };
+    let out;
+    try {
+      if (navigator.gpu) out = await bgrmModule.removeBackground(blob, { ...cfg, device: 'gpu' });
+      else out = await bgrmModule.removeBackground(blob, cfg);
+    } catch (e) {
+      console.warn('gpu 경로 실패, cpu로 재시도', e);
+      out = await bgrmModule.removeBackground(blob, cfg);
+    }
+    const bmp = await createImageBitmap(out);
+    const c = makeCanvas(bmp.width, bmp.height);
+    c.getContext('2d').drawImage(bmp, 0, 0);
+    bmp.close();
+    d.results[p] = { canvas: c, label: 'AI 누끼' };
+  }
   $('btnAI').addEventListener('click', async () => {
     if (!current) return;
     const btn = $('btnAI'); btn.disabled = true;
     const d = current, p = d.page;
     try {
-      setProg('bgProg', 'bgStat', 0.02, '이미지 준비 중…');
-      const src = d.results[p] ? d.results[p].canvas : await sourceCanvas(d, p, { forAI: true });
-      const blob = await new Promise(res => src.toBlob(res, 'image/png'));
-      setProg('bgProg', 'bgStat', 0.05, 'AI 모듈 불러오는 중…');
-      if (!bgrmModule) bgrmModule = await import(/* @vite-ignore */ BGRM_URL);
-      const fetched = {};
-      const progress = (key, cur, total) => {
-        if (key.startsWith('fetch:')) {
-          fetched[key] = [cur, total];
-          let c = 0, t = 0; for (const k in fetched) { c += fetched[k][0]; t += fetched[k][1]; }
-          const r = t ? c / t : 0;
-          setProg('bgProg', 'bgStat', 0.05 + r * 0.45, `모델 내려받는 중 ${Math.round(r * 100)}% (${fmtSize(c)} / ${fmtSize(t)})`);
-        } else {
-          setProg('bgProg', 'bgStat', 0.55 + (total ? cur / total : 0.5) * 0.4, 'AI가 배경을 분리하는 중… (기기에 따라 최대 1분)');
-        }
-      };
-      const cfg = { model: 'isnet_quint8', progress, output: { format: 'image/png', quality: 1 } };
-      let out;
-      try {
-        if (navigator.gpu) out = await bgrmModule.removeBackground(blob, { ...cfg, device: 'gpu' });
-        else out = await bgrmModule.removeBackground(blob, cfg);
-      } catch (e) {
-        console.warn('gpu 경로 실패, cpu로 재시도', e);
-        out = await bgrmModule.removeBackground(blob, cfg);
-      }
-      const bmp = await createImageBitmap(out);
-      const c = makeCanvas(bmp.width, bmp.height);
-      c.getContext('2d').drawImage(bmp, 0, 0);
-      bmp.close();
-      setResult(d, p, c, 'AI 누끼');
-      setProg('bgProg', 'bgStat', null, '완료 · 결과는 "이미지 저장"에서 PNG로 내려받으세요');
+      await runAI(d, p, (r, t) => setProg('bgProg', 'bgStat', r, t));
+      syncPanels(); renderPage();
+      setProg('bgProg', 'bgStat', null, '완료 · "투명 PNG로 저장"을 누르거나 4K·규격 저장으로 넘어가세요');
     } catch (e) {
       console.error(e);
       setProg('bgProg', 'bgStat', null, '');
