@@ -277,6 +277,19 @@
       background-position: 0 0, 0 8px, 8px -8px, -8px 0;
     }
     .sheet canvas { display: block; }
+    .sheet { overflow: hidden; }
+    #cropBox {
+      position: absolute; display: none; box-sizing: border-box;
+      border: 2px solid var(--violet); box-shadow: 0 0 0 9999px rgba(22,14,46,.42);
+      cursor: grab; touch-action: none; z-index: 2;
+    }
+    #cropBox:active { cursor: grabbing; }
+    #cropBox::after {
+      content: attr(data-label); position: absolute; left: 6px; top: 6px;
+      background: var(--violet); color: #fff; font-size: 11px; font-weight: 700;
+      padding: 2px 7px; border-radius: 6px; white-space: nowrap;
+    }
+    #trimBox { position: absolute; display: none; box-sizing: border-box; border: 1.5px dashed var(--lavender); pointer-events: none; z-index: 1; }
     .sheet .loading {
       position: absolute; inset: 0; display: none; align-items: center; justify-content: center;
       background: rgba(255,255,255,.55); font-size: 13px; color: var(--violet); font-weight: 600;
@@ -333,6 +346,16 @@
     .panel .progress.show { display: block; }
     .panel .pstat { font-size: 12px; color: var(--ink-60); margin-top: 6px; min-height: 16px; }
     .panel .btn-full { width: 100%; }
+    .panel input[type="number"] {
+      width: 88px; height: 34px; padding: 0 8px; border-radius: 8px; border: 1px solid var(--border);
+      background: var(--white); color: var(--ink); font-size: 13.5px;
+    }
+    .panel input[type="color"] {
+      width: 40px; height: 32px; padding: 2px; border: 1px solid var(--border); border-radius: 8px; background: var(--white); cursor: pointer;
+    }
+    .panel .seg.four button { padding: 0 4px; font-size: 12.5px; }
+    .panel .inline.gap { gap: 8px; margin-top: 8px; }
+    .panel .inline .btn { flex: 1; }
 
     /* Alert / toast */
     .alert {
@@ -434,7 +457,7 @@
   <div class="modes" id="modes" role="group" aria-label="작업 선택">
     <button type="button" data-mode="view" aria-pressed="true"><svg viewBox="0 0 24 24"><path d="M12 5C7 5 3 8.6 1.5 12 3 15.4 7 19 12 19s9-3.6 10.5-7C21 8.6 17 5 12 5Zm0 11.5a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9Zm0-7a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5Z"/></svg><span>파일 보기</span></button>
     <button type="button" data-mode="bg" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Zm0 2a7 7 0 0 1 5.6 11.2L7.8 6.4A6.97 6.97 0 0 1 12 5Zm-5.6 2.8 9.8 9.8A7 7 0 0 1 6.4 7.8Z"/></svg><span>누끼</span></button>
-    <button type="button" data-mode="up" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M4 4h6v2H7.4l4.3 4.3-1.4 1.4L6 7.4V10H4V4Zm10 0h6v6h-2V7.4l-4.3 4.3-1.4-1.4L16.6 6H14V4ZM4 14h2v2.6l4.3-4.3 1.4 1.4L7.4 18H10v2H4v-6Zm14.6 4-4.3-4.3 1.4-1.4 4.3 4.3V14h2v6h-6v-2h2.6Z"/></svg><span>4K 저장</span></button>
+    <button type="button" data-mode="up" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M4 4h6v2H7.4l4.3 4.3-1.4 1.4L6 7.4V10H4V4Zm10 0h6v6h-2V7.4l-4.3 4.3-1.4-1.4L16.6 6H14V4ZM4 14h2v2.6l4.3-4.3 1.4 1.4L7.4 18H10v2H4v-6Zm14.6 4-4.3-4.3 1.4-1.4 4.3 4.3V14h2v6h-6v-2h2.6Z"/></svg><span>4K·규격 저장</span></button>
   </div>
   <div class="spacer"></div>
   <div class="privacy" title="파일은 이 브라우저 안에서만 처리되며 서버로 전송되지 않습니다.">
@@ -477,8 +500,8 @@
         <button class="mode-card" type="button" data-pick="up">
           <span class="ico"><svg viewBox="0 0 24 24"><path d="M4 4h6v2H7.4l4.3 4.3-1.4 1.4L6 7.4V10H4V4Zm10 0h6v6h-2V7.4l-4.3 4.3-1.4-1.4L16.6 6H14V4ZM4 14h2v2.6l4.3-4.3 1.4 1.4L7.4 18H10v2H4v-6Zm14.6 4-4.3-4.3 1.4-1.4 4.3 4.3V14h2v6h-6v-2h2.6Z"/></svg></span>
           <span class="step">03</span>
-          <h2>4K 고해상도 저장</h2>
-          <p>사진은 원본 그대로 Lanczos-3로 키우고,<br>AI 파일은 벡터에서 바로 렌더링해<br>4K 이상 크기로 뽑습니다.</p>
+          <h2>4K·규격 저장</h2>
+          <p>4K 고해상도로 키우거나,<br>카톡·인스타 규격에 맞춰 자르고<br>여백·배경·용량까지 정해 저장합니다.</p>
           <span class="fmt">JPG · PNG · .ai · .pdf · SVG</span>
           <span class="go">파일 선택 <svg viewBox="0 0 24 24"><path d="M8.6 16.6 10 18l6-6-6-6-1.4 1.4 4.6 4.6-4.6 4.6Z"/></svg></span>
         </button>
@@ -530,7 +553,7 @@
         </button>
         <button class="btn btn-ghost btn-sm" id="btnSave" type="button" title="4K 고해상도 저장">
           <svg viewBox="0 0 24 24"><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2Zm0 16H5v-2.6l3.5-3.5 2.5 2.5 5-5 3 3V19Zm0-8.4-3-3-5 5-2.5-2.5L5 13.6V5h14v5.6ZM8.5 10A1.5 1.5 0 1 0 8.5 7a1.5 1.5 0 0 0 0 3Z"/></svg>
-          <span class="txt">4K 저장</span>
+          <span class="txt">4K·규격</span>
         </button>
         <button class="btn btn-ghost btn-sm" id="btnPdf" type="button" title="이 파일을 PDF로 저장 (다른 사람에게 보낼 때)">
           <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6Zm-1 7V3.5L18.5 9H13Zm-5 4h1.5a1.75 1.75 0 0 1 0 3.5H9V18H8v-5Zm1 2.5h.5a.75.75 0 0 0 0-1.5H9v1.5ZM12 13h1.6c1.4 0 2.2.9 2.2 2.5S15 18 13.6 18H12v-5Zm1 4h.5c.8 0 1.2-.5 1.2-1.5S14.3 14 13.5 14H13v3Zm3.7-4H19v1h-1.3v1H19v1h-1.3v2h-1V13Z"/></svg>
@@ -542,6 +565,8 @@
         <div class="stage-inner">
           <div class="sheet" id="sheet">
             <canvas id="canvas"></canvas>
+            <div id="trimBox"></div>
+            <div id="cropBox" data-label="저장 영역"></div>
             <div class="loading" id="loadingLbl">렌더링 중…</div>
           </div>
         </div>
@@ -553,26 +578,102 @@
       <aside class="dock" id="dock">
       <!-- 이미지 저장 패널 -->
       <div class="panel" id="savePanel">
-        <h4><span id="saveTitle">4K 고해상도 저장</span> <button class="x" type="button" data-close="savePanel" aria-label="닫기">×</button></h4>
-        <p class="lead" id="saveLead">크기와 형식을 고르고 저장을 누르세요. 벡터 파일은 어떤 크기든 화질 손실이 없습니다.</p>
+        <h4><span id="saveTitle">4K·규격 저장</span> <button class="x" type="button" data-close="savePanel" aria-label="닫기">×</button></h4>
+        <p class="lead" id="saveLead">용도를 고르면 크기와 비율이 맞춰집니다. 벡터 파일은 어떤 크기든 화질 손실이 없습니다.</p>
+
         <div class="row">
-          <label class="lbl" for="selSize">크기</label>
+          <label class="lbl" for="selSize">용도 · 크기</label>
           <select id="selSize">
-            <option value="base">기본</option>
-            <option value="fit4k">4K에 맞춤 (3840×2160 안에 최대)</option>
-            <option value="long4k">긴 변 3840px</option>
-            <option value="x2">×2</option>
-            <option value="x4">×4</option>
+            <optgroup label="크기만 조정">
+              <option value="base">기본</option>
+              <option value="fit4k">4K에 맞춤 (3840×2160 안에 최대)</option>
+              <option value="long4k">긴 변 3840px</option>
+              <option value="x2">×2</option>
+              <option value="x4">×4</option>
+            </optgroup>
+            <optgroup label="카카오톡">
+              <option value="og">링크 미리보기(OG) 1200×630</option>
+              <option value="kakao_basic">채널 메시지 기본 800×800</option>
+              <option value="kakao_wide">채널 메시지 와이드 800×400</option>
+            </optgroup>
+            <optgroup label="인스타그램">
+              <option value="ig_portrait">피드 세로 1080×1350</option>
+              <option value="ig_square">피드 정사각 1080×1080</option>
+              <option value="ig_story">스토리·릴스 1080×1920</option>
+            </optgroup>
+            <optgroup label="기타">
+              <option value="yt">유튜브 썸네일 1280×720</option>
+              <option value="ppt">PPT·모니터 16:9 1920×1080</option>
+              <option value="custom">직접 입력…</option>
+            </optgroup>
           </select>
+          <div class="inline" id="rowCustom" style="display:none">
+            <input type="number" id="inW" min="16" max="8192" value="1200" aria-label="가로 px"> <span class="hint">×</span>
+            <input type="number" id="inH" min="16" max="8192" value="630" aria-label="세로 px"> <span class="hint">px</span>
+          </div>
           <p class="hint" id="sizeHint"></p>
         </div>
+
+        <div class="row" id="rowFit">
+          <label class="lbl">비율 맞춤</label>
+          <div class="seg" id="segFit">
+            <button type="button" data-v="fill" aria-pressed="true">잘라서 채움</button>
+            <button type="button" data-v="pad" aria-pressed="false">여백 두고 맞춤</button>
+          </div>
+          <div class="range-row" id="rowPos">
+            <span>자를 위치</span>
+            <input type="range" id="rngPos" min="0" max="100" value="50">
+            <output id="outPos" style="min-width:44px">가운데</output>
+          </div>
+          <p class="hint" id="fitHint">미리보기의 보라색 틀을 끌어서 자를 위치를 바꿀 수 있습니다.</p>
+        </div>
+
         <div class="row">
-          <label class="lbl">형식</label>
-          <div class="seg" id="segFmt">
-            <button type="button" data-v="png" aria-pressed="true">PNG (투명 유지)</button>
-            <button type="button" data-v="jpg" aria-pressed="false">JPG (흰 배경)</button>
+          <label class="lbl">여백 · 배경</label>
+          <label class="check"><input type="checkbox" id="chkTrim"> 빈 여백 자동 잘라내기 (투명·단색 테두리)</label>
+          <div class="range-row" id="rowPad" style="display:none">
+            <span>남길 여백</span>
+            <input type="range" id="rngPad" min="0" max="25" value="5">
+            <output id="outPad">5%</output>
+          </div>
+          <div class="seg four" id="segBg">
+            <button type="button" data-v="transparent" aria-pressed="true">투명</button>
+            <button type="button" data-v="white" aria-pressed="false">흰색</button>
+            <button type="button" data-v="purple" aria-pressed="false">퍼플</button>
+            <button type="button" data-v="custom" aria-pressed="false">직접</button>
+          </div>
+          <div class="inline" id="rowBgColor" style="display:none">
+            <input type="color" id="inBgColor" value="#4A1BD0"> <span class="hint">배경색 선택</span>
           </div>
         </div>
+
+        <div class="row">
+          <label class="lbl">방향</label>
+          <div class="seg four" id="segOrient">
+            <button type="button" data-v="rotl" title="왼쪽으로 90° 회전">↺ 90°</button>
+            <button type="button" data-v="rotr" title="오른쪽으로 90° 회전">↻ 90°</button>
+            <button type="button" data-v="fliph" title="좌우 반전">좌우 반전</button>
+            <button type="button" data-v="flipv" title="상하 반전">상하 반전</button>
+          </div>
+        </div>
+
+        <div class="row">
+          <label class="lbl">형식 · 용량</label>
+          <div class="seg" id="segFmt">
+            <button type="button" data-v="png" aria-pressed="true">PNG</button>
+            <button type="button" data-v="jpg" aria-pressed="false">JPG</button>
+            <button type="button" data-v="webp" aria-pressed="false">WebP</button>
+          </div>
+          <select id="selLimit">
+            <option value="0">용량 제한 없음</option>
+            <option value="300">300KB 이하 (카톡 메시지·썸네일)</option>
+            <option value="1000">1MB 이하</option>
+            <option value="2000">2MB 이하</option>
+            <option value="5000">5MB 이하</option>
+          </select>
+          <p class="hint" id="fmtHint">PNG·WebP는 투명 배경을 유지합니다. JPG는 배경을 흰색(또는 선택한 색)으로 채웁니다.</p>
+        </div>
+
         <div class="row" id="rowSharp">
           <label class="lbl">선명도 보정 <span style="font-weight:500;letter-spacing:0;text-transform:none;color:var(--ink-40)">(사진 확대 시)</span></label>
           <div class="seg" id="segSharp">
@@ -581,7 +682,11 @@
             <button type="button" data-v="0.7" aria-pressed="false">강하게</button>
           </div>
         </div>
-        <button class="btn btn-primary btn-full" id="btnDoSave" type="button">이미지 저장</button>
+
+        <div class="inline gap">
+          <button class="btn btn-primary" id="btnDoSave" type="button">저장</button>
+          <button class="btn btn-ghost" id="btnCopy" type="button" title="PNG로 클립보드에 복사 (카톡·PPT에 붙여넣기)">클립보드 복사</button>
+        </div>
         <div class="progress" id="saveProg"><i></i></div>
         <div class="pstat" id="saveStat"></div>
       </div>
@@ -753,7 +858,7 @@
   async function loadDoc(file) {
     const bytes = await file.arrayBuffer();
     const kind = sniff(bytes);
-    const base = { id: nextId++, name: file.name, size: file.size, page: 1, zoom: 'fit', thumbs: [], transparent: false, results: {}, meta: null };
+    const base = { id: nextId++, name: file.name, size: file.size, page: 1, zoom: 'fit', thumbs: [], transparent: false, results: {}, meta: null, rot: 0, flipH: false, flipV: false };
 
     if (kind === 'pdf') {
       // pdf.js는 전달한 버퍼를 워커로 넘겨 버리므로 원본은 복사본을 보관한다.
@@ -883,11 +988,30 @@
 
   /** 페이지 크기(scale 1 기준) */
   async function pageSize(d, p) {
-    if (d.kind !== 'pdf') return { w: d.w0, h: d.h0 };
-    if (p === 1) return { w: d.w0, h: d.h0 };
-    const page = await d.pdf.getPage(p);
-    const vp = page.getViewport({ scale: 1 });
-    return { w: vp.width, h: vp.height };
+    let w = d.w0, h = d.h0;
+    if (d.kind === 'pdf' && p !== 1) {
+      const page = await d.pdf.getPage(p);
+      const vp = page.getViewport({ scale: 1 });
+      w = vp.width; h = vp.height;
+    }
+    return orientedDims(w, h, d);
+  }
+  const orientedDims = (w, h, d) => (d.rot % 180) ? { w: h, h: w } : { w, h };
+
+  /** 회전·반전을 적용해 img를 (W×H) 출력 캔버스에 꽉 채워 그린다. W,H는 회전이 반영된 출력 크기 */
+  function drawOriented(c, img, W, H, d) {
+    c.save();
+    c.setTransform(1, 0, 0, 1, 0, 0);
+    if (d.flipH) { c.translate(W, 0); c.scale(-1, 1); }
+    if (d.flipV) { c.translate(0, H); c.scale(1, -1); }
+    c.imageSmoothingEnabled = true; c.imageSmoothingQuality = 'high';
+    switch (d.rot || 0) {
+      case 90: c.translate(W, 0); c.rotate(Math.PI / 2); c.drawImage(img, 0, 0, H, W); break;
+      case 180: c.translate(W, H); c.rotate(Math.PI); c.drawImage(img, 0, 0, W, H); break;
+      case 270: c.translate(0, H); c.rotate(-Math.PI / 2); c.drawImage(img, 0, 0, H, W); break;
+      default: c.drawImage(img, 0, 0, W, H);
+    }
+    c.restore();
   }
 
   /**
@@ -895,23 +1019,29 @@
    * pdf는 page.render, image/svg는 drawImage. 반환: {canvas, task?}
    */
   async function drawSource(d, p, scale, targetCanvas, transparent, pixelRatio = 1) {
+    const W = targetCanvas.width, H = targetCanvas.height;
     if (d.kind === 'pdf') {
       const page = await d.pdf.getPage(p);
-      const vp = page.getViewport({ scale });
-      const task = page.render({
+      const vp = page.getViewport({ scale, rotation: (page.rotate + (d.rot || 0)) % 360 });
+      const pr = pixelRatio;
+      // 반전은 출력 공간의 기본 변환 행렬로 처리
+      let transform = null;
+      if (d.flipH && d.flipV) transform = [-pr, 0, 0, -pr, W, H];
+      else if (d.flipH) transform = [-pr, 0, 0, pr, W, 0];
+      else if (d.flipV) transform = [pr, 0, 0, -pr, 0, H];
+      else if (pr !== 1) transform = [pr, 0, 0, pr, 0, 0];
+      return page.render({
         canvasContext: targetCanvas.getContext('2d'),
         viewport: vp,
-        transform: pixelRatio !== 1 ? [pixelRatio, 0, 0, pixelRatio, 0, 0] : null,
+        transform,
         background: transparent ? 'rgba(0,0,0,0)' : 'rgb(255,255,255)',
       });
-      return task;
     }
     const c = targetCanvas.getContext('2d');
     c.setTransform(1, 0, 0, 1, 0, 0);
-    c.clearRect(0, 0, targetCanvas.width, targetCanvas.height);
-    if (!transparent && d.kind === 'svg') { c.fillStyle = '#fff'; c.fillRect(0, 0, targetCanvas.width, targetCanvas.height); }
-    c.imageSmoothingEnabled = true; c.imageSmoothingQuality = 'high';
-    c.drawImage(d.img, 0, 0, targetCanvas.width, targetCanvas.height);
+    c.clearRect(0, 0, W, H);
+    if (!transparent && d.kind === 'svg') { c.fillStyle = '#fff'; c.fillRect(0, 0, W, H); }
+    drawOriented(c, d.img, W, H, d);
     return { promise: Promise.resolve(), cancel() {} };
   }
 
@@ -999,8 +1129,7 @@
       if (result) {
         ctx.setTransform(1, 0, 0, 1, 0, 0);
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
-        ctx.drawImage(result.canvas, 0, 0, canvas.width, canvas.height);
+        drawOriented(ctx, result.canvas, canvas.width, canvas.height, d);
       } else {
         renderTask = await drawSource(d, d.page, scale, canvas, d.transparent, dpr);
         await renderTask.promise;
@@ -1013,6 +1142,7 @@
     }
     if (seq !== renderSeq) return;
     renderInfo(d, sz);
+    updateOverlay();
   }
 
   function renderInfo(d, sz) {
@@ -1136,10 +1266,53 @@
   }
   function segValue(id) { return $(id).querySelector('button[aria-pressed="true"]').dataset.v; }
 
-  let saveFmt = 'png', saveSharp = 0;
-  seg('segFmt', v => { saveFmt = v; });
-  seg('segSharp', v => { saveSharp = parseFloat(v); });
-  $('selSize').addEventListener('change', updateSizeHint);
+  // ── 저장·내보내기 옵션 ────────────────────────────────
+  const PRESETS = {
+    base: { kind: 'scale' }, fit4k: { kind: 'scale' }, long4k: { kind: 'scale' }, x2: { kind: 'scale' }, x4: { kind: 'scale' },
+    og: { w: 1200, h: 630, tag: 'og' }, kakao_basic: { w: 800, h: 800, tag: 'kakao' }, kakao_wide: { w: 800, h: 400, tag: 'kakao-wide' },
+    ig_portrait: { w: 1080, h: 1350, tag: 'insta' }, ig_square: { w: 1080, h: 1080, tag: 'square' }, ig_story: { w: 1080, h: 1920, tag: 'story' },
+    yt: { w: 1280, h: 720, tag: 'youtube' }, ppt: { w: 1920, h: 1080, tag: '16x9' }, custom: { custom: true, tag: 'custom' },
+  };
+  const BRAND_PURPLE = '#4A1BD0';
+  const exp = { fit: 'fill', pos: 50, trim: false, pad: 5, bg: 'transparent', bgColor: BRAND_PURPLE, fmt: 'png', limit: 0, sharp: 0 };
+  const clampInt = (v, lo, hi, dflt) => { const n = parseInt(v, 10); return Number.isFinite(n) ? Math.min(hi, Math.max(lo, n)) : dflt; };
+
+  /** 고정 규격이면 {w,h,tag}, 크기만 조정이면 null */
+  function presetDims(key) {
+    const k = key || $('selSize').value, p = PRESETS[k] || PRESETS.base;
+    if (p.kind === 'scale') return null;
+    if (p.custom) return { w: clampInt($('inW').value, 16, 8192, 1200), h: clampInt($('inH').value, 16, 8192, 630), tag: 'custom' };
+    return p;
+  }
+
+  seg('segFit', v => { exp.fit = v; refreshExportUI(); });
+  seg('segBg', v => { exp.bg = v; refreshExportUI(); });
+  seg('segFmt', v => { exp.fmt = v; refreshExportUI(); });
+  seg('segSharp', v => { exp.sharp = parseFloat(v); });
+  $('selLimit').addEventListener('change', () => { exp.limit = parseInt($('selLimit').value, 10) || 0; });
+  $('chkTrim').addEventListener('change', () => { exp.trim = $('chkTrim').checked; refreshExportUI(); });
+  $('rngPad').addEventListener('input', () => { exp.pad = parseInt($('rngPad').value, 10); $('outPad').textContent = `${exp.pad}%`; updateOverlay(); });
+  $('rngPos').addEventListener('input', () => { exp.pos = parseInt($('rngPos').value, 10); updatePosLabel(); updateOverlay(); });
+  $('inBgColor').addEventListener('input', () => { exp.bgColor = $('inBgColor').value; });
+  ['inW', 'inH'].forEach(id => $(id).addEventListener('input', refreshExportUI));
+  $('selSize').addEventListener('change', refreshExportUI);
+  function updatePosLabel() {
+    const v = exp.pos;
+    $('outPos').textContent = v === 50 ? '가운데' : v === 0 ? '시작' : v === 100 ? '끝' : `${v}%`;
+  }
+
+  // 회전·반전은 문서 상태로 저장되어 화면·저장에 함께 적용
+  $('segOrient').addEventListener('click', async (e) => {
+    const b = e.target.closest('button'); if (!b || !current) return;
+    const d = current;
+    if (b.dataset.v === 'rotl') d.rot = ((d.rot || 0) + 270) % 360;
+    else if (b.dataset.v === 'rotr') d.rot = ((d.rot || 0) + 90) % 360;
+    else if (b.dataset.v === 'fliph') d.flipH = !d.flipH;
+    else d.flipV = !d.flipV;
+    await renderPage();
+    buildThumbs(d);
+    updateSizeHint();
+  });
 
   /** 현재 문서·옵션에 맞춰 패널 표시를 갱신 */
   function syncPanels() {
@@ -1147,33 +1320,51 @@
     const isVector = d.kind !== 'image';
     $('secVector').style.display = isVector ? '' : 'none';
     $('chkTransparent').checked = !!d.transparent;
-    $('rowSharp').style.display = (d.kind === 'image' || d.results[d.page]) ? '' : 'none';
     const baseOpt = $('selSize').querySelector('option[value="base"]');
     baseOpt.textContent = (d.kind === 'image' || d.results[d.page]) ? '원본 크기' : `기본 (긴 변 ${BASE_LONG}px)`;
+    refreshExportUI();
+  }
+  function refreshExportUI() {
+    const fixed = presetDims();
+    $('rowCustom').style.display = $('selSize').value === 'custom' ? 'flex' : 'none';
+    $('rowFit').style.display = fixed ? '' : 'none';
+    $('rowPos').style.display = exp.fit === 'fill' ? 'flex' : 'none';
+    $('fitHint').style.display = exp.fit === 'fill' ? '' : 'none';
+    $('rowPad').style.display = exp.trim ? 'flex' : 'none';
+    $('rowBgColor').style.display = exp.bg === 'custom' ? 'flex' : 'none';
+    $('fmtHint').textContent = exp.fmt === 'jpg'
+      ? 'JPG는 투명을 지원하지 않아 배경을 흰색(또는 선택한 색)으로 채웁니다.'
+      : 'PNG·WebP는 투명 배경을 유지합니다. 용량 제한을 걸면 품질을 자동 조정합니다.';
     updateSizeHint();
+    updateOverlay();
   }
 
   // ── 저장 크기 계산 ────────────────────────────────────
   async function exportPlan(sizeOverride) {
     const d = current;
-    const sz = await pageSize(d, d.page);
+    const key = sizeOverride || $('selSize').value;
+    const sz = await pageSize(d, d.page);          // 회전 반영된 페이지 크기
     const res = d.results[d.page];
-    // 소스 픽셀 크기: 결과물이 있으면 그 캔버스, 사진이면 원본, 벡터면 "기본" 렌더 크기
-    const srcW = res ? res.canvas.width : (d.kind === 'image' ? d.w0 : Math.round(sz.w * BASE_LONG / Math.max(sz.w, sz.h)));
-    const srcH = res ? res.canvas.height : (d.kind === 'image' ? d.h0 : Math.round(sz.h * BASE_LONG / Math.max(sz.w, sz.h)));
-    const sizeMode = sizeOverride || $('selSize').value;
-    let s;
-    if (sizeMode === 'base') s = 1;
-    else if (sizeMode === 'fit4k') s = Math.min(3840 / srcW, 2160 / srcH);
-    else if (sizeMode === 'long4k') s = 3840 / Math.max(srcW, srcH);
-    else if (sizeMode === 'x2') s = 2;
-    else s = 4;
-    let tw = Math.round(srcW * s), th = Math.round(srcH * s);
+    const fixed = presetDims(key);
+    // 소스 픽셀 크기(회전 반영): 결과물 캔버스 / 사진 원본 / 벡터 "기본" 렌더 크기
+    let srcW, srcH;
+    if (res) ({ w: srcW, h: srcH } = orientedDims(res.canvas.width, res.canvas.height, d));
+    else if (d.kind === 'image') ({ w: srcW, h: srcH } = sz);
+    else { const k = BASE_LONG / Math.max(sz.w, sz.h); srcW = Math.round(sz.w * k); srcH = Math.round(sz.h * k); }
+    let s = 1, tw, th;
+    if (fixed) { tw = fixed.w; th = fixed.h; }
+    else {
+      if (key === 'fit4k') s = Math.min(3840 / srcW, 2160 / srcH);
+      else if (key === 'long4k') s = 3840 / Math.max(srcW, srcH);
+      else if (key === 'x2') s = 2;
+      else if (key === 'x4') s = 4;
+      tw = Math.round(srcW * s); th = Math.round(srcH * s);
+    }
     const cap = capDims(tw, th);
     const capped = cap.k < 1;
     tw = cap.w; th = cap.h;
-    const vectorDirect = !res && d.kind !== 'image';   // 벡터는 목표 크기로 바로 렌더
-    return { d, sz, res, srcW, srcH, tw, th, s, capped, vectorDirect };
+    const vectorDirect = !fixed && !res && d.kind !== 'image';   // 벡터는 목표 크기로 바로 렌더
+    return { d, sz, res, srcW, srcH, tw, th, s, capped, vectorDirect, fixed, key };
   }
 
   async function updateSizeHint() {
@@ -1181,13 +1372,182 @@
     try {
       const p = await exportPlan();
       let t = `${p.tw} × ${p.th} px`;
-      if (p.vectorDirect) t += ' · 벡터에서 바로 렌더링 (화질 손실 없음)';
+      if (p.fixed) t += exp.fit === 'fill' ? ' · 비율에 맞게 잘라서 채움' : ' · 비율에 맞게 여백을 두고 배치';
+      else if (p.vectorDirect) t += ' · 벡터에서 바로 렌더링 (화질 손실 없음)';
       else if (p.s > 1.001) t += ' · Lanczos-3 보간 확대';
       else if (p.s < 0.999) t += ' · 축소';
+      if (exp.trim && !p.fixed) t += ' · 여백을 잘라내면 실제 크기는 줄어듭니다';
       if (p.capped) t += ' · 브라우저 한계로 크기를 줄였습니다';
-      if (p.s <= 1 && !p.vectorDirect && $('selSize').value !== 'base') t += ' (이미 목표 크기 이상이라 원본 크기로 저장)';
       $('sizeHint').textContent = t;
     } catch (e) { $('sizeHint').textContent = ''; }
+  }
+
+  // ── 미리보기 오버레이 (자를 영역 / 여백 잘라낸 영역) ──
+  let trimCache = { seq: -1, box: null };
+  function cachedTrimBox() {
+    if (trimCache.seq === renderSeq) return trimCache.box;
+    let box = null;
+    try { box = trimBox(canvas); } catch (_) {}
+    trimCache = { seq: renderSeq, box };
+    return box;
+  }
+  /** 화면 캔버스 좌표계(px)에서 여백 영역·자를 영역을 계산 */
+  function overlayGeom() {
+    if (!current || mode !== 'up') return null;
+    const fixed = presetDims();
+    if (!fixed && !exp.trim) return null;
+    const W = canvas.width, H = canvas.height;
+    let region = { x: 0, y: 0, w: W, h: H }, trimmed = false;
+    if (exp.trim) {
+      const box = cachedTrimBox();
+      if (box) {
+        const padPx = Math.round(Math.max(box.w, box.h) * exp.pad / 100);
+        region = { x: box.x - padPx, y: box.y - padPx, w: box.w + 2 * padPx, h: box.h + 2 * padPx };
+        trimmed = true;
+      }
+    }
+    let crop = null, axis = null, free = 0;
+    if (fixed && exp.fit === 'fill') {
+      const r = fixed.w / fixed.h, sr = region.w / region.h;
+      let cw = region.w, ch = region.h, x = region.x, y = region.y;
+      if (sr > r + 1e-4) { cw = region.h * r; free = region.w - cw; x += free * exp.pos / 100; axis = 'x'; }
+      else if (sr < r - 1e-4) { ch = region.w / r; free = region.h - ch; y += free * exp.pos / 100; axis = 'y'; }
+      crop = { x, y, w: cw, h: ch };
+    }
+    return { region, trimmed, crop, axis, free, k: parseFloat(canvas.style.width) / W };
+  }
+  function updateOverlay() {
+    const cb = $('cropBox'), tb = $('trimBox');
+    const g = overlayGeom();
+    if (!g) { cb.style.display = 'none'; tb.style.display = 'none'; return; }
+    const px = (v) => `${v * g.k}px`;
+    if (g.trimmed) {
+      tb.style.display = 'block';
+      tb.style.left = px(g.region.x); tb.style.top = px(g.region.y); tb.style.width = px(g.region.w); tb.style.height = px(g.region.h);
+    } else tb.style.display = 'none';
+    if (g.crop) {
+      cb.style.display = 'block';
+      cb.style.left = px(g.crop.x); cb.style.top = px(g.crop.y); cb.style.width = px(g.crop.w); cb.style.height = px(g.crop.h);
+      const f = presetDims(); cb.dataset.label = `${f.w} × ${f.h}`;
+    } else cb.style.display = 'none';
+  }
+  let cropDrag = null;
+  $('cropBox').addEventListener('pointerdown', (e) => {
+    const g = overlayGeom(); if (!g || !g.axis) return;
+    cropDrag = { x: e.clientX, y: e.clientY, pos: exp.pos, g };
+    e.currentTarget.setPointerCapture(e.pointerId); e.preventDefault();
+  });
+  $('cropBox').addEventListener('pointermove', (e) => {
+    if (!cropDrag) return;
+    const { g } = cropDrag;
+    const delta = g.axis === 'x' ? e.clientX - cropDrag.x : e.clientY - cropDrag.y;
+    exp.pos = Math.round(Math.min(100, Math.max(0, cropDrag.pos + delta / (g.free * g.k) * 100)));
+    $('rngPos').value = exp.pos; updatePosLabel(); updateOverlay();
+  });
+  ['pointerup', 'pointercancel'].forEach(ev => $('cropBox').addEventListener(ev, () => { cropDrag = null; }));
+
+  // ── 픽셀 처리 도구 ────────────────────────────────────
+  /** 투명(알파) 또는 단색 테두리를 제외한 내용 영역. 없으면 null */
+  function trimBox(cv) {
+    const w = cv.width, h = cv.height;
+    const img = cv.getContext('2d', { willReadFrequently: true }).getImageData(0, 0, w, h), d = img.data;
+    const corners = [0, (w - 1) * 4, (h - 1) * w * 4, ((h - 1) * w + w - 1) * 4];
+    const alphaMode = corners.some(q => d[q + 3] < 250);
+    let isContent;
+    if (alphaMode) isContent = (i) => d[i * 4 + 3] > 8;
+    else {
+      const ref = cornerColor(img), thr2 = (16 * 2.2) ** 2;
+      isContent = (i) => { const q = i * 4, dr = d[q] - ref[0], dg = d[q + 1] - ref[1], db = d[q + 2] - ref[2]; return dr * dr + dg * dg + db * db > thr2; };
+    }
+    let top = -1, bottom = -1, left = w, right = -1;
+    for (let y = 0; y < h && top < 0; y++) for (let x = 0; x < w; x++) if (isContent(y * w + x)) { top = y; break; }
+    if (top < 0) return null;
+    for (let y = h - 1; y >= top && bottom < 0; y--) for (let x = 0; x < w; x++) if (isContent(y * w + x)) { bottom = y; break; }
+    for (let y = top; y <= bottom; y++) {
+      for (let x = 0; x < left; x++) if (isContent(y * w + x)) { left = x; break; }
+      for (let x = w - 1; x > right; x--) if (isContent(y * w + x)) { right = x; break; }
+    }
+    if (right < left) return null;
+    return { x: left, y: top, w: right - left + 1, h: bottom - top + 1 };
+  }
+  function trimCanvas(cv, padPct) {
+    const box = trimBox(cv);
+    if (!box || (box.w === cv.width && box.h === cv.height && padPct === 0)) return cv;
+    const padPx = Math.round(Math.max(box.w, box.h) * padPct / 100);
+    const c = makeCanvas(box.w + 2 * padPx, box.h + 2 * padPx);
+    c.getContext('2d').drawImage(cv, box.x, box.y, box.w, box.h, padPx, padPx, box.w, box.h);
+    return c;
+  }
+  /** 목표 비율로 잘라내거나(fill) 여백을 두고(pad) 맞춘다 */
+  function fitToRatio(cv, tw, th, fitMode, pos) {
+    const w = cv.width, h = cv.height, r = tw / th, sr = w / h;
+    if (Math.abs(sr - r) < 1e-3) return cv;
+    if (fitMode === 'fill') {
+      let cw = w, ch = h, x = 0, y = 0;
+      if (sr > r) { cw = Math.round(h * r); x = Math.round((w - cw) * pos / 100); }
+      else { ch = Math.round(w / r); y = Math.round((h - ch) * pos / 100); }
+      const c = makeCanvas(cw, ch);
+      c.getContext('2d').drawImage(cv, x, y, cw, ch, 0, 0, cw, ch);
+      return c;
+    }
+    let nw = w, nh = h;
+    if (sr > r) nh = Math.round(w / r); else nw = Math.round(h * r);
+    const c = makeCanvas(nw, nh);
+    c.getContext('2d').drawImage(cv, Math.round((nw - w) / 2), Math.round((nh - h) / 2));
+    return c;
+  }
+  async function resampleTo(cv, tw, th, P) {
+    if (tw > cv.width + 1) {
+      const srcData = cv.getContext('2d', { willReadFrequently: true }).getImageData(0, 0, cv.width, cv.height);
+      const outData = await lanczosResize(srcData, tw, th, (r) => P(0.2 + r * 0.6, `확대 중 ${Math.round(r * 100)}%`));
+      const out = makeCanvas(tw, th); out.getContext('2d').putImageData(outData, 0, 0); return out;
+    }
+    if (tw < cv.width - 1 || th < cv.height - 1) return downscale(cv, tw, th);
+    return cv;
+  }
+  /** 배경 제거·회전을 반영한 소스 캔버스. 벡터는 longSide 크기로 래스터화 */
+  async function baseCanvas(d, p, res, longSide) {
+    if (res) {
+      const o = orientedDims(res.canvas.width, res.canvas.height, d);
+      const c = makeCanvas(o.w, o.h); drawOriented(c.getContext('2d'), res.canvas, o.w, o.h, d); return c;
+    }
+    if (d.kind === 'image') {
+      const cap = capDims(d.w0, d.h0), o = orientedDims(cap.w, cap.h, d);
+      const c = makeCanvas(o.w, o.h); drawOriented(c.getContext('2d'), d.img, o.w, o.h, d); return c;
+    }
+    const sz = await pageSize(d, p);
+    const scale = longSide / Math.max(sz.w, sz.h);
+    const c = makeCanvas(sz.w * scale, sz.h * scale);
+    await (await drawSource(d, p, scale, c, d.transparent)).promise;
+    return c;
+  }
+  const toBlob = (c, mime, q) => new Promise(res => c.toBlob(res, mime, q));
+  /** 형식·용량 제한에 맞춰 인코딩. PNG가 제한을 넘으면 WebP(투명 유지)로 대체 */
+  async function encodeWithLimit(out, fmt, limitKB, P) {
+    const limit = limitKB * 1024;
+    let note = '';
+    if (fmt === 'png') {
+      const b = await toBlob(out, 'image/png');
+      if (!limit || b.size <= limit) return { blob: b, ext: 'png', w: out.width, h: out.height, note };
+      fmt = 'webp'; note = 'PNG로는 용량 제한을 맞출 수 없어 WebP(투명 유지)로 저장했습니다. ';
+    }
+    const mime = fmt === 'jpg' ? 'image/jpeg' : 'image/webp', ext = fmt === 'jpg' ? 'jpg' : 'webp';
+    let c = out;
+    for (let round = 0; round < 5; round++) {
+      const first = await toBlob(c, mime, 0.95);
+      if (!first) throw new Error('encode');
+      if (!limit || first.size <= limit) return { blob: first, ext, w: c.width, h: c.height, note };
+      let lo = 0.4, hi = 0.95, best = null;
+      for (let i = 0; i < 7; i++) {
+        const q = (lo + hi) / 2, t = await toBlob(c, mime, q);
+        if (t.size <= limit) { best = t; lo = q; } else hi = q;
+      }
+      if (best) return { blob: best, ext, w: c.width, h: c.height, note: note + '용량 제한에 맞춰 압축 품질을 조정했습니다. ' };
+      c = downscale(c, Math.max(16, Math.round(c.width * 0.8)), Math.max(16, Math.round(c.height * 0.8)));
+      P(0.98, `용량 제한에 맞추기 위해 크기를 줄이는 중 (${c.width} × ${c.height})…`);
+    }
+    const b = await toBlob(c, mime, 0.4);
+    return { blob: b, ext, w: c.width, h: c.height, note: note + '용량 제한에 맞추기 위해 크기와 품질을 함께 줄였습니다. ' };
   }
 
   // ── 저장 실행 ─────────────────────────────────────────
@@ -1208,13 +1568,26 @@
   }
 
   $('btnDoSave').addEventListener('click', () => exportImage({ btnId: 'btnDoSave', progId: 'saveProg', statId: 'saveStat' }));
-  $('btnBgSave').addEventListener('click', () => exportImage({ btnId: 'btnBgSave', progId: 'bgSaveProg', statId: 'bgSaveStat', sizeMode: 'base', fmt: 'png', sharp: 0 }));
+  $('btnBgSave').addEventListener('click', () => exportImage({ btnId: 'btnBgSave', progId: 'bgSaveProg', statId: 'bgSaveStat', sizeMode: 'base', fmt: 'png', sharp: 0, limit: 0, bg: 'transparent', trim: false }));
+  $('btnCopy').addEventListener('click', () => {
+    if (!current) return;
+    if (!navigator.clipboard || !window.ClipboardItem) {
+      showAlert('이 브라우저는 이미지 클립보드 복사를 지원하지 않습니다', '<p>대신 "저장"으로 파일을 내려받아 주세요.</p>'); return;
+    }
+    // Safari는 사용자 동작 안에서 Promise 형태로 넘겨야 허용된다
+    const blobP = exportImage({ btnId: 'btnCopy', progId: 'saveProg', statId: 'saveStat', fmt: 'png', limit: 0, returnBlob: true })
+      .then(r => { if (!r) throw new Error('export failed'); return r.blob; });
+    navigator.clipboard.write([new ClipboardItem({ 'image/png': blobP })])
+      .then(() => setProg('saveProg', 'saveStat', null, '클립보드에 복사했습니다. 카톡·PPT에 붙여넣기(Ctrl+V) 하세요.'))
+      .catch(e => { console.warn(e); showAlert('클립보드 복사에 실패했습니다', '<p>브라우저가 권한을 막았거나 지원하지 않습니다. "저장"으로 내려받아 주세요.</p>'); });
+  });
 
   async function exportImage(opts) {
     if (!current) return;
     const btn = $(opts.btnId); btn.disabled = true;
     const P = (r, t) => setProg(opts.progId, opts.statId, r, t);
-    const fmt = opts.fmt || saveFmt, sharp = opts.sharp ?? saveSharp;
+    const fmt = opts.fmt || exp.fmt, sharp = opts.sharp ?? exp.sharp, limitKB = opts.limit ?? exp.limit;
+    const bg = opts.bg || exp.bg, trim = opts.trim ?? exp.trim;
     try {
       const p = await exportPlan(opts.sizeMode);
       const d = p.d;
@@ -1222,49 +1595,47 @@
       if (p.vectorDirect) {
         P(0.2, '렌더링 중…');
         out = makeCanvas(p.tw, p.th);
-        const scale = p.tw / p.sz.w;
-        await (await drawSource(d, d.page, scale, out, d.transparent)).promise;
+        await (await drawSource(d, d.page, p.tw / p.sz.w, out, d.transparent)).promise;
+        if (trim) out = trimCanvas(out, exp.pad);
       } else {
-        // 소스 이미지 데이터
-        let src;
-        if (p.res) src = p.res.canvas;
-        else { src = makeCanvas(d.w0, d.h0); src.getContext('2d').drawImage(d.img, 0, 0); }
-        if (p.tw > src.width + 1) {
-          const sctx = src.getContext('2d', { willReadFrequently: true });
-          const srcData = sctx.getImageData(0, 0, src.width, src.height);
-          const outData = await lanczosResize(srcData, p.tw, p.th, (r) => P(r * 0.9, `확대 중 ${Math.round(r * 100)}%`));
-          out = makeCanvas(p.tw, p.th);
-          out.getContext('2d').putImageData(outData, 0, 0);
-        } else if (p.tw < src.width - 1) {
-          out = downscale(src, p.tw, p.th);
-        } else {
-          out = src;
-        }
+        P(0.1, '이미지 준비 중…');
+        const long = p.fixed ? Math.min(4096, Math.max(1600, Math.round(Math.max(p.tw, p.th) * 1.6))) : BASE_LONG;
+        let base = await baseCanvas(d, d.page, p.res, long);
+        if (trim) base = trimCanvas(base, exp.pad);
+        if (p.fixed) base = fitToRatio(base, p.tw, p.th, exp.fit, exp.pos);
+        let tw = p.fixed ? p.tw : Math.round(base.width * p.s), th = p.fixed ? p.th : Math.round(base.height * p.s);
+        const cap = capDims(tw, th); tw = cap.w; th = cap.h;
+        out = await resampleTo(base, tw, th, P);
         if (sharp > 0) {
           const octx = out.getContext('2d', { willReadFrequently: true });
-          const sharpened = await unsharp(octx.getImageData(0, 0, out.width, out.height), sharp, (r) => P(0.9 + r * 0.1, '선명도 보정 중…'));
+          const sharpened = await unsharp(octx.getImageData(0, 0, out.width, out.height), sharp, (r) => P(0.8 + r * 0.1, '선명도 보정 중…'));
           const c2 = makeCanvas(out.width, out.height);
           c2.getContext('2d').putImageData(sharpened, 0, 0);
           out = c2;
         }
       }
-      if (fmt === 'jpg') {
+      // 배경 채우기 (JPG는 항상)
+      if (bg !== 'transparent' || fmt === 'jpg') {
+        const color = bg === 'purple' ? BRAND_PURPLE : bg === 'custom' ? exp.bgColor : '#ffffff';
         const flat = makeCanvas(out.width, out.height);
         const fx = flat.getContext('2d');
-        fx.fillStyle = '#fff'; fx.fillRect(0, 0, flat.width, flat.height);
+        fx.fillStyle = color; fx.fillRect(0, 0, flat.width, flat.height);
         fx.drawImage(out, 0, 0);
         out = flat;
       }
-      P(0.97, '파일 만드는 중…');
-      const blob = await new Promise(res => fmt === 'jpg' ? out.toBlob(res, 'image/jpeg', 1.0) : out.toBlob(res, 'image/png'));
-      if (!blob) throw new Error('toBlob');
+      P(0.95, '파일 만드는 중…');
+      const enc = await encodeWithLimit(out, fmt, limitKB, P);
+      if (!enc.blob) throw new Error('toBlob');
+      if (opts.returnBlob) { P(null, ''); return enc; }
       const parts = [baseName(d.name)];
       if (d.numPages > 1) parts.push(`artboard${d.page}`);
       if (p.res) parts.push('nukki');
       else if (d.transparent && d.kind !== 'image') parts.push('transparent');
-      if ((opts.sizeMode || $('selSize').value) !== 'base') parts.push(`${out.width}x${out.height}`);
-      download(blob, `${parts.join('-')}.${fmt === 'jpg' ? 'jpg' : 'png'}`);
-      P(null, `저장 완료 · ${out.width} × ${out.height} px · ${fmtSize(blob.size)}`);
+      if (p.fixed) parts.push(p.fixed.tag, `${enc.w}x${enc.h}`);
+      else if (p.key !== 'base' || trim) parts.push(`${enc.w}x${enc.h}`);
+      download(enc.blob, `${parts.join('-')}.${enc.ext}`);
+      P(null, `${enc.note}저장 완료 · ${enc.w} × ${enc.h} px · ${fmtSize(enc.blob.size)}`);
+      return enc;
     } catch (e) {
       console.error(e);
       P(null, '');
