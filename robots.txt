@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /tools/
+Disallow: /ai-viewer/
+Disallow: /s/admin/
+
+Sitemap: https://trinityone.co.kr/sitemap.xml

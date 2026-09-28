@@ -16,6 +16,9 @@
     - 고객용 사이트: `/customer/`
     - 강의 페이지: `/class-날짜` (예: `class-0728.html`, `class-0728-busan.html`, `class-0730-seoul.html`, `class-0820.html`, `class-0820-b.html`, `class-0908/`, `class-0909-kim/`, `class-0909-kang/`)
     - 구 경로(`/trinity-one/`, `/insurance/`, `/busan.html`, `/busan-0908/` 등)에는 **리다이렉트 스텁**이 있다. 페이지를 옮기거나 이름을 바꿀 때는 반드시 구 경로에 스텁(meta refresh + JS redirect + OG 유지)을 남긴다.
+- 검색 등록: 네이버 서치어드바이저 소유확인 메타(`naver-site-verification`)가 루트 `index.html` `<head>`에 있다 — **지우지 않는다**(지우면 소유확인이 풀린다).
+  - `sitemap.xml`에는 공개 페이지(루트, `/customer/`, 진행 중·예정 강의 페이지)만 넣는다. 새 강의 페이지를 만들면 사이트맵에 추가하고, 끝난 강의는 뺀다. noindex 페이지(`/tools/`, `/s/`, `recruit-v1.html` 등)는 넣지 않는다.
+  - `robots.txt`는 내부 도구(`/tools/`, `/ai-viewer/`, `/s/admin/`)만 막고 사이트맵 주소를 알린다.
 - 머지 후 "pages build and deployment" 워크플로가 성공해야 실제 반영됩니다. 배포 성공까지 확인하고 보고하세요.
 - 페이지를 수정하면 로컬 서버 + Chromium(Playwright, `/opt/pw-browsers/chromium`)으로 **데스크톱(1280px)과 모바일(390px) 양쪽을 렌더링해 스크린샷으로 검증**한 뒤 커밋하세요.
 
