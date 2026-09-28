@@ -8,7 +8,11 @@
 - GitHub Pages가 `main` 브랜치를 배포합니다. 작업 브랜치에 커밋·푸시한 뒤 PR을 만들어 **squash 머지**해야 사이트에 반영됩니다.
 - 사이트 주소: `https://trinityone.co.kr/` (커스텀 도메인, 가비아 DNS → GitHub Pages. 구 주소 `https://hq1trinity-arch.github.io/trinity-lecture-page/`는 자동 리다이렉트)
   - URL 체계 (2026-08-25 재편):
-    - 리쿠르팅(회사 소개) 사이트: 루트 `/` (`index.html`, 에셋·JS는 `trinity-one/` 디렉터리 참조)
+    - 리쿠르팅 사이트: 루트 `/` (`index.html`) — 2026-09-28 새 메인으로 교체. 순수 정적 HTML(React 없음), 미리보기 이미지 `assets/og-recruit-v1.jpg`.
+      - 설정값(카카오 링크 `KAKAO_CHANNEL_URL`, `SITE_URL`, GA4·메타 픽셀 ID, SNS 주소, 히어로 영상)은 페이지 첫 `<script>` 맨 위 상수에서 바꾼다. 빈 값이면 해당 기능이 꺼진다.
+      - 에셋: `assets/people/`(멤버 프로필), `assets/photos/`(세미나), `assets/benefits/`, `assets/site/`, `assets/fonts/PretendardVariable.woff2`
+      - 약관·개인정보처리방침·법적고지의 빈칸은 `span.slot`(`data-slot="LEGAL_…"`)으로 표시돼 있다.
+    - 초기 버전 리쿠르팅 페이지 백업: `/recruit-v1.html` (noindex, 에셋·JS는 `trinity-one/` 디렉터리 참조)
     - 고객용 사이트: `/customer/`
     - 강의 페이지: `/class-날짜` (예: `class-0728.html`, `class-0728-busan.html`, `class-0730-seoul.html`, `class-0820.html`, `class-0820-b.html`, `class-0908/`, `class-0909-kim/`, `class-0909-kang/`)
     - 구 경로(`/trinity-one/`, `/insurance/`, `/busan.html`, `/busan-0908/` 등)에는 **리다이렉트 스텁**이 있다. 페이지를 옮기거나 이름을 바꿀 때는 반드시 구 경로에 스텁(meta refresh + JS redirect + OG 유지)을 남긴다.
@@ -85,5 +89,5 @@
 ## 기타
 
 - 기존 강의 페이지(`class-*` 경로)를 새 작업으로 덮어쓰지 않는다. 새 페이지는 별도 경로로 만든다. 루트 `index.html`은 리쿠르팅 사이트다.
-- 리쿠르팅 사이트(루트 `index.html`)는 React 런타임(`trinity-one/dc-runtime.js`)을 로컬 파일로 포함하고 있다. CDN(unpkg) 의존을 새로 추가하지 않는다.
+- 초기 버전 백업(`recruit-v1.html`)은 React 런타임(`trinity-one/dc-runtime.js`)을 로컬 파일로 포함하고 있다. `trinity-one/` 디렉터리의 JS 파일을 지우지 않는다. CDN(unpkg) 의존을 새로 추가하지 않는다.
 - 커밋 메시지는 한국어로, 변경 내용을 구체적으로 쓴다.
