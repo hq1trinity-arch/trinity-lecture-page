@@ -284,6 +284,9 @@
       background-position: 0 0, 0 8px, 8px -8px, -8px 0;
     }
     .sheet canvas { display: block; }
+    .sheet.checker.pv-white { background-image: none; background-color: #ffffff; }
+    .sheet.checker.pv-black { background-image: none; background-color: #0B0B0F; }
+    .sheet.checker.pv-purple { background-image: none; background-color: #4A1BD0; }
     .sheet { overflow: hidden; }
     #cropBox {
       position: absolute; display: none; box-sizing: border-box;
@@ -430,6 +433,7 @@
       .topbar .btn { padding: 0 12px; }
 
       .topbar .modes { margin-left: 0; }
+      body.has-file .topbar .brand { display: none; }
       .topbar .modes button { padding: 0 10px; font-size: 12.5px; height: 34px; }
       .topbar .modes button span { display: none; }
       .home .head h1 { font-size: 22px; }
@@ -781,7 +785,18 @@
       <!-- 배경 제거 패널 -->
       <div class="panel" id="bgPanel">
         <h4>누끼 따기 (배경 제거) <button class="x" type="button" data-close="bgPanel" aria-label="닫기">×</button></h4>
-        <p class="lead">배경 종류에 맞는 방법을 골라 적용한 뒤, 아래 "투명 PNG로 저장"을 누르세요.</p>
+        <p class="lead">사진(인물·제품)은 <b>AI 누끼</b>,<br>흰 바탕 로고·일러스트는 <b style="white-space:nowrap">단색 배경 제거</b>가 맞습니다.<br>적용 후 아래 "투명 PNG로 저장"을 누르세요.</p>
+        <div class="row">
+          <label class="lbl">결과 확인 배경</label>
+          <div class="seg four" id="segPv">
+            <button type="button" data-v="checker" aria-pressed="true">체크</button>
+            <button type="button" data-v="black" aria-pressed="false">검정</button>
+            <button type="button" data-v="white" aria-pressed="false">흰색</button>
+            <button type="button" data-v="purple" aria-pressed="false">퍼플</button>
+          </div>
+          <p class="hint">저장 전에 <b>검정</b>으로 바꿔 보면 남은 잡티·얼룩이 잘 보입니다.</p>
+        </div>
+        <div class="sec"></div>
 
         <div id="secVector">
           <p class="sec-title">파일의 투명 배경 사용 <span class="badge">AI·PDF·SVG</span></p>
@@ -794,8 +809,8 @@
         <div class="row">
           <div class="range-row">
             <span>허용 오차</span>
-            <input type="range" id="rngTol" min="1" max="100" value="28">
-            <output id="outTol">28</output>
+            <input type="range" id="rngTol" min="1" max="100" value="22">
+            <output id="outTol">22</output>
           </div>
           <label class="check"><input type="checkbox" id="chkInner"> 안쪽에 닫힌 같은 색 영역도 제거 (글자 속 구멍 등)</label>
           <div class="inline">
@@ -808,7 +823,12 @@
 
         <div class="sec"></div>
         <p class="sec-title">AI 누끼 <span class="badge">인물·사물 사진</span></p>
-        <p class="hint">브라우저에서 AI 모델이 직접 돌아갑니다. 처음 한 번만 약 <b>55MB</b>를 내려받고, 기기에 따라 10초에서 1분쯤 걸립니다. 사진은 여전히 외부로 전송되지 않습니다.</p>
+        <div class="seg" id="segAIq">
+          <button type="button" data-v="hq" aria-pressed="true">고품질 (권장)</button>
+          <button type="button" data-v="fast" aria-pressed="false">빠르게</button>
+        </div>
+        <label class="check" style="margin-top:8px"><input type="checkbox" id="chkRefine" checked> <span>결과 자동 다듬기<br><span style="color:var(--ink-60);font-size:12px">반투명 얼룩·잡티 제거, <span style="white-space:nowrap">가장자리 보정</span></span></span></label>
+        <p class="hint" id="aiHint" style="margin-top:6px"></p>
         <button class="btn btn-primary btn-full" id="btnAI" type="button" style="margin-top:8px">AI 누끼 실행</button>
         <div class="progress" id="bgProg"><i></i></div>
         <div class="pstat" id="bgStat"></div>
@@ -1273,6 +1293,7 @@
     const result = d.results[d.page];
     const transparentView = !!result || (d.transparent && d.kind !== 'image');
     sheet.classList.toggle('checker', transparentView);
+    applyPvBg();
 
     try {
       if (result) {
@@ -2328,7 +2349,7 @@
       return c;
     }
     const sz = await pageSize(d, p);
-    const long = forAI ? 2048 : SRC_LONG;
+    const long = SRC_LONG;
     const scale = long / Math.max(sz.w, sz.h);
     const c = makeCanvas(sz.w * scale, sz.h * scale);
     // 벡터 파일의 투명 배경은 그대로 살린다 (AI 모델에는 흰 배경이 유리하므로 forAI면 칠함)
@@ -2393,17 +2414,32 @@
     const out = makeCanvas(img.width, img.height);
     out.getContext('2d').putImageData(removed.data, 0, 0);
     d.results[p] = { canvas: out, label: '단색 배경 제거' };
-    return removed.ratio;
+    removed.photo = looksLikePhoto(img);
+    return removed;
+  }
+  /** 색 가짓수로 사진인지 추정 (로고·일러스트는 수십~수백 가지, 사진은 수천 가지) */
+  function looksLikePhoto(img) {
+    const w = img.width, h = img.height, d = img.data;
+    const step = Math.max(1, Math.floor(Math.sqrt((w * h) / 40000)));
+    const seen = new Uint8Array(4096); let count = 0;
+    for (let y = 0; y < h; y += step) for (let x = 0; x < w; x += step) {
+      const q = (y * w + x) * 4; if (d[q + 3] < 128) continue;
+      const k = ((d[q] >> 4) << 8) | ((d[q + 1] >> 4) << 4) | (d[q + 2] >> 4);
+      if (!seen[k]) { seen[k] = 1; count++; }
+    }
+    return count > 700;
   }
   $('btnChroma').addEventListener('click', async () => {
     if (!current) return;
     const btn = $('btnChroma'); btn.disabled = true;
     try {
       const d = current, p = d.page;
-      const ratio = await runChroma(d, p, (r, t) => setProg('bgProg', 'bgStat', r, t));
+      const res = await runChroma(d, p, (r, t) => setProg('bgProg', 'bgStat', r, t));
+      const ratio = res.ratio;
       syncPanels(); renderPage();
       setProg('bgProg', 'bgStat', null, `완료 · 전체의 ${Math.round(ratio * 100)}%를 투명 처리`);
-      if (ratio < 0.02) showAlert('지워진 영역이 거의 없습니다', '<p>허용 오차를 올리거나, "이미지에서 선택"으로 배경색을 직접 지정해 보세요. 사진처럼 배경이 복잡하면 AI 누끼를 쓰세요.</p>', 'info');
+      if (res.photo) showAlert('사진에는 AI 누끼를 권장합니다', '<p>단색 배경 제거는 흰 바탕 로고·일러스트용이라, 사진에서는 밝은 피부나 하이라이트까지 지워질 수 있습니다. 아래 <b>AI 누끼</b>를 눌러 보세요. AI 누끼는 항상 원본에서 새로 계산합니다.</p>', 'info');
+      else if (ratio < 0.02) showAlert('지워진 영역이 거의 없습니다', '<p>허용 오차를 올리거나, "이미지에서 선택"으로 배경색을 직접 지정해 보세요. 사진처럼 배경이 복잡하면 AI 누끼를 쓰세요.</p>', 'info');
     } catch (e) {
       console.error(e);
       setProg('bgProg', 'bgStat', null, '');
@@ -2468,12 +2504,14 @@
       dist2[i] = dr * dr + dg * dg + db * db;
       if ((i & 0xFFFFF) === 0) { onProgress(i / n * 0.4); await yieldFrame(); }
     }
-    const mark = new Uint8Array(n);   // 1 = 배경 후보
+    // 1 = 확실한 배경(허용 오차 안), 2 = 경계 띠(부분 투명).
+    // 퍼져 나가는 건 확실한 배경뿐이라, 밝은 피부·하이라이트처럼 배경색에 "가까운" 색으로는 번지지 않는다.
+    const mark = new Uint8Array(n);
     if (inner) {
-      for (let i = 0; i < n; i++) if (dist2[i] <= soft2) mark[i] = 1;
+      for (let i = 0; i < n; i++) if (dist2[i] <= thr2) mark[i] = 1;
     } else {
       const queue = new Int32Array(n); let qh = 0, qt = 0;
-      const push = (i) => { if (!mark[i] && dist2[i] <= soft2) { mark[i] = 1; queue[qt++] = i; } };
+      const push = (i) => { if (!mark[i] && dist2[i] <= thr2) { mark[i] = 1; queue[qt++] = i; } };
       for (let x = 0; x < w; x++) { push(x); push((h - 1) * w + x); }
       for (let y = 0; y < h; y++) { push(y * w); push(y * w + w - 1); }
       let step = 0;
@@ -2486,6 +2524,17 @@
         if (y < h - 1) push(i + w);
         if ((++step & 0x3FFFF) === 0) { onProgress(0.4 + Math.min(qh / n, 1) * 0.4); await yieldFrame(); }
       }
+    }
+    // 경계 띠: 배경에 맞닿은 픽셀 중 soft 범위 안쪽만 2px까지 (안티앨리어싱 가장자리)
+    for (let pass = 0; pass < 2; pass++) {
+      const add = [];
+      for (let i = 0; i < n; i++) {
+        if (mark[i] || dist2[i] > soft2) continue;
+        const x = i % w;
+        if ((x > 0 && mark[i - 1]) || (x < w - 1 && mark[i + 1]) || (i >= w && mark[i - w]) || (i < n - w && mark[i + w])) add.push(i);
+      }
+      for (const i of add) mark[i] = 2;
+      await yieldFrame();
     }
     let removed = 0;
     const out = new ImageData(w, h), o = out.data;
@@ -2531,38 +2580,286 @@
 
   // AI 누끼
   let bgrmModule = null;
-  /** AI 누끼를 (문서, 페이지)에 적용하고 결과를 저장 */
+  // AI 품질·다듬기 옵션 (저사양·모바일은 기본 "빠르게")
+  const aiOpt = {
+    q: ((navigator.deviceMemory && navigator.deviceMemory <= 4) || matchMedia('(max-width: 860px)').matches) ? 'fast' : 'hq',
+    refine: true,
+  };
+  function refreshAIUI() {
+    document.querySelectorAll('#segAIq button').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === aiOpt.q ? 'true' : 'false'));
+    $('aiHint').innerHTML = aiOpt.q === 'hq'
+      ? '브라우저에서 AI 모델이 직접 돌아갑니다. 처음 한 번만 약 <b>100MB</b>를 내려받고, 기기에 따라 10초에서 1분쯤 걸립니다. 사진은 외부로 전송되지 않습니다.'
+      : '가벼운 모델로 더 빨리 처리합니다(처음 한 번 약 <b>55MB</b>). 머리카락·가장자리 정확도는 고품질보다 낮습니다.';
+  }
+  seg('segAIq', v => { aiOpt.q = v; refreshAIUI(); });
+  $('chkRefine').addEventListener('change', () => { aiOpt.refine = $('chkRefine').checked; });
+  refreshAIUI();
+
+  // 결과 확인 배경 (체크/검정/흰색/퍼플)
+  let pvBg = 'checker';
+  seg('segPv', v => { pvBg = v; applyPvBg(); });
+  function applyPvBg() { ['white', 'black', 'purple'].forEach(k => sheet.classList.toggle(`pv-${k}`, pvBg === k)); }
+
+  /** AI 누끼를 (문서, 페이지)에 적용하고 결과를 저장. 이전 누끼 결과와 상관없이 항상 원본에서 계산한다 */
   async function runAI(d, p, P) {
     P(0.02, '이미지 준비 중…');
-    const src = d.results[p] ? d.results[p].canvas : await sourceCanvas(d, p, { forAI: true });
-    const blob = await new Promise(res => src.toBlob(res, 'image/png'));
+    const full = await sourceCanvas(d, p, { forAI: true });
+    // 모델 입력은 1024px로 줄여 보낸다 (모델 내부 해상도가 1024라 더 크게 보내도 이득이 없고 느리기만 함)
+    const k = Math.min(1, 1024 / Math.max(full.width, full.height));
+    const small = makeCanvas(Math.max(1, Math.round(full.width * k)), Math.max(1, Math.round(full.height * k)));
+    const sc = small.getContext('2d', { willReadFrequently: true });
+    sc.fillStyle = '#ffffff'; sc.fillRect(0, 0, small.width, small.height);   // 투명 PNG 원본은 흰 바탕 위에서 판단
+    sc.imageSmoothingEnabled = true; sc.imageSmoothingQuality = 'high';
+    sc.drawImage(full, 0, 0, small.width, small.height);
+    const blob = await new Promise(res => small.toBlob(res, 'image/png'));
     P(0.05, 'AI 모듈 불러오는 중…');
     if (!bgrmModule) bgrmModule = await import(/* @vite-ignore */ BGRM_URL);
     const fetched = {};
     const progress = (key, cur, total) => {
-      if (key.startsWith('fetch:')) {
-        fetched[key] = [cur, total];
-        let c = 0, t = 0; for (const k in fetched) { c += fetched[k][0]; t += fetched[k][1]; }
-        const r = t ? c / t : 0;
-        P(0.05 + r * 0.45, `모델 내려받는 중 ${Math.round(r * 100)}% (${fmtSize(c)} / ${fmtSize(t)})`);
-      } else {
-        P(0.55 + (total ? cur / total : 0.5) * 0.4, 'AI가 배경을 분리하는 중… (기기에 따라 최대 1분)');
-      }
+      if (!key.startsWith('fetch:')) return;
+      fetched[key] = [cur, total];
+      let c = 0, t = 0; for (const kk in fetched) { c += fetched[kk][0]; t += fetched[kk][1]; }
+      const r = t ? c / t : 0;
+      if (r >= 0.999) P(0.5, 'AI가 피사체를 찾는 중… (기기에 따라 최대 1분)');
+      else P(0.05 + r * 0.45, `모델 내려받는 중 ${Math.round(r * 100)}% (${fmtSize(c)} / ${fmtSize(t)})`);
     };
-    const cfg = { model: 'isnet_quint8', progress, output: { format: 'image/png', quality: 1 } };
-    let out;
-    try {
-      if (navigator.gpu) out = await bgrmModule.removeBackground(blob, { ...cfg, device: 'gpu' });
-      else out = await bgrmModule.removeBackground(blob, cfg);
-    } catch (e) {
-      console.warn('gpu 경로 실패, cpu로 재시도', e);
-      out = await bgrmModule.removeBackground(blob, cfg);
+    const model = aiOpt.q === 'hq' ? 'isnet_fp16' : 'isnet_quint8';
+    const tryRun = async (mdl) => {
+      const cfg = { model: mdl, progress, output: { format: 'image/png', quality: 1 } };
+      if (navigator.gpu) {
+        try { return await bgrmModule.segmentForeground(blob, { ...cfg, device: 'gpu' }); }
+        catch (e) { console.warn('그래픽 가속 실패, CPU로 재시도', e); }
+      }
+      return bgrmModule.segmentForeground(blob, cfg);
+    };
+    P(0.5, 'AI가 피사체를 찾는 중… (기기에 따라 최대 1분)');
+    let maskBlob, usedFast = model === 'isnet_quint8';
+    try { maskBlob = await tryRun(model); }
+    catch (e) {
+      if (model === 'isnet_quint8') throw e;
+      console.warn('고품질 모델 실패, 빠른 모델로 재시도', e);
+      maskBlob = await tryRun('isnet_quint8'); usedFast = true;
     }
-    const bmp = await createImageBitmap(out);
-    const c = makeCanvas(bmp.width, bmp.height);
-    c.getContext('2d').drawImage(bmp, 0, 0);
-    bmp.close();
-    d.results[p] = { canvas: c, label: 'AI 누끼' };
+    // 마스크(흰색+알파)를 저해상도 배열로
+    const mb = await createImageBitmap(maskBlob);
+    const mc = makeCanvas(small.width, small.height), mcx = mc.getContext('2d', { willReadFrequently: true });
+    mcx.drawImage(mb, 0, 0, small.width, small.height); mb.close();
+    const md = mcx.getImageData(0, 0, small.width, small.height).data;
+    const maskS = new Uint8Array(small.width * small.height);
+    for (let i = 0, q = 3; i < maskS.length; i++, q += 4) maskS[i] = md[q];
+    P(0.9, '가장자리 다듬는 중…');
+    const out = await refineCutout(full, small, maskS, { refine: aiOpt.refine }, (r) => P(0.9 + r * 0.1, '가장자리 다듬는 중…'));
+    d.results[p] = { canvas: out, label: usedFast ? 'AI 누끼(빠르게)' : 'AI 누끼(고품질)' };
+  }
+
+  // ── AI 누끼 결과 다듬기 ───────────────────────────────
+  /** 박스 평균 (가장자리는 실제 들어간 칸 수로 나눔) */
+  function boxMean(src, w, h, r) {
+    const tmp = new Float32Array(w * h), dst = new Float32Array(w * h);
+    const cum = new Float64Array(Math.max(w, h) + 1);
+    for (let y = 0; y < h; y++) {
+      const o = y * w;
+      for (let x = 0; x < w; x++) cum[x + 1] = cum[x] + src[o + x];
+      for (let x = 0; x < w; x++) {
+        const lo = x - r < 0 ? 0 : x - r, hi = x + r + 1 > w ? w : x + r + 1;
+        tmp[o + x] = (cum[hi] - cum[lo]) / (hi - lo);
+      }
+    }
+    for (let x = 0; x < w; x++) {
+      for (let y = 0; y < h; y++) cum[y + 1] = cum[y] + tmp[y * w + x];
+      for (let y = 0; y < h; y++) {
+        const lo = y - r < 0 ? 0 : y - r, hi = y + r + 1 > h ? h : y + r + 1;
+        dst[y * w + x] = (cum[hi] - cum[lo]) / (hi - lo);
+      }
+    }
+    return dst;
+  }
+  /** 원본 해상도 n → 저해상도 ns 로의 좌표 대응 (쌍선형 보간용) */
+  function axisMap(n, ns) {
+    const i0 = new Int32Array(n), i1 = new Int32Array(n), f = new Float32Array(n), near = new Int32Array(n);
+    const k = ns / n;
+    for (let i = 0; i < n; i++) {
+      let s = (i + 0.5) * k - 0.5; if (s < 0) s = 0; if (s > ns - 1) s = ns - 1;
+      const a = Math.floor(s); i0[i] = a; i1[i] = a + 1 < ns ? a + 1 : ns - 1; f[i] = s - a;
+      near[i] = Math.min(ns - 1, Math.floor((i + 0.5) * k));
+    }
+    return { i0, i1, f, near };
+  }
+  /** 4방향 연결 성분 라벨링. 반환: {lab, areas, touches(가장자리 닿음)} */
+  function labelComponents(bin, w, h, want) {
+    const n = w * h, lab = new Int32Array(n), areas = [0], touches = [false];
+    const queue = new Int32Array(n);
+    for (let s = 0; s < n; s++) {
+      if (lab[s] || bin[s] !== want) continue;
+      const id = areas.length; let qh = 0, qt = 0, area = 0, edge = false;
+      lab[s] = id; queue[qt++] = s;
+      while (qh < qt) {
+        const i = queue[qh++]; area++;
+        const x = i % w, y = (i - x) / w;
+        if (x === 0 || y === 0 || x === w - 1 || y === h - 1) edge = true;
+        if (x > 0 && !lab[i - 1] && bin[i - 1] === want) { lab[i - 1] = id; queue[qt++] = i - 1; }
+        if (x < w - 1 && !lab[i + 1] && bin[i + 1] === want) { lab[i + 1] = id; queue[qt++] = i + 1; }
+        if (y > 0 && !lab[i - w] && bin[i - w] === want) { lab[i - w] = id; queue[qt++] = i - w; }
+        if (y < h - 1 && !lab[i + w] && bin[i + w] === want) { lab[i + w] = id; queue[qt++] = i + w; }
+      }
+      areas.push(area); touches.push(edge);
+    }
+    return { lab, areas, touches };
+  }
+  /**
+   * 저해상도 AI 마스크를 원본 해상도 누끼로 만든다.
+   * 1) 빠른 가이드 필터: 원본 사진의 윤곽을 따라 마스크를 키워 가장자리를 또렷하게
+   * 2) 명암 늘이기: 옅은 반투명 얼룩은 0, 거의 불투명한 곳은 완전 불투명으로
+   * 3) 주 피사체에서 떨어진 조각·얼룩 제거, 피사체 안의 작은 구멍(하이라이트 등) 메우기
+   * 4) 가장자리 색 번짐 제거: 반투명 픽셀에 섞인 원래 배경색을 주변 배경 추정색으로 걷어낸다
+   * refine=false면 1)의 단순 확대만 한다.
+   */
+  async function refineCutout(full, small, maskS, { refine }, P) {
+    const W = full.width, H = full.height, ws = small.width, hs = small.height, ns = ws * hs;
+    const fctx = full.getContext('2d', { willReadFrequently: true });
+    const fd = fctx.getImageData(0, 0, W, H), F = fd.data;
+    const sd = small.getContext('2d', { willReadFrequently: true }).getImageData(0, 0, ws, hs).data;
+    const mx = axisMap(W, ws), my = axisMap(H, hs);
+    const alpha = new Uint8ClampedArray(W * H);
+
+    // 1) 가이드 필터 계수 (저해상도)
+    let mA = null, mB = null, edgeW = null;
+    const pS = new Float32Array(ns);
+    for (let i = 0; i < ns; i++) pS[i] = maskS[i] / 255;
+    if (refine) {
+      const I = new Float32Array(ns), II = new Float32Array(ns), IP = new Float32Array(ns);
+      for (let i = 0, q = 0; i < ns; i++, q += 4) {
+        const g = (0.299 * sd[q] + 0.587 * sd[q + 1] + 0.114 * sd[q + 2]) / 255;
+        I[i] = g; II[i] = g * g; IP[i] = g * pS[i];
+      }
+      const r = Math.max(2, Math.round(Math.max(ws, hs) / 256)), eps = 0.01;
+      const mI = boxMean(I, ws, hs, r), mP = boxMean(pS, ws, hs, r), mII = boxMean(II, ws, hs, r), mIP = boxMean(IP, ws, hs, r);
+      const a = new Float32Array(ns), b = new Float32Array(ns);
+      for (let i = 0; i < ns; i++) {
+        const v = mII[i] - mI[i] * mI[i], c = mIP[i] - mI[i] * mP[i];
+        a[i] = c / (v + eps); b[i] = mP[i] - a[i] * mI[i];
+      }
+      mA = boxMean(a, ws, hs, r); mB = boxMean(b, ws, hs, r);
+      // 경계 가중치: 주변 마스크 평균이 0~1 사이인 곳(=경계 근처)에서만 가이드 필터 결과를 쓴다
+      edgeW = new Float32Array(ns);
+      const mPw = boxMean(pS, ws, hs, r * 2);
+      for (let i = 0; i < ns; i++) { const m = Math.min(mPw[i], 1 - mPw[i]); edgeW[i] = m >= 0.08 ? 1 : m / 0.08; }
+    }
+    P(0.15); await yieldFrame();
+
+    // 원본 해상도 알파 (+ 2) 명암 늘이기)
+    const LO = refine ? 0.1 : 0, HI = refine ? 0.9 : 1, SPAN = HI - LO;
+    for (let y = 0; y < H; y++) {
+      const r0 = my.i0[y] * ws, r1 = my.i1[y] * ws, fy = my.f[y];
+      for (let x = 0; x < W; x++) {
+        const c0 = mx.i0[x], c1 = mx.i1[x], fx = mx.f[x];
+        const i = y * W + x, q = i * 4;
+        let v;
+        const w00 = (1 - fx) * (1 - fy), w01 = fx * (1 - fy), w10 = (1 - fx) * fy, w11 = fx * fy;
+        const s00 = r0 + c0, s01 = r0 + c1, s10 = r1 + c0, s11 = r1 + c1;
+        v = pS[s00] * w00 + pS[s01] * w01 + pS[s10] * w10 + pS[s11] * w11;       // 단순 확대한 마스크
+        if (refine) {
+          const ew = edgeW[s00] * w00 + edgeW[s01] * w01 + edgeW[s10] * w10 + edgeW[s11] * w11;
+          if (ew > 0.001) {
+            const A = mA[s00] * w00 + mA[s01] * w01 + mA[s10] * w10 + mA[s11] * w11;
+            const B = mB[s00] * w00 + mB[s01] * w01 + mB[s10] * w10 + mB[s11] * w11;
+            const g = A * (0.299 * F[q] + 0.587 * F[q + 1] + 0.114 * F[q + 2]) / 255 + B;
+            v += ew * (g - v);
+          }
+        }
+        v = (v - LO) / SPAN;
+        const av = v <= 0 ? 0 : v >= 1 ? 255 : v * 255;
+        alpha[i] = av < F[q + 3] ? av : F[q + 3];    // 원본이 투명하던 곳은 그대로 투명
+      }
+      if ((y & 255) === 0) { P(0.15 + 0.35 * y / H); await yieldFrame(); }
+    }
+
+    if (refine) {
+      // 3) 조각 제거·구멍 메우기 (저해상도 격자에서 판단 후 원본에 반영)
+      const bin = new Uint8Array(ns);
+      for (let ys = 0; ys < hs; ys++) {
+        const Y = Math.min(H - 1, Math.floor((ys + 0.5) * H / hs));
+        for (let xs = 0; xs < ws; xs++) {
+          const X = Math.min(W - 1, Math.floor((xs + 0.5) * W / ws));
+          bin[ys * ws + xs] = alpha[Y * W + X] >= 128 ? 1 : 0;
+        }
+      }
+      const fg = labelComponents(bin, ws, hs, 1);
+      const maxArea = Math.max(0, ...fg.areas);
+      const minKeep = Math.max(maxArea * 0.04, ns * 0.0005);
+      const keepF = new Float32Array(ns);
+      for (let i = 0; i < ns; i++) if (fg.lab[i] && fg.areas[fg.lab[i]] >= minKeep) keepF[i] = 1;
+      const rd = Math.max(3, Math.round(Math.max(ws, hs) * 0.008));
+      const near = boxMean(keepF, ws, hs, rd);             // > 0 이면 남길 피사체 근처
+      const bg = labelComponents(bin, ws, hs, 0);
+      const holeMax = ns * 0.0012;
+      const fill = new Uint8Array(ns);
+      for (let i = 0; i < ns; i++) { const l = bg.lab[i]; if (l && !bg.touches[l] && bg.areas[l] < holeMax) fill[i] = 1; }
+      P(0.6); await yieldFrame();
+      // 피사체에서 멀어질수록 부드럽게 0으로 (딱 잘린 사각형 경계가 생기지 않도록 보간)
+      for (let y = 0; y < H; y++) {
+        const r0 = my.i0[y] * ws, r1 = my.i1[y] * ws, fy = my.f[y], ro = my.near[y] * ws;
+        for (let x = 0; x < W; x++) {
+          const i = y * W + x;
+          if (!alpha[i]) continue;
+          const c0 = mx.i0[x], c1 = mx.i1[x], fx = mx.f[x];
+          const nv = (near[r0 + c0] * (1 - fx) + near[r0 + c1] * fx) * (1 - fy) + (near[r1 + c0] * (1 - fx) + near[r1 + c1] * fx) * fy;
+          if (fill[ro + mx.near[x]] && F[i * 4 + 3] > 0) { alpha[i] = 255; continue; }
+          if (nv < 0.12) alpha[i] = alpha[i] * (nv / 0.12);
+        }
+        if ((y & 511) === 0) await yieldFrame();
+      }
+      P(0.7); await yieldFrame();
+
+      // 4) 가장자리 색 번짐 제거 (저해상도에서 전경·배경 평균색 추정 → 반투명 픽셀만 보정)
+      const aS = new Float32Array(ns);
+      for (let ys = 0; ys < hs; ys++) {
+        const Y = Math.min(H - 1, Math.floor((ys + 0.5) * H / hs));
+        for (let xs = 0; xs < ws; xs++) aS[ys * ws + xs] = alpha[Y * W + Math.min(W - 1, Math.floor((xs + 0.5) * W / ws))] / 255;
+      }
+      const rB = Math.max(4, Math.round(Math.max(ws, hs) * 0.02));
+      const one = new Float32Array(ns); for (let i = 0; i < ns; i++) one[i] = 1 - aS[i];
+      const mAa = boxMean(aS, ws, hs, rB), m1a = boxMean(one, ws, hs, rB);
+      const Fb = [], Bb = [];
+      for (let c = 0; c < 3; c++) {
+        const ta = new Float32Array(ns), tb = new Float32Array(ns);
+        for (let i = 0; i < ns; i++) { const v = sd[i * 4 + c] / 255; ta[i] = v * aS[i]; tb[i] = v * (1 - aS[i]); }
+        const fa = boxMean(ta, ws, hs, rB), fb = boxMean(tb, ws, hs, rB);
+        for (let i = 0; i < ns; i++) { fa[i] = fa[i] / (mAa[i] + 1e-5); fb[i] = fb[i] / (m1a[i] + 1e-5); }
+        Fb.push(fa); Bb.push(fb);
+      }
+      for (let y = 0; y < H; y++) {
+        const r0 = my.i0[y] * ws, r1 = my.i1[y] * ws, fy = my.f[y];
+        for (let x = 0; x < W; x++) {
+          const i = y * W + x, al = alpha[i];
+          if (al <= 6 || al >= 249) continue;
+          const c0 = mx.i0[x], c1 = mx.i1[x], fx = mx.f[x], a = al / 255, q = i * 4;
+          const w00 = (1 - fx) * (1 - fy), w01 = fx * (1 - fy), w10 = (1 - fx) * fy, w11 = fx * fy;
+          const keep = a <= 0.8 ? 1 : (0.97 - a) / 0.17;          // 1 → 0 (불투명에 가까울수록 원래 색)
+          if (keep <= 0) continue;
+          for (let c = 0; c < 3; c++) {
+            const fb = Fb[c][r0 + c0] * w00 + Fb[c][r0 + c1] * w01 + Fb[c][r1 + c0] * w10 + Fb[c][r1 + c1] * w11;
+            const bb = Bb[c][r0 + c0] * w00 + Bb[c][r0 + c1] * w01 + Bb[c][r1 + c0] * w10 + Bb[c][r1 + c1] * w11;
+            const I0 = F[q + c] / 255;
+            // 관측색 I = a·F + (1-a)·B 에서 주변 배경색 B를 빼 원래 전경색 F를 되살린다 (디테일 유지).
+            // 알파가 아주 낮으면 나눗셈이 불안정하므로 주변 전경 평균색 쪽으로 기운다.
+            let fu = (I0 - (1 - a) * bb) / a;
+            fu = fu < 0 ? 0 : fu > 1 ? 1 : fu;
+            const t = a >= 0.4 ? 1 : a <= 0.15 ? 0 : (a - 0.15) / 0.25;
+            let v = fb + t * (fu - fb);
+            v = I0 + keep * (v - I0);
+            F[q + c] = v <= 0 ? 0 : v >= 1 ? 255 : v * 255;
+          }
+        }
+        if ((y & 255) === 0) { P(0.7 + 0.25 * y / H); await yieldFrame(); }
+      }
+    }
+
+    for (let i = 0, q = 3; i < alpha.length; i++, q += 4) F[q] = alpha[i];
+    const out = makeCanvas(W, H);
+    out.getContext('2d').putImageData(fd, 0, 0);
+    P(1);
+    return out;
   }
   $('btnAI').addEventListener('click', async () => {
     if (!current) return;
@@ -2571,7 +2868,7 @@
     try {
       await runAI(d, p, (r, t) => setProg('bgProg', 'bgStat', r, t));
       syncPanels(); renderPage();
-      setProg('bgProg', 'bgStat', null, '완료 · "투명 PNG로 저장"을 누르거나 4K·규격 저장으로 넘어가세요');
+      setProg('bgProg', 'bgStat', null, `완료 · ${d.results[p].label} · 결과 확인 배경을 "검정"으로 바꿔 잡티를 확인한 뒤 저장하세요`);
     } catch (e) {
       console.error(e);
       setProg('bgProg', 'bgStat', null, '');
