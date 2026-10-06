@@ -73,6 +73,30 @@
       "skillPath": "skills/soft-skill/SKILL.md",
       "computedHash": "7db385e4c5370e5a7fca9704a1361b056e4504ea6a03924bb86f33a4f00b5c73"
     },
+    "humanize": {
+      "source": "epoko77-ai/im-not-ai",
+      "sourceType": "github",
+      "skillPath": "skills/humanize/SKILL.md",
+      "computedHash": "a489f18cf406df3d642372194ad8831d5bb43cbcff238581ad05cfbf7d8cdf86"
+    },
+    "humanize-korean": {
+      "source": "epoko77-ai/im-not-ai",
+      "sourceType": "github",
+      "skillPath": "skills/humanize-korean/SKILL.md",
+      "computedHash": "71fae38f2a2be0b740fe82fc5a822588aa3ba637bf7e88fd2ca5acc4eabec629"
+    },
+    "humanize-redo": {
+      "source": "epoko77-ai/im-not-ai",
+      "sourceType": "github",
+      "skillPath": "skills/humanize-redo/SKILL.md",
+      "computedHash": "790abcc9e39f0bd7ea3e03dab671ab72348831bdd199814aea45079499841d11"
+    },
+    "humanize-scan": {
+      "source": "epoko77-ai/im-not-ai",
+      "sourceType": "github",
+      "skillPath": "skills/humanize-scan/SKILL.md",
+      "computedHash": "bd16dcf96368b43c341a151616e875c1fb4750cda39f69dc271417c19130d4a4"
+    },
     "image-to-code": {
       "source": "Leonxlnx/taste-skill",
       "sourceType": "github",
