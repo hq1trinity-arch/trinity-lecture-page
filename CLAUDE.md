@@ -19,6 +19,8 @@
 - 검색 등록: 네이버 서치어드바이저 소유확인 메타(`naver-site-verification`)가 루트 `index.html` `<head>`에 있다 — **지우지 않는다**(지우면 소유확인이 풀린다).
   - `sitemap.xml`에는 공개 페이지(루트, `/customer/`, 진행 중·예정 강의 페이지)만 넣는다. 새 강의 페이지를 만들면 사이트맵에 추가하고, 끝난 강의는 뺀다. noindex 페이지(`/tools/`, `/s/`, `recruit-v1.html` 등)는 넣지 않는다.
   - `robots.txt`는 내부 도구(`/tools/`, `/ai-viewer/`, `/s/admin/`)만 막고 사이트맵 주소를 알린다.
+  - 루트 `index.html` `<head>`에 **구조화 데이터(JSON-LD, Organization + WebSite)**가 있다. 브랜드 별칭(TRINITY ONE·trinityone·트리니티 원), 로고, 전화, 주소, 이메일, 공식 채널(`sameAs`: 네이버 블로그·인스타그램)을 담는다 — 네이버 「연관 채널」·구글 브랜드 인식용.
+    연락처·주소·SNS·이메일이 바뀌면 **화면 문구와 JSON-LD를 함께** 고친다. `meta keywords`는 검색 순위 효과가 거의 없으니 키워드를 늘리는 데 쓰지 않는다.
 - 머지 후 "pages build and deployment" 워크플로가 성공해야 실제 반영됩니다. 배포 성공까지 확인하고 보고하세요.
 - 페이지를 수정하면 로컬 서버 + Chromium(Playwright, `/opt/pw-browsers/chromium`)으로 **데스크톱(1280px)과 모바일(390px) 양쪽을 렌더링해 스크린샷으로 검증**한 뒤 커밋하세요.
 
