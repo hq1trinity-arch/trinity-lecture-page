@@ -109,6 +109,19 @@
 - 긴 글은 먼저 `humanize-scan`으로 AI 티 점수를 재고, 손볼 게 있을 때만 전수 윤문을 돌린다.
 - 윤문 후에도 CLAUDE.md의 다른 규칙(수치 표기, 모바일 줄바꿈, 브랜드 톤)이 우선한다 — 윤문이 이 규칙들을 깨면 안 된다.
 
+## PPT 제작 규칙 (글꼴 보존)
+
+- PPT(.pptx)를 만들거나 수정할 때는 trinity-ppt 스킬의 디자인 규칙(Pretendard, TRINITY CI)을 따르고, **받는 사람 컴퓨터에 Pretendard가 없으면 글꼴이 깨진다**는 전제로 아래를 지킨다:
+  1. **작업 전 폰트 설치**: 저장소의 Pretendard를 컨테이너에 설치한다
+     (`mkdir -p ~/.fonts && cp assets/fonts/Pretendard-*.otf ~/.fonts/ && fc-cache -f`).
+     설치 없이 렌더링·변환하면 대체 글꼴로 깨진 결과가 나온다.
+  2. **전달 시 PDF 사본 필수**: .pptx를 전달할 때는 글꼴이 박제된 PDF를 반드시 함께 생성해 같이 전달한다
+     (`soffice --headless --convert-to pdf <파일>.pptx` — 컨테이너에 LibreOffice 설치돼 있음).
+     공유·인쇄·모바일 열람은 PDF 기준으로 안내한다.
+  3. **.pptx 자체에 글꼴을 심는 것(임베드)은 제작 도구에서 지원되지 않는다.** 다른 컴퓨터에서 편집까지 해야 하는 파일은,
+     사용자가 PowerPoint에서 `파일 → 옵션 → 저장 → "파일의 글꼴 포함"`을 켜고 다시 저장하도록 전달 시 안내 문구를 붙인다.
+     수정까지 맡길 상대에게는 Pretendard 설치 링크(https://github.com/orioncactus/pretendard)를 함께 준다.
+
 ## 기타
 
 - 기존 강의 페이지(`class-*` 경로)를 새 작업으로 덮어쓰지 않는다. 새 페이지는 별도 경로로 만든다. 루트 `index.html`은 리쿠르팅 사이트다.
