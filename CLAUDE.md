@@ -6,6 +6,7 @@
 ## 배포 구조
 
 - GitHub Pages가 `main` 브랜치를 배포합니다. 작업 브랜치에 커밋·푸시한 뒤 PR을 만들어 **squash 머지**해야 사이트에 반영됩니다.
+  - **커밋을 만들면 PR 생성 → squash 머지 → 배포 확인까지 묻지 않고 자동으로 끝낸다** (사용자 상시 승인, 2026-10-12). 사용자가 "머지하지 말라"고 명시한 작업만 예외.
 - 사이트 주소: `https://trinityone.co.kr/` (커스텀 도메인, 가비아 DNS → GitHub Pages. 구 주소 `https://hq1trinity-arch.github.io/trinity-lecture-page/`는 자동 리다이렉트)
   - URL 체계 (2026-08-25 재편):
     - 리쿠르팅 사이트: 루트 `/` (`index.html`) — 2026-09-28 새 메인으로 교체. 순수 정적 HTML(React 없음), 미리보기 이미지 `assets/og-recruit-v1.jpg`.
