@@ -116,12 +116,15 @@
   1. **작업 전 폰트 설치**: 저장소의 Pretendard를 컨테이너에 설치한다
      (`mkdir -p ~/.fonts && cp assets/fonts/Pretendard-*.otf ~/.fonts/ && fc-cache -f`).
      설치 없이 렌더링·변환하면 대체 글꼴로 깨진 결과가 나온다.
-  2. **전달 시 PDF 사본 필수**: .pptx를 전달할 때는 글꼴이 박제된 PDF를 반드시 함께 생성해 같이 전달한다
-     (`soffice --headless --convert-to pdf <파일>.pptx` — 컨테이너에 LibreOffice 설치돼 있음).
-     공유·인쇄·모바일 열람은 PDF 기준으로 안내한다.
-  3. **.pptx 자체에 글꼴을 심는 것(임베드)은 제작 도구에서 지원되지 않는다.** 다른 컴퓨터에서 편집까지 해야 하는 파일은,
-     사용자가 PowerPoint에서 `파일 → 옵션 → 저장 → "파일의 글꼴 포함"`을 켜고 다시 저장하도록 전달 시 안내 문구를 붙인다.
-     수정까지 맡길 상대에게는 Pretendard 설치 링크(https://github.com/orioncactus/pretendard)를 함께 준다.
+  2. **전달 전 글꼴 임베드 (필수)**: 완성된 .pptx는 `python3 scripts/embed_pptx_fonts.py <파일>.pptx`로
+     Pretendard를 파일 안에 심은 **임베드본(-embedded.pptx)을 전달본으로** 쓴다.
+     (의존성: `pip install fonttools cu2qu`. OTF→TTF 변환 포함, 패밀리당 약 3MB 증가.)
+     PowerPoint 표준 임베드 규격(embeddedFontLst)이라 Pretendard가 없는 컴퓨터에서도 글꼴이 유지된다.
+     PDF 사본은 기본 생략 — 사용자가 요청할 때만 만든다
+     (`apt-get install -y libreoffice-impress` 후 `soffice --headless --convert-to pdf <파일>.pptx`).
+  3. 임베드본은 LibreOffice 렌더링까지 검증했지만 실제 PowerPoint 확인은 컨테이너에서 불가능하므로,
+     **첫 전달 때 사용자에게 "Pretendard 없는 컴퓨터에서 글꼴이 유지되는지" 한 번 확인**을 요청한다.
+     문제가 있으면 PowerPoint의 `파일 → 옵션 → 저장 → "파일의 글꼴 포함"` 저장을 대안으로 안내한다.
 
 ## 기타
 
