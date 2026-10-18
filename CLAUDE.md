@@ -13,6 +13,7 @@
       - 설정값(카카오 링크 `KAKAO_CHANNEL_URL`, `SITE_URL`, GA4·메타 픽셀 ID, SNS 주소, 히어로 영상)은 페이지 첫 `<script>` 맨 위 상수에서 바꾼다. 빈 값이면 해당 기능이 꺼진다.
       - 에셋: `assets/people/`(멤버 프로필), `assets/photos/`(세미나), `assets/benefits/`, `assets/site/`, `assets/fonts/PretendardVariable.woff2`
       - 약관·개인정보처리방침·법적고지의 빈칸은 `span.slot`(`data-slot="LEGAL_…"`)으로 표시돼 있다.
+      - 멤버 프로필: 강경연·김재민 카드는 **삭제가 아니라 숨김**(`<li class="person" hidden>`, 2026-10-18 사용자 요청). 화면엔 4명(강신우·김홍권·이주현·허도곤)이며 `ul.people-grid.n4`가 4명 배치를 맡는다. 다시 보이게 할 때는 `hidden` 속성과 `n4` 클래스를 함께 지운다. 숨긴 카드를 지우지 않는다.
     - 초기 버전 리쿠르팅 페이지 백업: `/recruit-v1.html` (noindex, 에셋·JS는 `trinity-one/` 디렉터리 참조)
     - 고객용 사이트: `/customer/`
     - 강의 페이지: `/class-날짜` (예: `class-0728.html`, `class-0728-busan.html`, `class-0730-seoul.html`, `class-0820.html`, `class-0820-b.html`, `class-0908/`, `class-0909-kim/`, `class-0909-kang/`)
