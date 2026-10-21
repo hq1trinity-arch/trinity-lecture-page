@@ -13,6 +13,12 @@
       "skillPath": "skills/caveman/SKILL.md",
       "computedHash": "2bc96f7c5d3c82f76714d9ec5027ef72518ede527b009a4cab6afd6db339ada9"
     },
+    "court": {
+      "source": "alexyc9381/court-skill",
+      "sourceType": "github",
+      "skillPath": "skills/court/SKILL.md",
+      "computedHash": "09f19b0cd2bf5b0399de3d3ff175dca04ecb2a80a4b50b82ed6546716045a617"
+    },
     "design-taste-frontend": {
       "source": "Leonxlnx/taste-skill",
       "sourceType": "github",
