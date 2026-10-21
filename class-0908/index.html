@@ -57,7 +57,9 @@
       width: 100%;
       max-width: 440px;
       background: #FBF8F4;
-      overflow: hidden;
+      /* overflow:hidden은 스크롤 컨테이너가 되어 하단 sticky CTA가 고정되지 않는다.
+         clip은 스크롤 컨테이너 없이 히어로 글로우·reveal 이동분만 잘라낸다(가로 스크롤 방지) */
+      overflow: clip;
       box-shadow: 0 0 80px rgba(0,0,0,0.4);
     }
 
