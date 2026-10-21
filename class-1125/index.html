@@ -156,6 +156,7 @@
     /* 좁은 화면(≤389px)에서 한 줄 유지용 축소 */
     @media (max-width:389px) {
       .hero-h1 { font-size:34px !important; }
+      .hero-pill { font-size:10px !important; letter-spacing:0.5px !important; padding:4px 8px !important; }
       .h2-curr { font-size:22px !important; }
       .part-h3 { font-size:21px; }
       .part-sub { font-size:13.5px; }
@@ -211,9 +212,9 @@
       <div class="hero-brand" style="position:relative;display:flex;align-items:center;justify-content:space-between;">
         <div style="display:flex;align-items:center;gap:9px;">
           <div role="img" aria-label="TRINITY ONE" style="flex:none;width:30px;height:30px;background:url('../assets/trinity-mark-v2.png') center/contain no-repeat;filter:brightness(0) invert(1);opacity:0.92;"></div>
-          <span style="font-size:13px;font-weight:700;letter-spacing:2.5px;color:#E6ECEA;">TRINITY ONE</span>
+          <span style="font-size:13px;font-weight:700;letter-spacing:2.5px;color:#E6ECEA;white-space:nowrap;">TRINITY ONE</span>
         </div>
-        <span style="font-size:11px;font-weight:600;letter-spacing:1px;color:#B3BBB8;border:1px solid rgba(255,255,255,0.18);padding:4px 9px;border-radius:999px;">5th BUSINESS CONFERENCE</span>
+        <span class="hero-pill" style="font-size:11px;font-weight:600;letter-spacing:1px;color:#B3BBB8;border:1px solid rgba(255,255,255,0.18);padding:4px 9px;border-radius:999px;white-space:nowrap;">5th BUSINESS CONFERENCE</span>
       </div>
 
       <!-- Title block -->
