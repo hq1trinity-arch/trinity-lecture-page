@@ -183,11 +183,13 @@
     .price-perk b { color:#FFFFFF; font-weight:700; }
 
     /* 389px 이하에서만 줄바꿈 */
-    .br-n { display:none; }
+    .br-n, .br-xs { display:none; }
+    @media (max-width:369px) { .br-xs { display:inline; } }
     /* 좁은 화면(≤389px)에서 한 줄 유지용 축소 */
     @media (max-width:389px) {
       .br-n { display:inline; }
       .h2-why { font-size:20px !important; }
+      .curr-intro { font-size:13px !important; }
       .hero-hook { font-size:23px; }
       .hero-compare { font-size:13px; }
       .hero-h1 { font-size:28px; }
@@ -385,8 +387,8 @@
     <section style="padding:46px 24px 18px;background:var(--page);">
       <div class="reveal sec-label">CURRICULUM</div>
       <h2 class="reveal sec-h2 h2-curr" style="font-size:23px;letter-spacing:-0.9px;">흩어진 지식 조각들을 <br class="br-n">하나로 꿰는 시간</h2>
-      <p class="reveal m-fit" style="margin:14px 0 0;font-size:14.5px;line-height:1.65;color:var(--text-2);font-weight:500;letter-spacing:-0.3px;">정관은 검토했는데 보수 규정은 그대로이고,<br>퇴직금은 준비했는데 상속 문제는<br>생각하지 못했다면 말짱 도루묵</p>
-      <p class="reveal m-fit" style="margin:12px 0 0;font-size:14.5px;line-height:1.65;color:var(--text-2);font-weight:500;letter-spacing:-0.3px;">이번 강의에서는 <b style="color:var(--text);font-weight:800;">정관 → 보수 → 퇴직금 → 상속</b> 프로세스로<br>실제 제안에 필요한 포인트를 함께 살펴봅니다</p>
+      <p class="reveal curr-intro" style="margin:14px 0 0;font-size:13.5px;line-height:1.65;color:var(--text-2);font-weight:500;letter-spacing:-0.3px;">정관은 검토했는데 보수 규정은 그대로이고,<br>퇴직금은 준비했는데 상속 문제는 <br class="br-xs">생각하지 못했다면 말짱 도루묵</p>
+      <p class="reveal curr-intro" style="margin:12px 0 0;font-size:13.5px;line-height:1.65;color:var(--text-2);font-weight:500;letter-spacing:-0.3px;">이번 강의에서는 <b style="color:var(--text);font-weight:800;">정관 → 보수 → 퇴직금 → 상속</b> 프로세스로<br>실제 제안에 필요한 포인트를 함께 살펴봅니다</p>
 
       <!-- Part 1 -->
       <div class="reveal from-left" style="margin-top:26px;border-radius:22px;overflow:hidden;background:#FFFFFF;border:1px solid rgba(200,161,101,0.38);box-shadow:0 12px 30px rgba(200,161,101,0.12);">
