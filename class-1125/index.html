@@ -185,6 +185,8 @@
       .part-item { font-size:14.5px; }
       .m-fit { font-size:13.5px !important; }
       .m-fit2 { font-size:14px !important; }
+      .quote-card p { font-size:13px !important; }
+      .why-close { font-size:13px !important; letter-spacing:-0.6px !important; }
     }
 
     /* ── Hero entrance animations ── */
@@ -223,9 +225,10 @@
     .career-tag { font-size:11px; font-weight:800; letter-spacing:1px; color:var(--label); margin-bottom:8px; }
 
     /* ── 인용 카드 (문제 제기) ── */
-    .quote-card { display:flex; gap:12px; align-items:flex-start; background:#FFFFFF; border:1px solid var(--line); border-radius:16px; padding:16px 17px; }
-    .quote-card .qmark { flex:none; width:26px; height:26px; border-radius:8px; background:var(--gold-bg); color:var(--gold-d); font-size:18px; font-weight:900; line-height:26px; text-align:center; font-family:Georgia, "Times New Roman", serif; }
-    .quote-card p { margin:0; font-size:15.5px; line-height:1.5; color:var(--text); font-weight:700; letter-spacing:-0.3px; }
+    .quote-card { display:flex; gap:9px; align-items:baseline; background:#FFFFFF; border:1px solid var(--line); border-radius:16px; padding:16px 17px; }
+    .quote-card .qn { flex:none; font-size:12px; font-weight:800; color:var(--gold-d); letter-spacing:0.5px; font-variant-numeric:tabular-nums; }
+    .quote-card p { margin:0; font-size:14.5px; line-height:1.5; color:var(--text); font-weight:700; letter-spacing:-0.6px; white-space:nowrap; }
+    .why-close { margin:0; font-size:14.5px; line-height:1.65; color:#F3EEE3; font-weight:600; letter-spacing:-0.5px; white-space:nowrap; }
 
     /* ── 변화 카드 (수강 후) ── */
     .change-card { background:#FFFFFF; border:1px solid var(--line); border-radius:16px; padding:17px 18px; }
@@ -313,16 +316,16 @@
 
       <div style="display:flex;flex-direction:column;gap:10px;margin-top:24px;">
         <div class="reveal quote-card" data-delay="0">
-          <span class="qmark" aria-hidden="true">“</span>
+          <span class="qn">01</span>
           <p>“대표님 보수는 얼마가 적절할까?”</p>
         </div>
         <div class="reveal quote-card" data-delay="80">
-          <span class="qmark" aria-hidden="true">“</span>
-          <p>“퇴직금 규정은 있는데,<br>실제 지급해도 괜찮을까?”</p>
+          <span class="qn">02</span>
+          <p>“퇴직금 규정은 있는데, 실제 지급해도 괜찮을까?”</p>
         </div>
         <div class="reveal quote-card" data-delay="160">
-          <span class="qmark" aria-hidden="true">“</span>
-          <p>“지금 이 방식이 상속까지<br>감안하더라도 유리할까?”</p>
+          <span class="qn">03</span>
+          <p>“지금 이 방식이 상속까지 감안하더라도 유리할까?”</p>
         </div>
       </div>
 
@@ -330,7 +333,7 @@
 
       <div class="reveal" style="margin-top:20px;border-radius:18px;overflow:hidden;background:var(--ink);box-shadow:0 16px 40px rgba(28,46,41,0.28);">
         <div style="padding:18px 20px;border-left:4px solid var(--gold);">
-          <p style="margin:0;font-size:15px;line-height:1.65;color:#F3EEE3;font-weight:600;letter-spacing:-0.3px;">미룬다고 대표님의 고민이<br>사라지진 않습니다. 이번 기회에<br><b style="color:var(--gold);font-weight:800;">거장의 시선</b>으로 확실하게 정리해 봅시다</p>
+          <p class="why-close">미룬다고 대표님의 고민이 사라지진 않습니다.<br>이번 기회에 <b style="color:var(--gold);font-weight:800;">거장의 시선</b>으로 확실하게 정리해 봅시다</p>
         </div>
       </div>
     </section>
