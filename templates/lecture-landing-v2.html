@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<!--
+  ════════════════════════════════════════════════════════════════
+   TRINITY ONE 강의 랜딩페이지 템플릿 V2  (2026-10-22, class-1125 기준)
+  ════════════════════════════════════════════════════════════════
+  사용법
+   1. 이 파일을 /class-MMDD/index.html 로 복사한다 (에셋 경로는 ../assets/ 기준).
+   2. [대괄호] 자리표시자를 전부 채운다. 남은 "[" 가 없는지 grep 으로 확인한다.
+   3. <meta name="robots" noindex> 줄을 지운다. sitemap.xml 에 새 경로를 넣는다.
+   4. :root 색상은 포스터 톤에 맞춰 바꾼다 (아래 "Palette" 주석). 로고는 색을 바꾸지 않는다.
+   5. 에셋: 포스터 jpg, OG 1200×630(포스터 중앙 + 블러 배경), 강사 사진, 도서 표지.
+      이미지를 교체할 때는 파일명을 -v2, -v3 로 바꿔 카카오 캐시를 피한다.
+   6. 스크립트 상단 APPLY_URL(신청 폼)·COUNTER_KEY(조회수 키)를 바꾼다.
+   7. 로컬 서버 + Chromium 으로 390 · 375 · 360 · 1280px 를 렌더링해 줄바꿈과 넘침을 확인한다.
+
+  구성 (CLAUDE.md "강의 페이지 구성 규칙")
+   HERO        : 대상 라벨 → 후킹 질문 → 비교 문장 → 연결 문장 → 제목/부제/강사 소개/펀치 라인
+                 → 일시·장소 배지 → 가격 카드(정가 취소선 → 할인가, 혜택) → 신청 버튼 → 포스터
+   WHY NOW     : pain point. 현장에서 받는 질문 3개(번호·한 줄) → 미뤄 둔 상황 → 다크 강조 박스
+   AFTER       : Before → After. "~에서 ~로!" 제목 → 변화 카드 3개(수강 후 달라지는 행동) → 마무리
+   CURRICULUM  : 제목·도입 → 파트 카드(파트명·시간 칩, 제목, 핵심 질문 먼저, 목차는 아래) → 마무리 → 가격 한 줄 → 신청 버튼
+   SPEAKER / SPECIAL GIFT / DATE & VENUE / 주최·문의 / 하단 고정 바(조회수 + 신청 버튼)
+
+  문안 규칙
+   · 문단 끝 마침표 없음. 문장 중간 마침표·물음표·느낌표·따옴표는 그대로.
+   · 긴 대시(em dash) 금지. 필요하면 짧은 대시(–)만.
+   · 줄바꿈은 문장·구 경계에서만. <br> 는 모든 화면, <br class="br-n"> 는 389px 이하만,
+     <br class="br-xs"> 는 369px 이하만. 한 줄에 안 들어가면 그 문단만 글자를 소폭 줄인다(.m-fit 류).
+   · 확인되지 않은 후기·잔여석·신청 인원·사례·혜택은 넣지 않는다. 자체 실적 수치 금지.
+   · 신청 버튼 문구는 "수강 신청하기" 로 통일. 가격은 버튼 밖(가격 카드, 버튼 위 한 줄)에만.
+-->
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>[강의 제목] | TRINITY ONE ([도시])</title>
+  <meta name="description" content="[강의 소개 한 줄. 날짜·장소 포함. 예: 2026.11.25 서울 선릉 패스트파이브]">
+  <meta name="robots" content="noindex, nofollow">  <!-- ★ 실제 페이지로 복사하면 이 줄은 지운다 -->
+  <link rel="icon" type="image/png" href="../assets/trinity-one-logo.png">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://trinityone.co.kr/[class-MMDD]/">
+  <meta property="og:title" content="[강의 제목] | TRINITY ONE ([도시])">
+  <meta property="og:description" content="[강의 소개 한 줄. 날짜·장소 포함. 예: 2026.11.25 서울 선릉 패스트파이브]">
+  <meta property="og:image" content="https://trinityone.co.kr/assets/[og-도시-MMDD-v1].jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="ko_KR">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="[강의 제목] | TRINITY ONE ([도시])">
+  <meta name="twitter:description" content="[강의 소개 한 줄. 날짜·장소 포함. 예: 2026.11.25 서울 선릉 패스트파이브]">
+  <meta name="twitter:image" content="https://trinityone.co.kr/assets/[og-도시-MMDD-v1].jpg">
+
+  <style>
+    /* ── Palette ── 포스터 톤에 맞춰 여기만 바꾼다. (V2 기본값: 딥 그린 + 코퍼)
+       다크(--ink/--ink-2), 포인트(--gold/--gold-d), 포인트 위 글자(--gold-on), 틴트(--gold-bg), 라벨(--label), 페이지 배경(--page) */
+    :root {
+      --ink:        #1C2E29;   /* 딥 그린 차콜 (히어로·다크 카드) */
+      --ink-2:      #27403A;   /* 딥 그린 밝은 톤 */
+      --gold:       #C8A165;   /* 코퍼 골드 (포인트·CTA) */
+      --gold-d:     #A77F45;   /* 코퍼 진한 톤 (그라디언트 끝) */
+      --gold-on:    #1A1206;   /* 골드 위 텍스트 */
+      --gold-bg:    #F4ECDD;   /* 골드 틴트 배경 */
+      --label:      #8A6A36;   /* 섹션 라벨 (밝은 배경 위) */
+      --page:       #F7F4EE;   /* 페이지 배경 (크림) */
+      --text:       #1F1B17;
+      --text-2:     #3B3630;
+      --muted:      #7A7168;
+      --line:       rgba(28,46,41,0.10);
+    }
+
+    /* ── Fonts ── */
+    @font-face { font-family:"Pretendard"; font-weight:100; font-display:swap; src:url("../assets/fonts/Pretendard-Thin.otf") format("opentype"); }
+    @font-face { font-family:"Pretendard"; font-weight:200; font-display:swap; src:url("../assets/fonts/Pretendard-ExtraLight.otf") format("opentype"); }
+    @font-face { font-family:"Pretendard"; font-weight:300; font-display:swap; src:url("../assets/fonts/Pretendard-Light.otf") format("opentype"); }
+    @font-face { font-family:"Pretendard"; font-weight:400; font-display:swap; src:url("../assets/fonts/Pretendard-Regular.otf") format("opentype"); }
+    @font-face { font-family:"Pretendard"; font-weight:500; font-display:swap; src:url("../assets/fonts/Pretendard-Medium.otf") format("opentype"); }
+    @font-face { font-family:"Pretendard"; font-weight:600; font-display:swap; src:url("../assets/fonts/Pretendard-SemiBold.otf") format("opentype"); }
+    @font-face { font-family:"Pretendard"; font-weight:700; font-display:swap; src:url("../assets/fonts/Pretendard-Bold.otf") format("opentype"); }
+    @font-face { font-family:"Pretendard"; font-weight:800; font-display:swap; src:url("../assets/fonts/Pretendard-ExtraBold.otf") format("opentype"); }
+    @font-face { font-family:"Pretendard"; font-weight:900; font-display:swap; src:url("../assets/fonts/Pretendard-Black.otf") format("opentype"); }
+
+    /* ── Reset ── */
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    a { text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    /* ── Page shell ── */
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      background: radial-gradient(130% 90% at 50% 0%, #27403A, #0E1917);
+      font-family: "Pretendard", -apple-system, BlinkMacSystemFont, sans-serif;
+      word-break: keep-all;
+    }
+
+    /* ── Card ── */
+    .page-card {
+      position: relative;
+      width: 100%;
+      max-width: 440px;
+      background: var(--page);
+      /* overflow:hidden은 스크롤 컨테이너가 되어 하단 sticky CTA가 고정되지 않는다.
+         clip은 스크롤 컨테이너 없이 히어로 글로우·reveal 이동분만 잘라낸다(가로 스크롤 방지) */
+      overflow: clip;
+      box-shadow: 0 0 80px rgba(0,0,0,0.45);
+    }
+
+    section { padding: 0; }
+
+    /* ── CTA button ── */
+    .btn-apply {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      height: 56px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #D9B679, var(--gold));
+      color: var(--gold-on);
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      text-decoration: none;
+      box-shadow: 0 14px 30px rgba(200,161,101,0.38);
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+    }
+    .btn-apply:active { transform: scale(0.98); box-shadow: 0 8px 18px rgba(200,161,101,0.32); }
+    .btn-apply { gap: 7px; white-space: nowrap; }
+    .btn-apply .bl { font-size: 17px; font-weight: 800; }
+    .btn-apply .bp { font-size: 13.5px; font-weight: 700; letter-spacing: -0.3px; }
+    .btn-apply .bp s { opacity: 0.62; text-decoration-thickness: 1.5px; }
+    .btn-apply .bp .ar { opacity: 0.7; margin: 0 1px; }
+    .btn-apply .bp b { font-size: 15.5px; font-weight: 800; }
+    .btn-apply .bp small { font-size: 12px; font-weight: 600; opacity: 0.85; margin-left: 2px; }
+    .sticky-row .btn-apply .bl { font-size: 16px; }
+    .sticky-row .btn-apply .bp { font-size: 13px; letter-spacing: -0.3px; }
+    .sticky-row .btn-apply .bp b { font-size: 15px; }
+    .sticky-row .btn-apply .bp small { font-size: 11.5px; }
+
+    /* ── Map nav buttons ── */
+    .btn-map {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      height: 46px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: opacity 0.1s ease;
+    }
+    .btn-map:active { opacity: 0.85; }
+    .btn-map-naver { background: #03C75A; color: #fff; }
+    .btn-map-kakao  { background: #FEE500; color: #191600; }
+
+    /* ── Sticky CTA bar (+ 조회수) ── */
+    .sticky-cta {
+      position: sticky;
+      bottom: 0;
+      z-index: 50;
+      padding: 10px 20px calc(12px + env(safe-area-inset-bottom));
+      background: linear-gradient(to top, #F7F4EE 78%, rgba(247,244,238,0));
+    }
+    .price-line { font-size:13px; line-height:1.4; color:var(--text-2); font-weight:600; letter-spacing:-0.3px; text-align:center; }
+    .price-line s { color:var(--muted); font-weight:500; text-decoration-thickness:1.5px; }
+    .price-line .ar { color:var(--muted); margin:0 2px; }
+    .price-line b { color:var(--text); font-weight:800; }
+    .sticky-price { margin:0 0 8px; font-size:12px; }
+    .sticky-row { display: flex; align-items: center; gap: 12px; }
+    .sticky-row .btn-apply { flex: 1; min-width: 0; border-radius: 15px; box-shadow: 0 12px 28px rgba(200,161,101,0.38); }
+    .view-count {
+      display: none;             /* data-min 미만이면 숨김 (JS가 표시) */
+      flex: none;
+      max-width: 44%;
+      font-size: 12px;
+      line-height: 1.35;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: -0.2px;
+    }
+    .view-count.on { display: block; }
+    .view-count b { font-weight: 800; color: var(--text); font-variant-numeric: tabular-nums; }
+    .view-count .vc-short { display: none; }
+    @media (max-width:439px) {
+      .view-count { max-width: 34%; }
+      .view-count .vc-long { display: none; }
+      .view-count .vc-short { display: inline; }
+    }
+
+    /* ── Section label / heading ── */
+    .sec-label { font-size:12px; font-weight:800; letter-spacing:2px; color:var(--label); text-transform:uppercase; }
+    .sec-h2 { margin:12px 0 0; font-size:26px; font-weight:800; letter-spacing:-0.7px; color:var(--text); line-height:1.3; }
+    .sec-sub { margin:10px 0 0; font-size:14px; color:var(--muted); font-weight:500; }
+    .part-h3 { margin:14px 0 0; font-size:22px; font-weight:800; letter-spacing:-0.6px; line-height:1.3; }
+    .part-q { margin-top:10px; font-size:14.5px; font-weight:600; letter-spacing:-0.3px; line-height:1.55; }
+    .part-item { margin:0; font-size:15px; line-height:1.55; color:var(--text-2); }
+
+    /* ── Hero copy ── */
+    .hero-hook { margin:12px 0 0; font-size:25px; line-height:1.3; font-weight:800; letter-spacing:-0.8px; color:#FFFFFF; }
+    .hero-compare { margin:14px 0 0; font-size:14px; line-height:1.7; color:#C9C2B4; font-weight:500; letter-spacing:-0.3px; }
+    .hero-bridge { margin:14px 0 0; font-size:15px; line-height:1.6; color:#EEE6D6; font-weight:600; letter-spacing:-0.3px; }
+    .hero-h1 { margin:8px 0 0; font-size:29px; line-height:1.22; font-weight:800; letter-spacing:-1px; color:var(--gold); }
+    .hero-h1-sub { margin:10px 0 0; font-size:14.5px; line-height:1.6; color:#D8D0C0; font-weight:500; letter-spacing:-0.3px; }
+    .hero-desc { margin:14px 0 0; font-size:14px; line-height:1.65; color:#B9B2A4; font-weight:450; letter-spacing:-0.3px; }
+    .hero-punch { margin:14px 0 0; font-size:15.5px; line-height:1.5; color:var(--gold); font-weight:800; letter-spacing:-0.4px; }
+    .price-card { margin-top:22px; border-radius:18px; background:rgba(255,255,255,0.06); border:1px solid rgba(200,161,101,0.35); padding:16px 18px; }
+    .price-old { font-size:14px; color:#A79F91; text-decoration:line-through; text-decoration-thickness:1.5px; font-weight:500; }
+    .price-arrow { margin:0 6px; color:#A79F91; font-size:14px; }
+    .price-new { font-size:22px; font-weight:800; color:var(--gold); letter-spacing:-0.5px; }
+    .price-new small { font-size:13px; font-weight:600; color:#D8D0C0; letter-spacing:-0.2px; margin-left:4px; }
+    .price-perk { margin:10px 0 0; font-size:13.5px; line-height:1.6; color:#E3DCCD; font-weight:500; letter-spacing:-0.2px; }
+    .price-perk b { color:#FFFFFF; font-weight:700; }
+
+    /* 389px 이하에서만 줄바꿈 */
+    .br-n, .br-xs { display:none; }
+    @media (max-width:369px) { .br-xs { display:inline; } }
+    /* 좁은 화면(≤389px)에서 한 줄 유지용 축소 */
+    @media (max-width:389px) {
+      .br-n { display:inline; }
+      .h2-why { font-size:20px !important; }
+      .curr-intro { font-size:13px !important; }
+      .curr-close { font-size:13.5px !important; }
+      .hero-hook { font-size:23px; }
+      .hero-compare { font-size:13px; }
+      .hero-h1 { font-size:28px; }
+      .hero-h1-sub { font-size:13.5px; }
+      .hero-desc { font-size:13px; }
+      .hero-punch { font-size:14.5px; }
+      .hero-pill { font-size:10px !important; letter-spacing:0.5px !important; padding:4px 8px !important; }
+      .h2-curr { font-size:23px !important; }
+      .part-h3 { font-size:20px; }
+      .part-q { font-size:13.5px; }
+      .part-item { font-size:14.5px; }
+      .m-fit { font-size:13.5px !important; }
+      .m-fit2 { font-size:14px !important; }
+      .quote-card p { font-size:13px !important; }
+      .view-count { max-width: 30%; }
+      .sticky-row .btn-apply .bl { font-size: 15px; }
+      .sticky-row .btn-apply .bp { font-size: 12px; letter-spacing: -0.4px; }
+      .sticky-row .btn-apply .bp b { font-size: 14px; }
+      .why-close { font-size:13px !important; letter-spacing:-0.6px !important; }
+    }
+
+    /* ── Hero entrance animations ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    .hero-brand { animation: fadeIn  0.6s ease both; animation-delay: 0.1s; }
+    .hero-label { animation: fadeUp  0.6s ease both; animation-delay: 0.25s; }
+    .hero-hook  { animation: fadeUp  0.6s ease both; animation-delay: 0.35s; }
+    .hero-compare, .hero-bridge { animation: fadeUp 0.6s ease both; animation-delay: 0.45s; }
+    .hero-h1, .hero-h1-sub, .hero-desc, .hero-punch { animation: fadeUp 0.7s ease both; animation-delay: 0.55s; }
+    .hero-pills { animation: fadeUp  0.6s ease both; animation-delay: 0.68s; }
+    .price-card { animation: fadeUp  0.6s ease both; animation-delay: 0.78s; }
+    .hero-cta   { animation: fadeUp  0.6s ease both; animation-delay: 0.88s; }
+    .hero-poster{ animation: fadeUp  0.7s ease both; animation-delay: 1.0s; }
+
+    /* ── Scroll-reveal ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+    .reveal.from-left  { transform: translateX(-28px); }
+    .reveal.from-right { transform: translateX(28px); }
+    .reveal.visible { opacity: 1; transform: translate(0, 0); }
+
+    /* ── 강사 경력 리스트 ── */
+    .career { margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:7px; }
+    .career li { position:relative; padding-left:14px; font-size:13.5px; line-height:1.5; color:#5E5A52; }
+    .career li::before { content:""; position:absolute; left:0; top:9px; width:5px; height:5px; border-radius:50%; background:var(--gold-d); }
+    .career-tag { font-size:11px; font-weight:800; letter-spacing:1px; color:var(--label); margin-bottom:8px; }
+
+    /* ── 인용 카드 (문제 제기) ── */
+    .quote-card { display:flex; gap:9px; align-items:baseline; background:#FFFFFF; border:1px solid var(--line); border-radius:16px; padding:16px 17px; }
+    .quote-card .qn { flex:none; font-size:12px; font-weight:800; color:var(--gold-d); letter-spacing:0.5px; font-variant-numeric:tabular-nums; }
+    .quote-card p { margin:0; font-size:14.5px; line-height:1.5; color:var(--text); font-weight:700; letter-spacing:-0.6px; white-space:nowrap; }
+    .why-close { margin:0; font-size:14.5px; line-height:1.65; color:#F3EEE3; font-weight:600; letter-spacing:-0.5px; white-space:nowrap; }
+
+    /* ── 변화 카드 (수강 후) ── */
+    .change-card { background:#FFFFFF; border:1px solid var(--line); border-radius:16px; padding:17px 18px; }
+    .change-card .ct { display:flex; gap:10px; align-items:center; font-size:16.5px; font-weight:800; color:var(--text); letter-spacing:-0.4px; }
+    .change-card .ct span { flex:none; width:24px; height:24px; border-radius:7px; background:var(--ink); color:var(--gold); font-size:11px; font-weight:800; display:flex; align-items:center; justify-content:center; }
+    .change-card p { margin:9px 0 0 34px; font-size:14.5px; line-height:1.6; color:var(--text-2); font-weight:500; }
+  </style>
+</head>
+<body>
+  <div class="page-card">
+
+    <!-- ══════════ HERO ══════════ -->
+    <section style="position:relative;background:var(--ink);color:#F7F4EE;padding:22px 24px 40px;overflow:hidden;">
+
+      <div style="position:absolute;top:-90px;right:-70px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(200,161,101,0.30),transparent 70%);pointer-events:none;"></div>
+      <div style="position:absolute;top:260px;left:-100px;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,rgba(200,161,101,0.12),transparent 70%);pointer-events:none;"></div>
+
+      <!-- Brand bar -->
+      <div class="hero-brand" style="position:relative;display:flex;align-items:center;justify-content:space-between;">
+        <div style="display:flex;align-items:center;gap:9px;">
+          <div role="img" aria-label="TRINITY ONE" style="flex:none;width:30px;height:30px;background:url('../assets/trinity-mark-v2.png') center/contain no-repeat;filter:brightness(0) invert(1);opacity:0.92;"></div>
+          <span style="font-size:13px;font-weight:700;letter-spacing:2.5px;color:#EDE6D8;white-space:nowrap;">TRINITY ONE</span>
+        </div>
+        <span class="hero-pill" style="font-size:11px;font-weight:600;letter-spacing:1px;color:#BDB5A6;border:1px solid rgba(255,255,255,0.18);padding:4px 9px;border-radius:999px;white-space:nowrap;">[회차 · 6th BUSINESS CONFERENCE]</span>
+      </div>
+
+      <!-- Hook -->
+      <div style="position:relative;margin-top:30px;">
+        <div class="hero-label" style="display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:800;letter-spacing:0.5px;color:var(--gold);">
+          <span aria-hidden="true">–</span>[대상 라벨 · 예: 세무사 · 회계사 · 법인컨설턴트를 위한 실무 강의]
+        </div>
+        <h2 class="hero-hook">[후킹 질문 1행,<br>2행 · 대상자의 pain point를 질문으로]</h2>
+        <p class="hero-compare">[비교 문장 1행 · 나는 ~하는데, 누군가는 ~]<br>[비교 문장 2행]</p>
+        <p class="hero-bridge">[연결 문장 · 390px 한 줄, 좁은 화면만 줄바꿈] <br class="br-n">[뒷부분]</p>
+      </div>
+
+      <!-- Title block -->
+      <div style="position:relative;margin-top:26px;padding-top:22px;border-top:1px solid rgba(255,255,255,0.12);">
+        <h1 class="hero-h1">[강의 제목 앞부분] <br class="br-n">[강의 제목 뒷부분]</h1>
+        <p class="hero-h1-sub">[부제 · 다루는 주제를 한 줄로]</p>
+        <p class="hero-desc">[강사 소개 1행 · 예: 『저서』의 저자, OOO 세무사와 함께하는]<br>[강의 한 줄 요약]</p>
+        <p class="hero-punch">[펀치 라인 · 예: 다음 고객 미팅을 준비하는 4시간]</p>
+      </div>
+
+      <!-- Date / venue pills -->
+      <div class="hero-pills" style="position:relative;display:flex;flex-wrap:wrap;gap:8px;margin-top:20px;">
+        <span style="display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:#F0EADC;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);padding:8px 13px;border-radius:999px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+          [날짜 · 예: 2026. 11. 25. 수요일 오후 1시–5시]
+        </span>
+        <span style="display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:#F0EADC;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);padding:8px 13px;border-radius:999px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
+          [장소명 · 예: 패스트파이브 선릉센트럴점]
+        </span>
+      </div>
+
+      <!-- Price -->
+      <div class="price-card" style="position:relative;">
+        <div style="display:flex;align-items:baseline;flex-wrap:wrap;">
+          <span class="price-old">수강료 [정가 · 예: 330,000원]</span>
+          <span class="price-arrow" aria-hidden="true">→</span>
+          <span class="price-new">특별 할인가 [할인가 · 예: 55,000원]<small>(VAT 포함)</small></span>
+        </div>
+        <p class="price-perk"><b>[혜택 제목 · 예: 오프라인 참석자만을 위한 혜택]</b><br>· [혜택 1]<br>· [혜택 2]</p>
+      </div>
+
+      <!-- Hero CTA -->
+      <a href="[신청 구글폼 주소]" target="_blank" rel="noopener" class="btn-apply hero-cta js-apply" style="position:relative;margin-top:18px;">
+        수강 신청하기
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold-on)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+
+      <!-- Key visual: poster -->
+      <div class="hero-poster" style="position:relative;margin-top:26px;border-radius:18px;overflow:hidden;box-shadow:0 24px 50px rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.1);">
+        <img src="../assets/[poster-도시-MMDD-v1].jpg"
+             alt="[강의 제목] 강의 포스터, [강사명] [직함]"
+             style="display:block;width:100%;height:auto;aspect-ratio:[포스터 가로]/[포스터 세로];object-fit:cover;">
+      </div>
+    </section>
+
+    <!-- ══════════ 문제 제기 ══════════ -->
+    <section style="padding:56px 24px 14px;background:var(--page);">
+      <div class="reveal sec-label">WHY NOW</div>
+      <h2 class="reveal sec-h2 h2-why" style="font-size:22px;letter-spacing:-0.6px;">[문제 제기 제목 1행,<br>2행<br>3행 · 대상자가 막히는 순간]</h2>
+
+      <div style="display:flex;flex-direction:column;gap:10px;margin-top:24px;">
+        <div class="reveal quote-card" data-delay="0">
+          <span class="qn">01</span>
+          <p>“[현장에서 받는 질문 1 · 한 줄]”</p>
+        </div>
+        <div class="reveal quote-card" data-delay="80">
+          <span class="qn">02</span>
+          <p>“[현장에서 받는 질문 2 · 한 줄]”</p>
+        </div>
+        <div class="reveal quote-card" data-delay="160">
+          <span class="qn">03</span>
+          <p>“[현장에서 받는 질문 3 · 한 줄]”</p>
+        </div>
+      </div>
+
+      <p class="reveal" style="margin:22px 0 0;font-size:15px;line-height:1.65;color:var(--text-2);font-weight:500;letter-spacing:-0.3px;">[미뤄 둔 상황 묘사 1행]<br>[2행 · 공감 질문으로 마무리]</p>
+
+      <div class="reveal" style="margin-top:20px;border-radius:18px;overflow:hidden;background:var(--ink);box-shadow:0 16px 40px rgba(28,46,41,0.28);">
+        <div style="padding:18px 20px;border-left:4px solid var(--gold);">
+          <p class="why-close">[강조 문장 1행]<br>[2행 · <b style="color:var(--gold);font-weight:800;">핵심 키워드</b>는 b 태그로 강조]</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ 수강 후 변화 ══════════ -->
+    <section style="padding:46px 24px 14px;background:var(--page);">
+      <div class="reveal sec-label">AFTER THIS CLASS</div>
+      <h2 class="reveal sec-h2" style="font-size:24px;letter-spacing:-0.8px;">[Before 문구]에서<br>[After 문구]로!</h2>
+      <p class="reveal sec-sub" style="font-size:15px;color:var(--label);font-weight:700;">[변화 부제 · 한 줄]</p>
+
+      <div style="display:flex;flex-direction:column;gap:10px;margin-top:24px;">
+        <div class="reveal change-card" data-delay="0">
+          <div class="ct"><span>01</span>[변화 1 제목]</div>
+          <p>[변화 1 설명 1행]<br>[2행 · 수강 후 달라지는 행동]</p>
+        </div>
+        <div class="reveal change-card" data-delay="80">
+          <div class="ct"><span>02</span>[변화 2 제목]</div>
+          <p>[변화 2 설명 1행]<br>[2행]</p>
+        </div>
+        <div class="reveal change-card" data-delay="160">
+          <div class="ct"><span>03</span>[변화 3 제목]</div>
+          <p>[변화 3 설명 1행]<br>[2행]</p>
+        </div>
+      </div>
+
+      <p class="reveal" style="margin:20px 0 0;font-size:15px;line-height:1.6;color:var(--text);font-weight:700;letter-spacing:-0.3px;text-align:center;">[변화 섹션 마무리 문장 · 390px 한 줄] <br class="br-n">[뒷부분]</p>
+    </section>
+
+    <!-- ══════════ 커리큘럼 ══════════ -->
+    <section style="padding:46px 24px 18px;background:var(--page);">
+      <div class="reveal sec-label">CURRICULUM</div>
+      <h2 class="reveal sec-h2 h2-curr" style="font-size:23px;letter-spacing:-0.9px;">[커리큘럼 제목 · 390px 한 줄] <br class="br-n">[뒷부분]</h2>
+      <p class="reveal curr-intro" style="margin:14px 0 0;font-size:13.5px;line-height:1.65;color:var(--text-2);font-weight:500;letter-spacing:-0.3px;">[커리큘럼 도입 1행]<br>[2행]</p>
+      <p class="reveal curr-intro" style="margin:12px 0 0;font-size:13.5px;line-height:1.65;color:var(--text-2);font-weight:500;letter-spacing:-0.3px;">[진행 순서 안내 · <b style="color:var(--text);font-weight:800;">A → B → C → D</b> 프로세스로]<br>[2행]</p>
+
+      <!-- Part 1 -->
+      <div class="reveal from-left" style="margin-top:26px;border-radius:22px;overflow:hidden;background:#FFFFFF;border:1px solid rgba(200,161,101,0.38);box-shadow:0 12px 30px rgba(200,161,101,0.12);">
+        <div style="padding:20px 20px 18px;background:linear-gradient(135deg,var(--gold),var(--gold-d));color:var(--gold-on);">
+          <span style="display:inline-block;font-size:12px;font-weight:800;letter-spacing:1.5px;background:rgba(26,18,6,0.16);padding:5px 11px;border-radius:999px;">PART 1 · [시간]</span>
+          <h3 class="part-h3">[파트 1 제목]</h3>
+          <div class="part-q" style="opacity:0.92;">“[핵심 질문 1행]”<br>[2행]</div>
+        </div>
+        <div style="padding:20px 20px 22px;display:flex;flex-direction:column;gap:13px;">
+          <div style="display:flex;gap:11px;align-items:flex-start;">
+            <span style="flex:none;margin-top:7px;width:6px;height:6px;border-radius:50%;background:var(--gold-d);"></span>
+            <p class="part-item">[목차 항목 1 · 핵심 키워드는 <b style="color:var(--text);">b 태그</b>]</p>
+          </div>
+          <div style="display:flex;gap:11px;align-items:flex-start;">
+            <span style="flex:none;margin-top:7px;width:6px;height:6px;border-radius:50%;background:var(--gold-d);"></span>
+            <p class="part-item">[목차 항목 2 · 핵심 키워드는 <b style="color:var(--text);">b 태그</b>]</p>
+          </div>
+          <div style="display:flex;gap:11px;align-items:flex-start;">
+            <span style="flex:none;margin-top:7px;width:6px;height:6px;border-radius:50%;background:var(--gold-d);"></span>
+            <p class="part-item">[목차 항목 3 · 핵심 키워드는 <b style="color:var(--text);">b 태그</b>]</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Part 2 -->
+      <div class="reveal from-right" data-delay="100" style="margin-top:18px;border-radius:22px;overflow:hidden;background:#FFFFFF;border:1px solid rgba(28,46,41,0.22);box-shadow:0 12px 30px rgba(28,46,41,0.10);">
+        <div style="padding:20px 20px 18px;background:linear-gradient(135deg,var(--ink-2),var(--ink));color:#fff;">
+          <span style="display:inline-block;font-size:12px;font-weight:800;letter-spacing:1.5px;background:rgba(200,161,101,0.2);color:var(--gold);padding:5px 11px;border-radius:999px;">PART 2 · [시간]</span>
+          <h3 class="part-h3">[파트 2 제목]</h3>
+          <div class="part-q" style="color:var(--gold);">“[핵심 질문]”</div>
+        </div>
+        <div style="padding:20px 20px 22px;display:flex;flex-direction:column;gap:13px;">
+          <div style="display:flex;gap:11px;align-items:flex-start;">
+            <span style="flex:none;margin-top:7px;width:6px;height:6px;border-radius:50%;background:var(--ink);"></span>
+            <p class="part-item">[목차 항목 4 · 핵심 키워드는 <b style="color:var(--text);">b 태그</b>]</p>
+          </div>
+          <div style="display:flex;gap:11px;align-items:flex-start;">
+            <span style="flex:none;margin-top:7px;width:6px;height:6px;border-radius:50%;background:var(--ink);"></span>
+            <p class="part-item">[목차 항목 5 · 핵심 키워드는 <b style="color:var(--text);">b 태그</b>]</p>
+          </div>
+          <div style="display:flex;gap:11px;align-items:flex-start;">
+            <span style="flex:none;margin-top:7px;width:6px;height:6px;border-radius:50%;background:var(--ink);"></span>
+            <p class="part-item">[목차 항목 6 · 핵심 키워드는 <b style="color:var(--text);">b 태그</b>]</p>
+          </div>
+          <div style="display:flex;gap:11px;align-items:flex-start;">
+            <span style="flex:none;margin-top:7px;width:6px;height:6px;border-radius:50%;background:var(--ink);"></span>
+            <p class="part-item">[목차 항목 7 · 핵심 키워드는 <b style="color:var(--text);">b 태그</b>]</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Part 3 -->
+      <div class="reveal from-left" data-delay="100" style="margin-top:18px;border-radius:22px;overflow:hidden;background:#FFFFFF;border:1px solid rgba(200,161,101,0.38);box-shadow:0 12px 30px rgba(200,161,101,0.12);">
+        <div style="padding:20px 20px 18px;background:linear-gradient(135deg,var(--gold),var(--gold-d));color:var(--gold-on);">
+          <span style="display:inline-block;font-size:12px;font-weight:800;letter-spacing:1.5px;background:rgba(26,18,6,0.16);padding:5px 11px;border-radius:999px;">PART 3 · [시간]</span>
+          <h3 class="part-h3">[파트 3 제목]</h3>
+          <div class="part-q" style="opacity:0.92;">“[핵심 질문 1행]”<br>[2행]</div>
+        </div>
+        <div style="padding:20px 20px 22px;display:flex;flex-direction:column;gap:13px;">
+          <div style="display:flex;gap:11px;align-items:flex-start;">
+            <span style="flex:none;margin-top:7px;width:6px;height:6px;border-radius:50%;background:var(--gold-d);"></span>
+            <p class="part-item">[목차 항목 8 · 핵심 키워드는 <b style="color:var(--text);">b 태그</b>]</p>
+          </div>
+          <div style="display:flex;gap:11px;align-items:flex-start;">
+            <span style="flex:none;margin-top:7px;width:6px;height:6px;border-radius:50%;background:var(--gold-d);"></span>
+            <p class="part-item">[목차 항목 9 · 핵심 키워드는 <b style="color:var(--text);">b 태그</b>]</p>
+          </div>
+          <div style="display:flex;gap:11px;align-items:flex-start;">
+            <span style="flex:none;margin-top:7px;width:6px;height:6px;border-radius:50%;background:var(--gold-d);"></span>
+            <p class="part-item">[목차 항목 10 · 핵심 키워드는 <b style="color:var(--text);">b 태그</b>]</p>
+          </div>
+          <div style="display:flex;gap:11px;align-items:flex-start;">
+            <span style="flex:none;margin-top:7px;width:6px;height:6px;border-radius:50%;background:var(--gold-d);"></span>
+            <p class="part-item">[목차 항목 11 · 핵심 키워드는 <b style="color:var(--text);">b 태그</b>]</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Part 4 -->
+      <div class="reveal from-right" data-delay="100" style="margin-top:18px;border-radius:22px;overflow:hidden;background:#FFFFFF;border:1px solid rgba(28,46,41,0.22);box-shadow:0 12px 30px rgba(28,46,41,0.10);">
+        <div style="padding:20px 20px 18px;background:linear-gradient(135deg,var(--ink-2),var(--ink));color:#fff;">
+          <span style="display:inline-block;font-size:12px;font-weight:800;letter-spacing:1.5px;background:rgba(200,161,101,0.2);color:var(--gold);padding:5px 11px;border-radius:999px;">PART 4 · [시간]</span>
+          <h3 class="part-h3">[파트 4 제목]</h3>
+          <div class="part-q" style="color:var(--gold);">[핵심 질문 1행]<br>[2행]</div>
+        </div>
+        <div style="padding:20px 20px 22px;display:flex;flex-direction:column;gap:13px;">
+          <div style="display:flex;gap:11px;align-items:flex-start;">
+            <span style="flex:none;margin-top:7px;width:6px;height:6px;border-radius:50%;background:var(--ink);"></span>
+            <p class="part-item">[목차 항목 12 · 핵심 키워드는 <b style="color:var(--text);">b 태그</b>]</p>
+          </div>
+          <div style="display:flex;gap:11px;align-items:flex-start;">
+            <span style="flex:none;margin-top:7px;width:6px;height:6px;border-radius:50%;background:var(--ink);"></span>
+            <p class="part-item">[목차 항목 13 · 핵심 키워드는 <b style="color:var(--text);">b 태그</b>]</p>
+          </div>
+          <div style="display:flex;gap:11px;align-items:flex-start;">
+            <span style="flex:none;margin-top:7px;width:6px;height:6px;border-radius:50%;background:var(--ink);"></span>
+            <p class="part-item">[목차 항목 14 · 핵심 키워드는 <b style="color:var(--text);">b 태그</b>]</p>
+          </div>
+          <div style="display:flex;gap:11px;align-items:flex-start;">
+            <span style="flex:none;margin-top:7px;width:6px;height:6px;border-radius:50%;background:var(--ink);"></span>
+            <p class="part-item">[목차 항목 15 · 핵심 키워드는 <b style="color:var(--text);">b 태그</b>]</p>
+          </div>
+          <div style="display:flex;gap:11px;align-items:flex-start;">
+            <span style="flex:none;margin-top:7px;width:6px;height:6px;border-radius:50%;background:var(--ink);"></span>
+            <p class="part-item">[목차 항목 16 · 핵심 키워드는 <b style="color:var(--text);">b 태그</b>]</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Closing -->
+      <div class="reveal" style="margin-top:22px;border-radius:18px;background:var(--gold-bg);border:1px solid rgba(200,161,101,0.4);padding:16px 12px;">
+        <p class="curr-close" style="margin:0;font-size:14.5px;line-height:1.5;color:var(--text);font-weight:800;letter-spacing:-0.8px;text-align:center;white-space:nowrap;">[커리큘럼 마무리 한 줄 · 390px 한 줄에 들어가게]</p>
+      </div>
+      <p class="reveal" style="margin:22px 0 0;font-size:16px;line-height:1.55;color:var(--text);font-weight:800;letter-spacing:-0.4px;text-align:center;">[마무리 제목 · 한 줄]</p>
+      <p class="reveal m-fit" style="margin:8px 0 0;font-size:14px;line-height:1.6;color:var(--text-2);font-weight:500;letter-spacing:-0.3px;text-align:center;">[마무리 설명 · 한 줄]</p>
+
+      <p class="reveal price-line" style="margin:18px 0 0;">수강료 <s>[정가]</s> <span class="ar" aria-hidden="true">→</span> <b>특별 할인가 [할인가]</b> (VAT 포함)</p>
+      <a href="[신청 구글폼 주소]" target="_blank" rel="noopener" class="reveal btn-apply js-apply" style="margin-top:10px;">
+        수강 신청하기
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold-on)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+    </section>
+
+    <!-- ══════════ 강사 프로필 ══════════ -->
+    <section style="padding:46px 24px 18px;background:var(--page);">
+      <div class="reveal sec-label">SPEAKER</div>
+      <h2 class="reveal sec-h2">강사 프로필</h2>
+
+      <div class="reveal" style="margin-top:24px;background:#FFFFFF;border:1px solid var(--line);border-radius:20px;padding:18px;">
+        <div style="display:flex;gap:16px;align-items:center;">
+          <div style="flex:none;width:84px;height:104px;border-radius:14px;overflow:hidden;border:2px solid var(--gold);background-image:url('../assets/[speaker-이름].jpg');background-size:cover;background-position:center 18%;"></div>
+          <div style="flex:1;min-width:0;">
+            <div style="display:inline-flex;font-size:11px;font-weight:800;letter-spacing:1px;color:var(--label);background:var(--gold-bg);padding:4px 9px;border-radius:6px;">[담당 파트 · 예: PART 1 ~ 4 절세설계]</div>
+            <div style="margin-top:10px;font-size:19px;font-weight:800;color:var(--text);letter-spacing:-0.4px;">[강사명] <span style="font-size:14px;font-weight:600;color:#6E6660;">[직함]</span></div>
+            <div style="margin-top:4px;font-size:13px;font-weight:600;color:#6E6660;line-height:1.4;">[소속 · 예: 세무법인 OO 대표세무사]</div>
+          </div>
+        </div>
+
+        <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--line);">
+          <div class="career-tag">현재</div>
+          <ul class="career">
+            <li>[현직 1]</li>
+            <li>[현직 2]</li>
+            <li>[현직 3]</li>
+            <li>[현직 4]</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ 도서 증정 ══════════ -->
+    <section style="padding:46px 24px 18px;background:var(--page);">
+      <div class="reveal sec-label">SPECIAL GIFT</div>
+      <h2 class="reveal sec-h2">[강사명] [직함]의 저서 무료 증정</h2>
+
+      <div class="reveal" style="margin-top:24px;border-radius:22px;overflow:hidden;background:#FFFFFF;border:1px solid rgba(200,161,101,0.35);box-shadow:0 12px 36px rgba(200,161,101,0.12);">
+        <div style="padding:14px 20px;background:linear-gradient(135deg,var(--gold),var(--gold-d));display:flex;align-items:center;justify-content:space-between;color:var(--gold-on);">
+          <span style="font-size:12px;font-weight:800;letter-spacing:1.5px;background:rgba(26,18,6,0.16);padding:5px 12px;border-radius:999px;">참석자 전원 무료 증정</span>
+          <span style="font-size:12px;font-weight:700;opacity:0.85;">현장 수령</span>
+        </div>
+        <div style="display:flex;gap:18px;align-items:center;padding:22px 20px;">
+          <img src="../assets/[book-이름].jpg" alt="[책 제목] 표지" style="flex:none;width:100px;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,0.18);">
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:11px;font-weight:800;letter-spacing:0.8px;color:var(--label);margin-bottom:6px;">[강사명] [직함] 저</div>
+            <div style="font-size:17px;font-weight:800;color:var(--text);line-height:1.4;letter-spacing:-0.4px;">[책 제목]<br><span style="font-size:13px;font-weight:600;color:#6E6660;">[판 정보 · 예: 2026년판 · 제15판]</span></div>
+            <p style="margin:10px 0 0;font-size:13px;line-height:1.6;color:#5E5A52;">[책 한 줄 소개]</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ 일시·장소·오시는 길 ══════════ -->
+    <section style="padding:46px 24px 18px;background:var(--page);">
+      <div class="reveal sec-label">DATE &amp; VENUE</div>
+      <h2 class="reveal sec-h2">일시 · 장소 · 오시는 길</h2>
+
+      <div class="reveal" style="margin-top:22px;border-radius:20px;overflow:hidden;background:#FFFFFF;border:1px solid var(--line);">
+        <div style="display:flex;gap:13px;align-items:center;padding:18px;border-bottom:1px solid var(--line);">
+          <span style="flex:none;width:40px;height:40px;border-radius:11px;background:var(--ink);display:flex;align-items:center;justify-content:center;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+          </span>
+          <div>
+            <div style="font-size:12px;font-weight:700;color:#9A928A;letter-spacing:0.5px;">일시</div>
+            <div style="margin-top:3px;font-size:16px;font-weight:700;color:var(--text);line-height:1.45;">[날짜 · 예: 2026. 11. 25. 수요일 오후 1시–5시]</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:13px;align-items:flex-start;padding:18px;">
+          <span style="flex:none;width:40px;height:40px;border-radius:11px;background:var(--ink);display:flex;align-items:center;justify-content:center;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
+          </span>
+          <div style="flex:1;">
+            <div style="font-size:12px;font-weight:700;color:#9A928A;letter-spacing:0.5px;">장소</div>
+            <div style="margin-top:3px;font-size:16px;font-weight:700;color:var(--text);line-height:1.45;">[장소명]<br>[층 · 호실]</div>
+            <div style="margin-top:3px;font-size:13.5px;color:#6E6660;line-height:1.5;">[도로명 주소]</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Google Maps embed -->
+      <div class="reveal" data-delay="80" style="margin-top:14px;border-radius:18px;overflow:hidden;border:1px solid var(--line);">
+        <iframe
+          title="[장소명] 위치"
+          src="https://maps.google.com/maps?q=[URL인코딩한+주소]&z=16&hl=ko&output=embed"
+          style="display:block;width:100%;height:220px;border:0;"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </div>
+
+      <!-- Map navigation buttons -->
+      <div class="reveal" data-delay="160" style="display:flex;gap:9px;margin-top:10px;">
+        <a href="https://map.naver.com/p/search/[URL인코딩한+주소]"
+           target="_blank" rel="noopener" class="btn-map btn-map-naver">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
+          네이버 지도
+        </a>
+        <a href="https://map.kakao.com/?q=[URL인코딩한+주소]"
+           target="_blank" rel="noopener" class="btn-map btn-map-kakao">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#191600" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
+          카카오맵
+        </a>
+      </div>
+
+      <!-- Parking notice -->
+      <div class="reveal" data-delay="240" style="margin-top:14px;display:flex;gap:11px;align-items:flex-start;background:#FCEEE9;border:1px solid rgba(196,90,60,0.2);border-radius:14px;padding:15px 16px;">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#C0492C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex:none;margin-top:1px;" aria-hidden="true"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+        <p style="margin:0;font-size:13.5px;line-height:1.55;color:#8A3A22;font-weight:500;"><b style="font-weight:700;">주차 안내</b><br>[주차 안내 1행 · 예: 별도 주차 지원이 없습니다]<br>[2행 · 예: 인근 주차장 · 대중교통을 이용해 주세요]</p>
+      </div>
+    </section>
+
+    <!-- ══════════ 주최 / 문의 ══════════ -->
+    <section style="padding:40px 24px 130px;background:var(--page);">
+      <div class="reveal" style="border-radius:20px;background:var(--ink);color:#EFE8DC;padding:26px 22px;text-align:center;">
+        <div aria-hidden="true" style="width:40px;height:40px;background:url('../assets/trinity-mark-v2.png') center/contain no-repeat;filter:brightness(0) invert(1);opacity:0.9;margin:0 auto;"></div>
+        <div style="margin-top:12px;font-size:14px;font-weight:700;letter-spacing:2px;">TRINITY ONE</div>
+        <div style="margin-top:5px;font-size:12px;color:#9A928A;letter-spacing:0.5px;">The Only Strategy for the 0.1%</div>
+        <div style="margin:20px auto;width:40px;height:1px;background:rgba(255,255,255,0.15);"></div>
+        <div style="font-size:13px;color:#A9A198;">주최</div>
+        <div style="margin-top:4px;font-size:15px;font-weight:600;color:#EFE8DC;">TRINITY ONE</div>
+        <a href="tel:[전화번호]"
+           style="margin-top:18px;display:inline-flex;align-items:center;gap:8px;font-size:15px;font-weight:700;color:#F7F4EE;text-decoration:none;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.16);padding:11px 18px;border-radius:999px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.4-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>
+          문의 · [전화번호] [담당자명 직함]
+        </a>
+      </div>
+    </section>
+
+    <!-- ══════════ STICKY CTA + 조회수 ══════════ -->
+    <div class="sticky-cta">
+      <p class="price-line sticky-price">수강료 <s>[정가]</s> <span class="ar" aria-hidden="true">→</span> <b>특별 할인가 [할인가]</b> (VAT 포함)</p>
+      <div class="sticky-row">
+        <div class="view-count" id="viewCount" data-min="300" aria-live="polite">
+          <span class="vc-long">전문직 <b class="vc-num">0</b>명이<br>이 강의를 봤습니다</span>
+          <span class="vc-short">👁 <b class="vc-num">0</b>명 확인</span>
+        </div>
+        <a href="[신청 구글폼 주소]" target="_blank" rel="noopener" class="btn-apply js-apply">
+        수강 신청하기
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold-on)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    /* ★ 설정값: 신청 폼 주소. 바꾸면 모든 신청 버튼에 반영됩니다. */
+    var APPLY_URL = '[신청 구글폼 주소]';
+
+    /* 조회수 카운터 (CLAUDE.md 규칙: 페이지 열 때 +1, 같은 브라우저 하루 1회, data-min 미만이면 숨김, 0→N 카운트업) */
+    var COUNTER_API = 'https://abacus.jasoncameron.dev';
+    var COUNTER_NS  = 'trinityone';
+    var COUNTER_KEY = '[class-MMDD]';   /* 페이지 경로와 같게. 새 강의마다 바꿔야 조회수가 분리된다 */
+
+    (function () {
+      document.querySelectorAll('.js-apply').forEach(function (a) { a.href = APPLY_URL; });
+
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          var el = e.target;
+          var delay = el.dataset.delay ? parseInt(el.dataset.delay, 10) : 0;
+          setTimeout(function () { el.classList.add('visible'); }, delay);
+          io.unobserve(el);
+        });
+      }, { threshold: 0.12 });
+      document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
+
+      /* ── 조회수 ── */
+      var box = document.getElementById('viewCount');
+      if (!box || !window.fetch) return;
+      var min = parseInt(box.dataset.min, 10) || 0;
+      var today = new Date().toISOString().slice(0, 10);
+      var lsKey = 'vc:' + COUNTER_KEY;
+      var counted = false;
+      try { counted = localStorage.getItem(lsKey) === today; } catch (e) {}
+      var url = COUNTER_API + '/' + (counted ? 'get' : 'hit') + '/' + COUNTER_NS + '/' + COUNTER_KEY;
+
+      fetch(url, { cache: 'no-store' })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (d) {
+          if (!d || typeof d.value !== 'number') return;
+          if (!counted) { try { localStorage.setItem(lsKey, today); } catch (e) {} }
+          if (d.value < min) return;
+          box.classList.add('on');
+          var nums = box.querySelectorAll('.vc-num');
+          var start = null, dur = 800, target = d.value;
+          function step(ts) {
+            if (!start) start = ts;
+            var p = Math.min((ts - start) / dur, 1);
+            var eased = 1 - Math.pow(1 - p, 3);
+            var v = Math.round(target * eased);
+            nums.forEach(function (n) { n.textContent = v.toLocaleString('ko-KR'); });
+            if (p < 1) requestAnimationFrame(step);
+          }
+          requestAnimationFrame(step);
+        })
+        .catch(function () {});
+    })();
+  </script>
+</body>
+</html>
