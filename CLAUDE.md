@@ -136,6 +136,24 @@
 - 강의 후기 글에 참석 인원 등 자체 실적 수치는 쓰지 않는다("꽉 찼습니다" 같은 서술은 가능).
 - 강의 사진은 사이트 사진 규칙(강사·참석자 얼굴 블러)을 따른다. 블러 없이 올릴지는 사용자가 결정한다.
 
+## 외부 사이트 확인 (agent-browser)
+
+- 배포된 사이트나 외부 페이지를 실제 브라우저로 열어 확인·스크린샷할 때는 agent-browser를 쓴다 (환경의 네트워크는 Full이라 외부 접속 가능).
+- **새 컨테이너마다 설치가 필요**하다 (스킬과 달리 저장소에 담기지 않음). 설정 절차 — 2026-10-22 검증 완료:
+  ```bash
+  npm install -g agent-browser
+  apt-get install -y libnss3-tools
+  mkdir -p /root/.pki/nssdb && certutil -d sql:/root/.pki/nssdb -N --empty-password 2>/dev/null
+  cd "$(mktemp -d)" && awk 'BEGIN{n=0} /BEGIN CERTIFICATE/{n++} {print > "ca-" n ".pem"}' /root/.ccr/ca-bundle.crt \
+    && for f in ca-*.pem; do certutil -d sql:/root/.pki/nssdb -A -t "C,," -n "$f" -i "$f" 2>/dev/null; done
+  export AGENT_BROWSER_EXECUTABLE_PATH=/opt/pw-browsers/chromium
+  ```
+  - 인증서 등록을 빼먹으면 모든 페이지가 `ERR_CERT_AUTHORITY_INVALID`로 실패한다. 번들에 인증서가 148개라 **분할 후 전부** 넣어야 한다.
+  - `agent-browser install`(Chrome 다운로드)은 하지 않는다 — 내장 Chromium(`/opt/pw-browsers/chromium`)을 쓴다.
+  - 인증서 등록 후에는 기존 데몬을 재시작해야 반영된다 (`pkill -f agent-browser`).
+- 로그인이 필요한 사이트(인스타그램·페이스북 등)는 열어도 로그인 벽만 보인다.
+- 텍스트만 필요하면 WebFetch/WebSearch가 더 가볍다. agent-browser는 렌더링 확인·스크린샷·클릭 조작이 필요할 때 쓴다.
+
 ## 기타
 
 - 기존 강의 페이지(`class-*` 경로)를 새 작업으로 덮어쓰지 않는다. 새 페이지는 별도 경로로 만든다. 루트 `index.html`은 리쿠르팅 사이트다.
