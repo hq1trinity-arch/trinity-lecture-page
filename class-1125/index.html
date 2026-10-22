@@ -12,7 +12,7 @@
   <meta property="og:url" content="https://trinityone.co.kr/class-1125/">
   <meta property="og:title" content="중소기업 핵심 절세설계와 전략 — TRINITY ONE (서울)">
   <meta property="og:description" content="내 거래처에, 다른 전문가는 무엇을 제안할까요? 정관과 지급규정, 임원보수와 퇴직금, 그리고 상속세까지 김창영 세무사의 핵심 포인트 총정리. 2026.11.25 서울 선릉 패스트파이브">
-  <meta property="og:image" content="https://trinityone.co.kr/assets/og-seoul-1125-v2.jpg">
+  <meta property="og:image" content="https://trinityone.co.kr/assets/og-seoul-1125-v3.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:locale" content="ko_KR">
@@ -21,7 +21,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="중소기업 핵심 절세설계와 전략 — TRINITY ONE (서울)">
   <meta name="twitter:description" content="내 거래처에, 다른 전문가는 무엇을 제안할까요? 정관과 지급규정, 임원보수와 퇴직금, 그리고 상속세까지 김창영 세무사의 핵심 포인트 총정리. 2026.11.25 서울 선릉 패스트파이브">
-  <meta name="twitter:image" content="https://trinityone.co.kr/assets/og-seoul-1125-v2.jpg">
+  <meta name="twitter:image" content="https://trinityone.co.kr/assets/og-seoul-1125-v3.jpg">
 
   <style>
     /* ── Palette (스타벅스 리저브 톤: 딥 그린 + 코퍼) ── */
@@ -106,10 +106,10 @@
     .btn-apply .bp .ar { opacity: 0.7; margin: 0 1px; }
     .btn-apply .bp b { font-size: 15.5px; font-weight: 800; }
     .btn-apply .bp small { font-size: 12px; font-weight: 600; opacity: 0.85; margin-left: 2px; }
-    .sticky-row .btn-apply .bl { font-size: 15px; }
-    .sticky-row .btn-apply .bp { font-size: 12px; letter-spacing: -0.4px; }
-    .sticky-row .btn-apply .bp b { font-size: 13.5px; }
-    .sticky-row .btn-apply .bp small { font-size: 11px; }
+    .sticky-row .btn-apply .bl { font-size: 16px; }
+    .sticky-row .btn-apply .bp { font-size: 13px; letter-spacing: -0.3px; }
+    .sticky-row .btn-apply .bp b { font-size: 15px; }
+    .sticky-row .btn-apply .bp small { font-size: 11.5px; }
 
     /* ── Map nav buttons ── */
     .btn-map {
@@ -134,9 +134,14 @@
       position: sticky;
       bottom: 0;
       z-index: 50;
-      padding: 12px 20px calc(12px + env(safe-area-inset-bottom));
-      background: linear-gradient(to top, #F7F4EE 70%, rgba(247,244,238,0));
+      padding: 10px 20px calc(12px + env(safe-area-inset-bottom));
+      background: linear-gradient(to top, #F7F4EE 78%, rgba(247,244,238,0));
     }
+    .price-line { font-size:13px; line-height:1.4; color:var(--text-2); font-weight:600; letter-spacing:-0.3px; text-align:center; }
+    .price-line s { color:var(--muted); font-weight:500; text-decoration-thickness:1.5px; }
+    .price-line .ar { color:var(--muted); margin:0 2px; }
+    .price-line b { color:var(--text); font-weight:800; }
+    .sticky-price { margin:0 0 8px; font-size:12px; }
     .sticky-row { display: flex; align-items: center; gap: 12px; }
     .sticky-row .btn-apply { flex: 1; min-width: 0; border-radius: 15px; box-shadow: 0 12px 28px rgba(200,161,101,0.38); }
     .view-count {
@@ -206,9 +211,9 @@
       .m-fit2 { font-size:14px !important; }
       .quote-card p { font-size:13px !important; }
       .view-count { max-width: 30%; }
-      .sticky-row .btn-apply .bl { font-size: 14px; }
-      .sticky-row .btn-apply .bp { font-size: 11px; letter-spacing: -0.5px; }
-      .sticky-row .btn-apply .bp b { font-size: 12.5px; }
+      .sticky-row .btn-apply .bl { font-size: 15px; }
+      .sticky-row .btn-apply .bp { font-size: 12px; letter-spacing: -0.4px; }
+      .sticky-row .btn-apply .bp b { font-size: 14px; }
       .why-close { font-size:13px !important; letter-spacing:-0.6px !important; }
     }
 
@@ -281,7 +286,7 @@
       <!-- Hook -->
       <div style="position:relative;margin-top:30px;">
         <div class="hero-label" style="display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:800;letter-spacing:0.5px;color:var(--gold);">
-          <span style="width:18px;height:1px;background:var(--gold);"></span>세무사 · 회계사 · 법인컨설턴트를 위한 실무 강의
+          <span aria-hidden="true">–</span>세무사 · 회계사 · 법인컨설턴트를 위한 실무 강의
         </div>
         <h2 class="hero-hook">내 거래처에,<br>다른 전문가는 무엇을 제안할까요?</h2>
         <p class="hero-compare">나는 급여를 검토하고 있는데, 누군가는 퇴직금을<br>나는 퇴직금을 이야기하고 있는데, 누군가는 상속까지</p>
@@ -292,8 +297,8 @@
       <div style="position:relative;margin-top:26px;padding-top:22px;border-top:1px solid rgba(255,255,255,0.12);">
         <h1 class="hero-h1">중소기업 핵심 <br class="br-n">절세설계와 전략</h1>
         <p class="hero-h1-sub">정관과 지급규정, 임원보수와 퇴직금, 그리고 상속세까지</p>
-        <p class="hero-desc">개업 전문직 바이블의 저자, 거장 김창영 세무사와 함께 하는<br>법인대표에게 제안할 핵심 포인트 총정리</p>
-        <p class="hero-punch">4시간의 투자로 다음 대표님과의 미팅을 자신 있게!</p>
+        <p class="hero-desc">『절세설계 컨설팅』의 저자, 김창영 세무사와 함께하는<br>법인컨설팅 핵심 포인트 총정리</p>
+        <p class="hero-punch">다음 고객 미팅을 준비하는 4시간</p>
       </div>
 
       <!-- Date / venue pills -->
@@ -315,17 +320,17 @@
           <span class="price-arrow" aria-hidden="true">→</span>
           <span class="price-new">특별 할인가 55,000원<small>(VAT 포함)</small></span>
         </div>
-        <p class="price-perk"><b>정가 100,000원 저자 도서</b>, 현장 참석자 전원 증정<br>강의 관련 실무양식 제공</p>
+        <p class="price-perk"><b>오프라인 참석자만을 위한 혜택</b><br>· 10만원 상당의 저자 친필 도서 증정<br>· 즉시 활용 가능한 실무 서식 패키지 제공</p>
       </div>
 
       <!-- Hero CTA -->
       <a href="https://forms.gle/UxQ4KUbamXj4hpD96" target="_blank" rel="noopener" class="btn-apply hero-cta js-apply" style="position:relative;margin-top:18px;">
-        <span class="bl">수강신청</span><span class="bp"><s>330,000원</s> <span class="ar" aria-hidden="true">→</span> <b>55,000원</b><small>(VAT 포함)</small></span>
+        <span class="bl">수강신청</span><span class="bp"><b>55,000원</b><small>(VAT 포함)</small></span>
       </a>
 
       <!-- Key visual: poster -->
       <div class="hero-poster" style="position:relative;margin-top:26px;border-radius:18px;overflow:hidden;box-shadow:0 24px 50px rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.1);">
-        <img src="../assets/poster-seoul-1125-v2.jpg"
+        <img src="../assets/poster-seoul-1125-v3.jpg"
              alt="중소기업 핵심 절세설계와 전략 강의 포스터 — 김창영 세무사, 거장의 시선"
              style="display:block;width:100%;height:auto;aspect-ratio:1188/1680;object-fit:cover;">
       </div>
@@ -334,7 +339,7 @@
     <!-- ══════════ 문제 제기 ══════════ -->
     <section style="padding:56px 24px 14px;background:var(--page);">
       <div class="reveal sec-label">WHY NOW</div>
-      <h2 class="reveal sec-h2 h2-why" style="font-size:22px;letter-spacing:-0.6px;">막연히 알고 있다고 생각했던 것도<br>막상 제안하려면<br>어디서부터 봐야 할지 막막해지죠</h2>
+      <h2 class="reveal sec-h2 h2-why" style="font-size:22px;letter-spacing:-0.6px;">알고 있던 내용도,<br>고객에게 제안하려면<br>어디서부터 확인할지 막막해집니다</h2>
 
       <div style="display:flex;flex-direction:column;gap:10px;margin-top:24px;">
         <div class="reveal quote-card" data-delay="0">
@@ -364,20 +369,20 @@
     <section style="padding:46px 24px 14px;background:var(--page);">
       <div class="reveal sec-label">AFTER THIS CLASS</div>
       <h2 class="reveal sec-h2" style="font-size:24px;letter-spacing:-0.8px;">“한번 알아보겠습니다”에서<br>“이것부터 보시죠”로!</h2>
-      <p class="reveal sec-sub" style="font-size:15px;color:var(--label);font-weight:700;">대표님 앞에서 이젠 사이다처럼 명쾌한 전문가로!</p>
+      <p class="reveal sec-sub" style="font-size:15px;color:var(--label);font-weight:700;">대표님의 질문에 막힘이 없도록</p>
 
       <div style="display:flex;flex-direction:column;gap:10px;margin-top:24px;">
         <div class="reveal change-card" data-delay="0">
           <div class="ct"><span>01</span>무슨 자료를 검토할지</div>
-          <p>정관과 지급규정 등 여러 자료를<br>어떤 포인트로 체크할지</p>
+          <p>정관과 지급규정 등 여러 자료를<br>어떤 포인트로 체크할지를 정리합니다</p>
         </div>
         <div class="reveal change-card" data-delay="80">
           <div class="ct"><span>02</span>상법과 세법 등 제반 근거는 무엇인지</div>
-          <p>각종 법령과 해석을 씹어서<br>“왜 그렇게 해야 하는지”에 대한 <br class="br-n">근거를 제공</p>
+          <p>관련 법령과 해석을 사례로 풀어,<br>“왜 그렇게 해야 하는지”에 대한 <br class="br-n">근거를 제공합니다</p>
         </div>
         <div class="reveal change-card" data-delay="160">
           <div class="ct"><span>03</span>어떤 포인트로 제안할지</div>
-          <p>대표님의 빈출 질문,<br>전문직이 꼭 알아야 할 프레임 공유</p>
+          <p>대표님이 자주 묻는 질문과,<br>답변에 필요한 판단 기준을 정리합니다</p>
         </div>
       </div>
 
@@ -388,7 +393,7 @@
     <section style="padding:46px 24px 18px;background:var(--page);">
       <div class="reveal sec-label">CURRICULUM</div>
       <h2 class="reveal sec-h2 h2-curr" style="font-size:23px;letter-spacing:-0.9px;">흩어진 지식 조각들을 <br class="br-n">하나로 꿰는 시간</h2>
-      <p class="reveal curr-intro" style="margin:14px 0 0;font-size:13.5px;line-height:1.65;color:var(--text-2);font-weight:500;letter-spacing:-0.3px;">정관은 검토했는데 보수 규정은 그대로이고,<br>퇴직금은 준비했는데 상속 문제는 <br class="br-xs">생각하지 못했다면 말짱 도루묵</p>
+      <p class="reveal curr-intro" style="margin:14px 0 0;font-size:13.5px;line-height:1.65;color:var(--text-2);font-weight:500;letter-spacing:-0.3px;">정관을 검토했다면 보수 규정까지, 퇴직금을 준비했다면<br>상속에 미치는 영향까지 함께 살펴봐야 합니다</p>
       <p class="reveal curr-intro" style="margin:12px 0 0;font-size:13.5px;line-height:1.65;color:var(--text-2);font-weight:500;letter-spacing:-0.3px;">이번 강의에서는 <b style="color:var(--text);font-weight:800;">정관 → 보수 → 퇴직금 → 상속</b> 프로세스로<br>실제 제안에 필요한 포인트를 함께 살펴봅니다</p>
 
       <!-- Part 1 -->
@@ -501,13 +506,14 @@
 
       <!-- Closing -->
       <div class="reveal" style="margin-top:22px;border-radius:18px;background:var(--gold-bg);border:1px solid rgba(200,161,101,0.4);padding:16px 12px;">
-        <p class="curr-close" style="margin:0;font-size:14.5px;line-height:1.5;color:var(--text);font-weight:800;letter-spacing:-0.8px;text-align:center;white-space:nowrap;">절세 프레임부터, 세금의 종착역이라는 상속세까지의 연계!</p>
+        <p class="curr-close" style="margin:0;font-size:14.5px;line-height:1.5;color:var(--text);font-weight:800;letter-spacing:-0.8px;text-align:center;white-space:nowrap;">법인의 핵심 절세 솔루션부터 상속·증여 플랜까지 한 번에!</p>
       </div>
-      <p class="reveal" style="margin:22px 0 0;font-size:16px;line-height:1.55;color:var(--text);font-weight:800;letter-spacing:-0.4px;text-align:center;">다음 미팅에선 끌려가지 마세요</p>
-      <p class="reveal m-fit" style="margin:8px 0 0;font-size:14px;line-height:1.6;color:var(--text-2);font-weight:500;letter-spacing:-0.3px;text-align:center;">대표님이 먼저 귀 기울일 질문과 <br class="br-n">대화의 주도권을 쥐어드립니다</p>
+      <p class="reveal" style="margin:22px 0 0;font-size:16px;line-height:1.55;color:var(--text);font-weight:800;letter-spacing:-0.4px;text-align:center;">다음 미팅에선 먼저 제안해보세요</p>
+      <p class="reveal m-fit" style="margin:8px 0 0;font-size:14px;line-height:1.6;color:var(--text-2);font-weight:500;letter-spacing:-0.3px;text-align:center;">대표님과 나눌 질문을 함께 준비합니다</p>
 
-      <a href="https://forms.gle/UxQ4KUbamXj4hpD96" target="_blank" rel="noopener" class="reveal btn-apply js-apply" style="margin-top:20px;">
-        <span class="bl">수강신청</span><span class="bp"><s>330,000원</s> <span class="ar" aria-hidden="true">→</span> <b>55,000원</b><small>(VAT 포함)</small></span>
+      <p class="reveal price-line" style="margin:18px 0 0;">수강료 <s>330,000원</s> <span class="ar" aria-hidden="true">→</span> <b>특별 할인가 55,000원</b> (VAT 포함)</p>
+      <a href="https://forms.gle/UxQ4KUbamXj4hpD96" target="_blank" rel="noopener" class="reveal btn-apply js-apply" style="margin-top:10px;">
+        <span class="bl">수강신청</span><span class="bp"><b>55,000원</b><small>(VAT 포함)</small></span>
       </a>
     </section>
 
@@ -553,7 +559,7 @@
           <div style="flex:1;min-width:0;">
             <div style="font-size:11px;font-weight:800;letter-spacing:0.8px;color:var(--label);margin-bottom:6px;">김창영 세무사 저</div>
             <div style="font-size:17px;font-weight:800;color:var(--text);line-height:1.4;letter-spacing:-0.4px;">절세설계 컨설팅<br><span style="font-size:13px;font-weight:600;color:#6E6660;">2026년판 · 제15판</span></div>
-            <p style="margin:10px 0 0;font-size:13px;line-height:1.6;color:#5E5A52;">기업경영 절세 지침서<br>계약서 · 실무서식 부록 수록</p>
+            <p style="margin:10px 0 0;font-size:13px;line-height:1.6;color:#5E5A52;">법인절세의 바이블</p>
           </div>
         </div>
       </div>
@@ -637,13 +643,14 @@
 
     <!-- ══════════ STICKY CTA + 조회수 ══════════ -->
     <div class="sticky-cta">
+      <p class="price-line sticky-price">수강료 <s>330,000원</s> <span class="ar" aria-hidden="true">→</span> <b>특별 할인가 55,000원</b> (VAT 포함)</p>
       <div class="sticky-row">
         <div class="view-count" id="viewCount" data-min="300" aria-live="polite">
           <span class="vc-long">전문직 <b class="vc-num">0</b>명이<br>이 강의를 봤습니다</span>
           <span class="vc-short">👁 <b class="vc-num">0</b>명 확인</span>
         </div>
         <a href="https://forms.gle/UxQ4KUbamXj4hpD96" target="_blank" rel="noopener" class="btn-apply js-apply">
-        <span class="bl">수강신청</span><span class="bp"><s>330,000원</s> <span class="ar" aria-hidden="true">→</span> <b>55,000원</b><small>(VAT 포함)</small></span>
+        <span class="bl">수강신청</span><span class="bp"><b>55,000원</b><small>(VAT 포함)</small></span>
       </a>
       </div>
     </div>
