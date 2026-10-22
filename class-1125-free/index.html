@@ -316,7 +316,12 @@
 
       <!-- Price -->
       <div class="price-card" style="position:relative;">
-        <p class="price-perk" style="margin:0;"><b>오프라인 참석자만을 위한 혜택</b><br>· 10만원 상당의 저자 친필 도서 증정<br>· 즉시 활용 가능한 실무 서식 패키지 제공</p>
+        <div style="display:flex;align-items:baseline;flex-wrap:wrap;">
+          <span class="price-old">수강료 330,000원</span>
+          <span class="price-arrow" aria-hidden="true">→</span>
+          <span class="price-new">무료 수강</span>
+        </div>
+        <p class="price-perk"><b>오프라인 참석자만을 위한 혜택</b><br>· 10만원 상당의 저자 친필 도서 증정<br>· 즉시 활용 가능한 실무 서식 패키지 제공</p>
       </div>
 
       <!-- Hero CTA -->
@@ -508,7 +513,8 @@
       <p class="reveal" style="margin:22px 0 0;font-size:16px;line-height:1.55;color:var(--text);font-weight:800;letter-spacing:-0.4px;text-align:center;">다음 미팅에선 먼저 제안해보세요</p>
       <p class="reveal m-fit" style="margin:8px 0 0;font-size:14px;line-height:1.6;color:var(--text-2);font-weight:500;letter-spacing:-0.3px;text-align:center;">대표님과 나눌 질문을 함께 준비합니다</p>
 
-      <a href="https://forms.gle/njg8QtXoioLCqCJi6" target="_blank" rel="noopener" class="reveal btn-apply js-apply" style="margin-top:20px;">
+      <p class="reveal price-line" style="margin:18px 0 0;">수강료 <s>330,000원</s> <span class="ar" aria-hidden="true">→</span> <b>무료 수강</b></p>
+      <a href="https://forms.gle/njg8QtXoioLCqCJi6" target="_blank" rel="noopener" class="reveal btn-apply js-apply" style="margin-top:10px;">
         수강 신청하기
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold-on)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
       </a>
@@ -640,6 +646,7 @@
 
     <!-- ══════════ STICKY CTA + 조회수 ══════════ -->
     <div class="sticky-cta">
+      <p class="price-line sticky-price">수강료 <s>330,000원</s> <span class="ar" aria-hidden="true">→</span> <b>무료 수강</b></p>
       <div class="sticky-row">
         <div class="view-count" id="viewCount" data-min="300" aria-live="polite">
           <span class="vc-long">전문직 <b class="vc-num">0</b>명이<br>이 강의를 봤습니다</span>
