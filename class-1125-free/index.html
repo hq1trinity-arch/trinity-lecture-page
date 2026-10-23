@@ -136,33 +136,27 @@
       bottom: 0;
       z-index: 50;
       padding: 14px 20px calc(12px + env(safe-area-inset-bottom));
-      background: linear-gradient(to top, #F7F4EE 88%, rgba(247,244,238,0));
+      background: linear-gradient(to top, #F7F4EE 94%, rgba(247,244,238,0));
     }
     .price-line { font-size:13px; line-height:1.4; color:var(--text-2); font-weight:600; letter-spacing:-0.3px; text-align:center; }
     .price-line s { color:var(--muted); font-weight:500; text-decoration-thickness:1.5px; }
     .price-line .ar { color:var(--muted); margin:0 2px; }
     .price-line b { color:var(--text); font-weight:800; }
-    .sticky-price { margin:0 0 8px; font-size:12px; }
+    .sticky-price { margin:0 0 6px; font-size:12px; }
     .sticky-row { display: flex; align-items: center; gap: 12px; }
     .sticky-row .btn-apply { flex: 1; min-width: 0; border-radius: 15px; box-shadow: 0 12px 28px rgba(200,161,101,0.38); }
     .view-count {
       display: none;             /* data-min 미만이면 숨김 (JS가 표시) */
-      flex: none;
-      max-width: 44%;
-      font-size: 12px;
-      line-height: 1.35;
+      margin: 0 0 8px;
+      font-size: 12.5px;
+      line-height: 1.4;
       font-weight: 600;
       color: var(--muted);
       letter-spacing: -0.2px;
+      text-align: center;
     }
     .view-count.on { display: block; }
     .view-count b { font-weight: 800; color: var(--text); font-variant-numeric: tabular-nums; }
-    .view-count .vc-short { display: none; }
-    @media (max-width:439px) {
-      .view-count { max-width: 34%; }
-      .view-count .vc-long { display: none; }
-      .view-count .vc-short { display: inline; }
-    }
 
     /* ── Section label / heading ── */
     .sec-label { font-size:12px; font-weight:800; letter-spacing:2px; color:var(--label); text-transform:uppercase; }
@@ -211,7 +205,6 @@
       .m-fit { font-size:13.5px !important; }
       .m-fit2 { font-size:14px !important; }
       .quote-card p { font-size:13px !important; }
-      .view-count { max-width: 30%; }
       .sticky-row .btn-apply .bl { font-size: 15px; }
       .sticky-row .btn-apply .bp { font-size: 12px; letter-spacing: -0.4px; }
       .sticky-row .btn-apply .bp b { font-size: 14px; }
@@ -647,11 +640,8 @@
     <!-- ══════════ STICKY CTA + 조회수 ══════════ -->
     <div class="sticky-cta">
       <p class="price-line sticky-price">수강료 <s>330,000원</s> <span class="ar" aria-hidden="true">→</span> <b>특별 할인가 0원</b></p>
+      <p class="view-count" id="viewCount" data-min="300" aria-live="polite">전문직 <b class="vc-num">0</b>명이 이 강의를 봤습니다</p>
       <div class="sticky-row">
-        <div class="view-count" id="viewCount" data-min="300" aria-live="polite">
-          <span class="vc-long">전문직 <b class="vc-num">0</b>명이<br>이 강의를 봤습니다</span>
-          <span class="vc-short">👁 <b class="vc-num">0</b>명 확인</span>
-        </div>
         <a href="https://forms.gle/njg8QtXoioLCqCJi6" target="_blank" rel="noopener" class="btn-apply js-apply">
         수강 신청하기
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold-on)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
