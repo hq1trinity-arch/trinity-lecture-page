@@ -134,7 +134,10 @@
 <meta name="color-scheme" content="light">
 <link rel="icon" type="image/png" href="assets/mark-brown-499.png">
 <link rel="apple-touch-icon" href="assets/mark-brown-499.png">
-<style>@font-face{font-family:"Pretendard Variable";font-weight:45 920;font-style:normal;font-display:swap;src:url("assets/fonts/PretendardVariable.woff2") format("woff2")}</style>
+<style>
+  /* hidden 속성은 항상 숨김(.qa-a 의 display:flex 등이 덮어쓰지 못하게). 게시용 틀에 있던 규칙을 페이지로 옮김 */
+  [hidden]:not([hidden=until-found i]){display:none!important}
+@font-face{font-family:"Pretendard Variable";font-weight:45 920;font-style:normal;font-display:swap;src:url("assets/fonts/PretendardVariable.woff2") format("woff2")}</style>
 
 <script>
 /* =====================================================================
