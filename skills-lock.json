@@ -163,6 +163,13 @@
       "skillPath": "skills/minimalist-skill/SKILL.md",
       "computedHash": "6fe7616c22141da6f52a9d7d55521d08c519d7de595f154d1d6358ecb988c9be"
     },
+    "openfilm": {
+      "source": "openfilm/openfilm",
+      "commit": "b353d10e756b6d37eff27384175ba117e9921adf",
+      "sourceType": "github",
+      "skillPath": "skills/openfilm/SKILL.md",
+      "computedHash": "c5a254e8aed6cbfd2098cae414081fa155b6e22fbd409a4460f8931565729fb1"
+    },
     "ponytail": {
       "source": "DietrichGebert/ponytail",
       "sourceType": "github",
