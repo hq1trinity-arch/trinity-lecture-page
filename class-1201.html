@@ -70,6 +70,7 @@
       justify-content: center;
       background: radial-gradient(130% 90% at 50% 0%, #241247, #0E0521);
       font-family: "Pretendard", -apple-system, BlinkMacSystemFont, sans-serif;
+      word-break: keep-all;
     }
 
     .page-card {
@@ -210,6 +211,13 @@
     .view-count { display:none; margin:0 0 8px; font-size:12.5px; line-height:1.4; font-weight:600; color:var(--ink-soft); letter-spacing:-0.2px; text-align:center; }
     .view-count.on { display:block; }
     .view-count b { font-weight:800; color:var(--ink); font-variant-numeric:tabular-nums; }
+    /* 넓은 폰에서 한 줄로 합치고, 좁은 폰에서만 원래 위치에서 줄바꿈 */
+    .br-xs, .br-s { display:none; }
+    @media (max-width: 389px) { .br-s { display:inline; } }
+    @media (max-width: 374px) { .br-xs { display:inline; } }
+    .m-fit-date { white-space:nowrap; }
+    @media (max-width: 389px) { .m-fit-date { font-size:15px; letter-spacing:-0.3px; } }
+    @media (max-width: 374px) { .m-fit-date { font-size:14px; letter-spacing:-0.4px; } }
   </style>
 </head>
 <body>
@@ -234,7 +242,7 @@
       <!-- 제목 블록 -->
       <div style="position:relative;margin-top:34px;">
         <div style="display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:800;letter-spacing:2px;color:#A98BFF;">
-          <span style="width:18px;height:1px;background:#A98BFF;"></span>5-DAYS INTENSIVE COURSE
+          <span style="width:9px;height:1px;background:#A98BFF;"></span>5-DAYS INTENSIVE COURSE
         </div>
         <div style="margin-top:14px;font-size:14px;font-weight:600;color:#C9BDF0;letter-spacing:-0.2px;">신입 전문직 커리큘럼 · Blueprint of 5 Days</div>
         <h1 style="margin:10px 0 0;font-size:40px;line-height:1.14;font-weight:900;letter-spacing:-1.2px;color:#FFFFFF;">TRINITY ONE<br><span style="color:transparent;-webkit-text-stroke:1.5px #FFFFFF;">BASE CAMP</span></h1>
@@ -266,7 +274,7 @@
     <!-- ══════════ 문제 제기 (WHY NOW) ══════════ -->
     <section style="padding:56px 24px 14px;background:var(--page-bg);">
       <div style="font-size:12px;font-weight:800;letter-spacing:2px;color:var(--violet);text-transform:uppercase;">WHY NOW</div>
-      <h2 style="margin:12px 0 0;font-size:23px;font-weight:800;letter-spacing:-0.7px;color:var(--ink);line-height:1.32;">자격증은 땄는데,<br>대표님 앞에서는<br>어디서부터 말해야 할지 막막합니다</h2>
+      <h2 style="margin:12px 0 0;font-size:23px;font-weight:800;letter-spacing:-0.7px;color:var(--ink);line-height:1.32;">자격증은 땄는데,<br class="br-xs"> 대표님 앞에서는<br>어디서부터 말해야 할지 막막합니다</h2>
       <div style="display:flex;flex-direction:column;gap:10px;margin-top:24px;">
         <div class="reveal quote-card"><span class="qn">01</span><p>“벤처투자나 MSO 얘기가 나오면,<br>아는 척만 하고 넘어가게 된다”</p></div>
         <div class="reveal quote-card reveal-delay-1"><span class="qn">02</span><p>“법인전환은 알겠는데,<br>이걸 어떻게 제안으로 꺼내지?”</p></div>
@@ -288,7 +296,7 @@
       <div style="display:flex;flex-direction:column;gap:10px;margin-top:24px;">
         <div class="reveal change-card">
           <div class="ct"><span>01</span>어떤 시장부터 볼지</div>
-          <p>벤처투자, 병의원, 법인처럼<br>돈이 모이는 곳에서 첫 미팅 주제를 고릅니다</p>
+          <p>벤처투자, 병의원, 법인처럼<br>돈이 모이는 곳에서<br class="br-xs"> 첫 미팅 주제를 고릅니다</p>
         </div>
         <div class="reveal change-card reveal-delay-1">
           <div class="ct"><span>02</span>무엇으로 엮어 제안할지</div>
@@ -299,7 +307,7 @@
           <p>스크립트와 롤플레이로 연습한 말로<br>상속·승계와 상품 제안까지 마무리합니다</p>
         </div>
       </div>
-      <p class="reveal" style="margin:20px 0 0;font-size:15px;line-height:1.6;color:var(--ink);font-weight:700;letter-spacing:-0.3px;text-align:center;word-break:keep-all;">첫 미팅을 앞둔 대표님 한 분을 떠올리며<br>5일을 시작해 보세요</p>
+      <p class="reveal" style="margin:20px 0 0;font-size:15px;line-height:1.6;color:var(--ink);font-weight:700;letter-spacing:-0.3px;text-align:center;word-break:keep-all;">첫 미팅을 앞둔 대표님 한 분을 떠올리며<br class="br-s"> 5일을 시작해 보세요</p>
     </section>
 
     <!-- ══════════ 제공 혜택 후킹 스트립 ══════════ -->
@@ -307,7 +315,7 @@
       <div style="border-radius:18px;background:linear-gradient(135deg,var(--violet),var(--violet-dark));padding:20px;color:#fff;box-shadow:0 14px 34px rgba(91,46,224,0.28);">
         <div style="display:inline-flex;font-size:11px;font-weight:800;letter-spacing:1.5px;background:rgba(255,255,255,0.2);padding:5px 11px;border-radius:999px;">참가자 전원 혜택</div>
         <p style="margin:13px 0 0;font-size:18px;font-weight:800;line-height:1.45;letter-spacing:-0.4px;">강의에서 다룬 <span style="color:#FFD84D;">컨설팅 자료 전부 제공</span></p>
-        <p style="margin:8px 0 0;font-size:13.5px;line-height:1.6;color:rgba(255,255,255,0.85);font-weight:500;">교안 · 스크립트 · 실전 컨설팅 자료까지,<br>수료 후 현장에서 바로 쓸 수 있게 아낌없이 드립니다.</p>
+        <p style="margin:8px 0 0;font-size:13.5px;line-height:1.6;color:rgba(255,255,255,0.85);font-weight:500;">교안 · 스크립트 · 실전 컨설팅 자료까지,<br>수료 후 현장에서 바로 쓸 수 있게<br class="br-xs"> 아낌없이 드립니다.</p>
       </div>
     </section>
 
@@ -353,7 +361,7 @@
     <!-- ══════════ 커리큘럼 ══════════ -->
     <section style="padding:46px 24px 18px;background:var(--page-bg);">
       <div style="font-size:12px;font-weight:800;letter-spacing:2px;color:var(--violet);text-transform:uppercase;">CURRICULUM · 5 DAYS</div>
-      <h2 style="margin:12px 0 6px;font-size:26px;font-weight:800;letter-spacing:-0.7px;color:var(--ink);line-height:1.3;">대담한 여정,<br>5일의 블루프린트</h2>
+      <h2 style="margin:12px 0 6px;font-size:26px;font-weight:800;letter-spacing:-0.7px;color:var(--ink);line-height:1.3;">대담한 여정,<br class="br-xs"> 5일의 블루프린트</h2>
       <p style="margin:8px 0 0;font-size:14px;color:var(--ink-soft);font-weight:500;">매일 13:00 – 18:00 · 5일 집중과정<br>이론 + 스크립트 + 실전 롤플레이</p>
 
       <!-- DAY 1 -->
@@ -466,7 +474,7 @@
           <div class="speaker-photo" style="background-image:url('assets/speaker-basecamp-1.jpg');"></div>
           <div class="speaker-body">
             <div class="speaker-name">강신우 <span>CFA</span></div>
-            <p class="speaker-desc"><b style="font-weight:700;color:var(--violet-dark);">전문직의 NEXT FIELD</b><br><b style="font-weight:700;color:var(--violet-dark);">주력 (보험)상품 핵심 포인트</b><br><!-- 소개 한 줄 추후 입력 (br 뒤에 작성) --></p>
+            <p class="speaker-desc"><b style="font-weight:700;color:var(--violet-dark);">전문직의 NEXT FIELD</b><br><b style="font-weight:700;color:var(--violet-dark);">주력 (보험)상품 핵심&nbsp;포인트</b><br><!-- 소개 한 줄 추후 입력 (br 뒤에 작성) --></p>
           </div>
         </div>
 
@@ -530,7 +538,7 @@
           </span>
           <div>
             <div style="font-size:12px;font-weight:700;color:#968CB4;letter-spacing:0.5px;">일시 · 5-DAYS 집중과정</div>
-            <div style="margin-top:3px;font-size:16px;font-weight:700;color:var(--ink);line-height:1.5;">2026년 12월<br>1(화) · 3(목) · 8(화) · 10(목) · 15(화)</div>
+            <div style="margin-top:3px;font-size:16px;font-weight:700;color:var(--ink);line-height:1.5;">2026년 12월<br><span class="m-fit-date">1(화) · 3(목) · 8(화) · 10(목) · 15(화)</span></div>
             <div style="margin-top:2px;font-size:13.5px;color:var(--ink-soft);">매일 오후 1:00 – 6:00</div>
           </div>
         </div>
@@ -597,9 +605,9 @@
         <div style="position:absolute;bottom:-70px;left:-60px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,var(--glow2),transparent 70%);pointer-events:none;"></div>
         <div style="position:relative;">
           <div style="font-size:11px;font-weight:800;letter-spacing:2.5px;color:#A98BFF;">2026 TRINITY ONE BASE CAMP</div>
-          <p style="margin:16px 0 0;font-size:26px;font-weight:900;letter-spacing:-0.8px;line-height:1.35;">한계는 없다.<br>오직 정상뿐.</p>
+          <p style="margin:16px 0 0;font-size:26px;font-weight:900;letter-spacing:-0.8px;line-height:1.35;">한계는 없다.<br class="br-xs"> 오직 정상뿐.</p>
           <p style="margin:8px 0 0;font-size:13px;font-weight:700;letter-spacing:2px;color:#A98BFF;">NO LIMITS. ONLY THE SUMMIT.</p>
-          <p style="margin:18px 0 0;font-size:14.5px;line-height:1.7;color:#C0B4E8;font-weight:500;">정상은 준비된 사람의 것!<br>5일의 베이스캠프에서, 당신의 등반이 시작됩니다.</p>
+          <p style="margin:18px 0 0;font-size:14.5px;line-height:1.7;color:#C0B4E8;font-weight:500;">정상은 준비된 사람의 것!<br>5일의 베이스캠프에서,<br class="br-s"> 당신의 등반이 시작됩니다.</p>
         </div>
       </div>
 
