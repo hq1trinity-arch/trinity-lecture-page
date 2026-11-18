@@ -200,6 +200,14 @@
     .quote-card { display:flex; gap:9px; align-items:baseline; background:#FFFFFF; border:1px solid var(--card-border); border-radius:16px; padding:16px 17px; }
     .quote-card .qn { flex:none; font-size:12px; font-weight:800; color:var(--violet); letter-spacing:0.5px; font-variant-numeric:tabular-nums; }
     .quote-card p { margin:0; font-size:14.5px; line-height:1.5; color:var(--ink); font-weight:700; letter-spacing:-0.5px; word-break:keep-all; }
+    /* 인용 02, 03: 390px 이상 폰에서 한 줄 (카드 3개 글자 크기는 함께 맞춤), 그보다 좁으면 두 줄 */
+    .br-q { display:none; }
+    @media (max-width: 416px) { .quote-card p { font-size:13.7px; } }
+    @media (max-width: 399px) { .quote-card p { font-size:13.2px; } }
+    @media (max-width: 389px) { .quote-card p { font-size:14.5px; } .br-q { display:inline; } }
+    /* 박도영 강사 카드: 카드 폭이 넉넉한 화면(큰 폰, 데스크톱)에서 한 줄 */
+    .br-sp { display:none; }
+    @media (max-width: 425px) { .br-sp { display:inline; } }
     .why-close { margin:0; font-size:14.5px; line-height:1.65; color:#F0EBFF; font-weight:600; letter-spacing:-0.4px; word-break:keep-all; }
     .change-card { background:#FFFFFF; border:1px solid var(--card-border); border-radius:16px; padding:17px 18px; }
     .change-card .ct { display:flex; gap:10px; align-items:center; font-size:16.5px; font-weight:800; color:var(--ink); letter-spacing:-0.4px; }
@@ -286,8 +294,8 @@
       <h2 style="margin:12px 0 0;font-size:23px;font-weight:800;letter-spacing:-0.7px;color:var(--ink);line-height:1.32;">자격증은 땄는데,<br>대표님 앞에서는 왜 작아지는가?</h2>
       <div style="display:flex;flex-direction:column;gap:10px;margin-top:24px;">
         <div class="reveal quote-card"><span class="qn">01</span><p>“벤처투자나 MSO 얘기가 나오면,<br>아는 척만 하고 넘어가게 된다”</p></div>
-        <div class="reveal quote-card reveal-delay-1"><span class="qn">02</span><p>“법인전환은 알겠는데,<br>이걸 어떤 식으로 제안해야 하지?”</p></div>
-        <div class="reveal quote-card reveal-delay-2"><span class="qn">03</span><p>“미팅 분위기는 좋았는데,<br>계약 얘기는 못 꺼내고 나왔다”</p></div>
+        <div class="reveal quote-card reveal-delay-1"><span class="qn">02</span><p>“법인전환은 알겠는데,<br class="br-q"> 이걸 어떤 식으로 제안해야 하지?”</p></div>
+        <div class="reveal quote-card reveal-delay-2"><span class="qn">03</span><p>“미팅 분위기는 좋았는데,<br class="br-q"> 계약 얘기는 못 꺼내고 나왔다”</p></div>
       </div>
       <p class="reveal m-fit-wn" style="margin:22px 0 0;font-size:15px;line-height:1.65;color:#3A3352;font-weight:500;letter-spacing:-0.3px;word-break:keep-all;">대표님도 AI를 쓰는 시대, 이제는 전문직도 달라져야 합니다<br>미처 생각지 못한 문제를 짚어줄 수 있는 전문직으로 거듭나세요</p>
       <div class="reveal" style="margin-top:20px;border-radius:18px;overflow:hidden;background:linear-gradient(160deg,#2A0F6E,var(--hero-bg));box-shadow:0 16px 40px rgba(23,8,56,0.28);">
@@ -489,7 +497,7 @@
           <div class="speaker-photo" style="background-image:url('assets/speaker-basecamp-6.jpg');"></div>
           <div class="speaker-body">
             <div class="speaker-name">박도영 <span>세무사</span></div>
-            <p class="speaker-desc"><b style="font-weight:700;color:var(--violet-dark);">자본거래부터<br>입체적 컨설팅까지</b><br><!-- 소개 한 줄 추후 입력 (br 뒤에 작성) --></p>
+            <p class="speaker-desc"><b style="font-weight:700;color:var(--violet-dark);">자본거래부터<br class="br-sp"> 입체적 컨설팅까지</b><br><!-- 소개 한 줄 추후 입력 (br 뒤에 작성) --></p>
           </div>
         </div>
 
