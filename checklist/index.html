@@ -63,6 +63,7 @@ input:focus,select:focus{outline:none;border-color:var(--c)}
 .cols div{font-size:15px;padding:6px 0 6px 25px;position:relative;border-bottom:1px dashed #e6e9ef;line-height:1.45}
 .cols div:before{content:'';position:absolute;left:2px;top:8px;width:13px;height:13px;border:2px solid var(--c);border-radius:3px}
 .cols div span{color:var(--sub);font-size:13px}
+.finnote{font-size:13.5px;color:var(--sub);background:#f6f7f9;border-radius:8px;padding:8px 12px;margin-top:8px;line-height:1.5}
 .none{font-size:14.5px;color:var(--sub);padding:10px 2px}
 .foot{margin-top:18px;font-size:12px;color:#8a91a1;text-align:right}
 @page{size:A4;margin:0}
@@ -102,10 +103,9 @@ input:focus,select:focus{outline:none;border-color:var(--c)}
       <div class="f" id="f-ins"><label>피보험자</label>
         <select id="ins"><option value="ceo">대표이사</option><option value="reg">등기임원</option><option value="non">비등기임원 · 직원</option></select></div>
       <div class="f" id="f-hist"><label>법인 이력</label>
-        <select id="hist"><option value="none">해당 없음</option><option value="conv">개인사업자 → 법인 전환</option><option value="merge">합병 · 분할 법인</option></select></div>
+        <select id="hist"><option value="none">기존 법인</option><option value="conv">개인사업자 → 법인 전환</option><option value="merge">합병 · 분할 법인</option></select></div>
       <label class="chk" id="f-young"><input type="checkbox" id="young"> 설립 2년 미만</label>
       <label class="chk" id="f-agent"><input type="checkbox" id="agent"> 대리인이 진행</label>
-      <label class="chk" id="f-fin"><input type="checkbox" id="fin"> 보험사에서 재정심사 요청함</label>
     </div>
 
     <div class="grp">
@@ -130,6 +130,7 @@ const CO = {
 const BIZ = ['사업자등록증 사본', '사업자등록증명원도 가능'];
 const SH_RULE = '<em>날짜 수기 작성 불가</em> · 성명 · 생년월일 · 주식 수 · 지분율 기재<br>주식회사는 반드시 <em>“주주명부”</em> 명칭 (사원명부 등 불가)';
 const FS = '재무제표 (직전 3개년)';
+const FIN = {hanwha:'소득금액증명원 · 재무제표 · 손익계산서 · 매출·비용 기재 자료 · 공시자료 · 감사보고서 · 부동산 등기부등본 등', shinhan:'재무제표 (직전 3개년)', met:''};
 
 const HW_SIMPLE = ['3개월 내 확정진단 · 질병의심 · 필요소견 · 추가(재검사) 소견','2년 내 (질병·재해) 입원 · 수술','5년 내 암 · 간경화증 · 투석 중 만성신장질환','근무처','운전 여부','월소득 <span>(계약자 기준)</span>','직업','주소 · 연락처'];
 const HW_NORMAL = ['최근 5년 치료력 <span>(입원·수술 / 약 복용, 언제부터)</span>','5년 내 10대 질병 <span>(암·뇌·심 등)</span>','운전 여부','키 · 몸무게','음주 · 흡연 여부','직업 · 근무처','월소득 <span>(계약자)</span>','주소 · 연락처'];
@@ -183,19 +184,17 @@ const $=id=>document.getElementById(id);
 function vis(){
   const corp=st.type==='corp', co=st.co;
   $('f-uw').classList.toggle('hide', co==='met');
-  $('f-prem').classList.toggle('hide', !(co==='hanwha'&&corp));
   $('corp-opts').classList.toggle('hide', !corp);
   $('f-ins').classList.toggle('hide', co==='met');
   $('f-hist').classList.toggle('hide', co==='shinhan');
   $('f-young').classList.toggle('hide', co!=='hanwha');
   $('f-agent').classList.toggle('hide', co!=='shinhan');
-  $('f-fin').classList.toggle('hide', co==='met');
 }
 
 function esc(s){return String(s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}
 
 function render(){
-  Object.assign(st,{prem:parseFloat($('prem').value)||0, ins:$('ins').value, hist:$('hist').value, young:$('young').checked, agent:$('agent').checked, fin:$('fin').checked});
+  Object.assign(st,{prem:parseFloat($('prem').value)||0, ins:$('ins').value, hist:$('hist').value, young:$('young').checked, agent:$('agent').checked, fin:false});
   const c=CO[st.co]; document.documentElement.style.setProperty('--c',c.c); document.documentElement.style.setProperty('--s',c.s);
   vis();
   const r=build(st), corp=st.type==='corp';
@@ -203,12 +202,11 @@ function render(){
   const cname=$('cname').value.trim(), an=$('agentname').value.trim();
   const tags=[corp?'법인 계약':'개인 계약'];
   if(st.co!=='met') tags.push(st.uw==='simple'?'간편 심사':'일반 심사');
-  if(st.co==='hanwha'&&corp&&st.prem) tags.push(`월납 ${st.prem.toLocaleString()}만 원`);
+  if(st.prem) tags.push(`월납 ${st.prem.toLocaleString()}만 원`);
   if(corp&&st.co!=='met') tags.push({ceo:'피보험자: 대표이사',reg:'피보험자: 등기임원',non:'피보험자: 비등기임원·직원'}[st.ins]);
   if(corp&&st.hist!=='none'&&st.co!=='shinhan') tags.push(st.hist==='conv'?'개인→법인 전환':'합병·분할');
   if(corp&&st.young&&st.co==='hanwha') tags.push('설립 2년 미만');
   if(corp&&st.agent&&st.co==='shinhan') tags.push('대리인 진행');
-  if(corp&&st.fin&&st.co!=='met') tags.push('재정심사 요청');
 
   const item=(x,i,why)=>`<div class="it"><div class="box"></div><div class="no">${i}</div><div><div class="t">${x[0]}${why?`<span class="why">${esc(why)}</span>`:''}</div>${x[1]?`<div class="d">${x[1]}</div>`:''}</div></div>`;
   let h=`<div class="sh-head"><div><div class="sh-co">${c.name}</div><div class="sh-title">신계약 필요서류</div></div>
@@ -218,7 +216,7 @@ function render(){
   if(r.warn) h+=`<div class="warn">⚠ ${r.warn}</div>`;
   h+=`<div class="sec"><h2>① 필수 서류</h2><div class="list">${r.req.map((x,i)=>item(x,i+1)).join('')}</div></div>`;
   if(corp){
-    h+=`<div class="sec"><h2>② 추가 서류</h2>`+(r.add.length?`<div class="list">${r.add.map((x,i)=>item(x,r.req.length+i+1,x[2])).join('')}</div>`:`<div class="none">선택한 조건에서는 추가 서류가 없습니다.</div>`)+`</div>`;
+    h+=`<div class="sec"><h2>② 추가 서류</h2>`+(r.add.length?`<div class="list">${r.add.map((x,i)=>item(x,r.req.length+i+1,x[2])).join('')}</div>`:`<div class="none">선택한 조건에서는 추가 서류가 없습니다.</div>`)+(FIN[st.co]?`<div class="finnote">※ 보험사에서 재정심사를 요청하면 추가 제출: ${FIN[st.co]}</div>`:'')+`</div>`;
   }
   if(r.info.length) h+=`<div class="sec"><h2>${corp?'③':'②'} ${r.infoTitle}</h2><div class="cols">${r.info.map(x=>`<div>${x}</div>`).join('')}</div></div>`;
   h+=`<div class="foot">2026년 11월 기준 · 보험사 안내가 변경될 수 있으니 최신 안내를 함께 확인하세요</div>`;
@@ -230,7 +228,7 @@ document.querySelectorAll('.seg').forEach(g=>g.addEventListener('click',e=>{
   g.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));
   st[g.dataset.k]=b.dataset.v; render();
 }));
-['prem','ins','hist','young','agent','fin','cname','agentname'].forEach(id=>{$(id).addEventListener('input',render);$(id).addEventListener('change',render)});
+['prem','ins','hist','young','agent','cname','agentname'].forEach(id=>{$(id).addEventListener('input',render);$(id).addEventListener('change',render)});
 render();
 
 // PDF: 인쇄 창에서 'PDF로 저장' 선택
