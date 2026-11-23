@@ -177,6 +177,7 @@
     /* 389px 이하에서만 줄바꿈 */
     .br-n, .br-xs { display:none; }
     @media (max-width:369px) { .br-xs { display:inline; } }
+    @media (max-width:369px) { .park-note { font-size:12.5px !important; letter-spacing:-0.3px; } }
     /* 좁은 화면(≤389px)에서 한 줄 유지용 축소 */
     @media (max-width:389px) {
       .br-n { display:inline; }
@@ -579,6 +580,12 @@
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#191600" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
           카카오맵
         </a>
+      </div>
+
+      <!-- Parking notice -->
+      <div class="reveal" data-delay="240" style="margin-top:14px;display:flex;gap:11px;align-items:flex-start;background:#FCEEE9;border:1px solid rgba(196,90,60,0.2);border-radius:14px;padding:15px 16px;">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#C0492C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex:none;margin-top:1px;" aria-hidden="true"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+        <p class="park-note" style="margin:0;font-size:13.5px;line-height:1.55;color:#8A3A22;font-weight:500;"><b style="font-weight:700;">주차 안내</b><br>별도 주차 공간이 없습니다<br>인근 유료 주차장, 대중교통 이용을 권장드립니다</p>
       </div>
     </section>
 
