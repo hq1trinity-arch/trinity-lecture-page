@@ -38,8 +38,6 @@
     - Lavender Tint `#F2EFFE` — 밝은 배경
     - Border `#E3DEF3` — 카드 테두리·구분선
     - Deep Purple `#0B0320` → `#260C6B` — 다크 섹션 그라디언트
-  - 브랜드 가이드(PPT) 원본 CI — 인쇄물·PT 등 오프라인 자료용으로만 사용
-    - Bronze `#8B5E3C` / Gold `#C8A96E` / Charcoal `#2B2522` / Off-White `#F7F4EE` / Gray `#8E8880`
   - 웹에서 갈색·금색 계열을 새로 쓰지 않는다 (`--trinity-brown` 계열 토큰도 퍼플로 정리 완료)
 - 서체: 국문 본문 Pretendard (`assets/fonts/`에 9종 웨이트 보유, 재다운로드 금지)
 - 태그라인: **"The Only Strategy for the 0.1%"** — 히어로 배지·다크 섹션·푸터에 사용
@@ -155,7 +153,8 @@
 
 ## PPT 제작 규칙 (글꼴 보존)
 
-- PPT(.pptx)를 만들거나 수정할 때는 trinity-ppt 스킬의 디자인 규칙(Pretendard, TRINITY CI)을 따르고, **받는 사람 컴퓨터에 Pretendard가 없으면 글꼴이 깨진다**는 전제로 아래를 지킨다:
+- PPT 색상은 정해진 팔레트로 고정하지 않는다 (2026-11-27 사용자 지시). 자료 성격에 맞게 디자인 스킬(예: elite-powerpoint-designer, ppt-visual)의 스타일을 골라 쓴다.
+- PPT(.pptx)를 만들거나 수정할 때는 Pretendard 글꼴을 쓰고, **받는 사람 컴퓨터에 Pretendard가 없으면 글꼴이 깨진다**는 전제로 아래를 지킨다:
   1. **작업 전 폰트 설치**: 저장소의 Pretendard를 컨테이너에 설치한다
      (`mkdir -p ~/.fonts && cp assets/fonts/Pretendard-*.otf ~/.fonts/ && fc-cache -f`).
      설치 없이 렌더링·변환하면 대체 글꼴로 깨진 결과가 나온다.
