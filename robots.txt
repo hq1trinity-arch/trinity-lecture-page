@@ -3,5 +3,6 @@ Allow: /
 Disallow: /tools/
 Disallow: /ai-viewer/
 Disallow: /s/admin/
+Disallow: /templates/
 
 Sitemap: https://trinityone.co.kr/sitemap.xml

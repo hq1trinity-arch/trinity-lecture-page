@@ -69,13 +69,75 @@
  ]
 }
 </script>
+<!-- FAQPage 구조화 데이터: 04 멤버십 Q&A 6문항과 글자 단위로 동일하게 유지한다(화면과 다른 JSON-LD 금지) -->
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "@id": "https://trinityone.co.kr/#faq",
+ "inLanguage": "ko-KR",
+ "mainEntity": [
+  {
+   "@type": "Question",
+   "name": "트리니티원은 어떤 조직인가요?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "트리니티원은 인카금융서비스 소속의 법인, 자산가 시장 전문 보험컨설팅 조직입니다. 법인 대표와 자산가의 경영·승계 과정에서의 이슈를 전문직과 보험 컨설턴트가 함께 검토하고, 고객 맞춤형 솔루션을 제안합니다"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "전문 지식은 있지만, 영업 경험은 많지 않습니다",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "전문적인 판단을 고객이 이해할 수 있는 제안으로 전달하는 과정도 중요합니다. 트리니티원은 상담 화법부터 제안서 구성, 프레젠테이션까지 실전에 필요한 역량을 키울 수 있도록 지원합니다. 실제 고객을 만나는 자리에도 필요시 전문직 선배가 동행해 제안 설명과 질문 대응을 함께합니다"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "기존 고객에게 보험을 제안하기는 조심스러운데요",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "오래 쌓아온 신뢰가 있으니 더 신중할 수밖에 없죠. 그래서 고객에게 보험이 왜 필요한지부터 살펴봅니다. 경영자의 갑작스러운 부재에 대비하거나 상속세 납부 재원을 준비하는 등, 고객이 미처 챙기지 못한 문제에 보험을 활용할 수 있습니다"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "제 거래처에만 제안하나요?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "기존 거래처뿐 아니라 보험 컨설턴트가 관리하는 고객 중 내 전문성이 필요한 공동 컨설팅에도 참여합니다. 동료가 쌓아온 고객 관계에 나의 전문 지식을 더해 법인 대표와 자산가의 과제를 함께 해결합니다"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "본업이 있는데, 교육과 활동에 얼마나 시간을 써야 하나요?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "처음에는 5일간의 트레이닝 과정을 통해 법인 컨설팅과 보험상품, 고객 제안의 기초를 익힙니다. 이후에는 정기 교육과 케이스 공유, 현장 동행으로 실무 경험을 쌓아 나갑니다. 실제 일정과 참여 범위, 본업 병행 시 고려할 사항은 커피챗에서 자세히 안내합니다"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "세무사ㆍ회계사가 아닌 전문직도 멤버십에 들어갈 수 있나요?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "네, 함께할 수 있습니다. 직역마다 법인 대표와 자산가에게 건넬 수 있는 이야기가 다르기 때문이죠. 노무사는 사내근로복지기금 같은 컨설팅을, 변리사는 벤처투자와 투자조합을 활용한 컨설팅을, 변호사는 유언대용신탁 같은 차세대 승계 모델을 맡습니다. 여기에 세무사·회계사와 협업해 기존 거래처에 새로운 자문을 제안할 수도 있습니다"
+   }
+  }
+ ]
+}
+</script>
 <meta name="naver-site-verification" content="c3e72a565b2547737df10959daae76f9c2afff03" />
 <meta name="theme-color" content="#170838">
 <!-- P29(48절 쟁점 4): 강제 다크 반전 위험을 줄이는 선언. 삼성 인터넷 다크 설정 실기기 확인은 README 0절 D3 -->
 <meta name="color-scheme" content="light">
 <link rel="icon" type="image/png" href="assets/mark-brown-499.png">
 <link rel="apple-touch-icon" href="assets/mark-brown-499.png">
-<style>@font-face{font-family:"Pretendard Variable";font-weight:45 920;font-style:normal;font-display:swap;src:url("assets/fonts/PretendardVariable.woff2") format("woff2")}</style>
+<style>
+  /* hidden 속성은 항상 숨김(.qa-a 의 display:flex 등이 덮어쓰지 못하게). 게시용 틀에 있던 규칙을 페이지로 옮김 */
+  [hidden]:not([hidden=until-found i]){display:none!important}
+@font-face{font-family:"Pretendard Variable";font-weight:45 920;font-style:normal;font-display:swap;src:url("assets/fonts/PretendardVariable.woff2") format("woff2")}</style>
 
 <script>
 /* =====================================================================
@@ -974,8 +1036,8 @@ var HERO_VIDEO_POSTER = 'assets/site/photo-quote.jpg';
   .id-fx{position:absolute;inset:0;z-index:-1;pointer-events:none}
   .id-fx i{position:absolute;display:block}
   .hero .ident.fx-hl{padding:0 0 12px}
-  /* P56(76절 1): 선 두께 한 단계 위 — 모바일 3 → 4.5px, PC 4 → 6px(끝은 비율대로 가늘어짐) */
-  /* P63(83절 · ref140): 선 길이 — 모바일 220px 상한 제거(글 폭 전체), PC 는 글자 끝을 넘어 120px 더(금빛이 「한 팀으로」 를 충분히 덮게) */
+  /* P56(76절 1): 선 두께 한 단계 위, 모바일 3 → 4.5px, PC 4 → 6px(끝은 비율대로 가늘어짐) */
+  /* P63(83절 · ref140): 선 길이, 모바일 220px 상한 제거(글 폭 전체), PC 는 글자 끝을 넘어 120px 더(금빛이 「한 팀으로」 를 충분히 덮게) */
   .fx-hl .ul{left:0;right:auto;width:100%;bottom:0;height:4.5px;transform-origin:0 50%;
     clip-path:polygon(0 0,100% 60%,100% 100%,0 100%);
     background:linear-gradient(90deg,#FFE9A3 0%,#FFD84D 16%,rgba(255,216,77,.82) 42%,rgba(201,189,240,.38) 74%,rgba(201,189,240,0) 100%)}
@@ -1022,7 +1084,7 @@ var HERO_VIDEO_POSTER = 'assets/site/photo-quote.jpg';
     .hero-top h1{order:1}
     .hero-top .ident{order:2}
     /* P40(60절 · ref111): 우하단 치우침 → 가운데 쪽으로(오른쪽 여백 12%), 위 여백은 줄이고 아래 여백은 키워 위로 당김 */
-    /* P66(86절 · ref144): 캐리커처 축소(모바일 220 → 170px, 짧은 화면 140, PC 286 → 220) — 크게 두면 촌스러움 */
+    /* P66(86절 · ref144): 캐리커처 축소(모바일 220 → 170px, 짧은 화면 140, PC 286 → 220), 크게 두면 촌스러움 */
     /* P91(104절 · ref156): 첫 화면 캐리커처가 독백 캐리커처보다 큼 → 인물 축척을 독백(모바일 68px ÷ 150 = 0.45px/단위)과 같게. 170 → 100px(220 × 0.45), 시각 중심은 그대로(오른쪽 여백 16 → 26%) */
     /* P92(105절): 우하단이 비어 보임 → 그림을 오른쪽·아래로(여백 26 → 8%, 위 16 → 56, 아래 96 → 40px) */
     .hero-fig{order:3;display:block;align-self:flex-end;width:100px;height:auto;margin:auto 8% auto 0;padding:56px 0 40px;box-sizing:content-box;color:var(--on-dark-3);opacity:.9;pointer-events:none}
@@ -1227,7 +1289,7 @@ var HERO_VIDEO_POSTER = 'assets/site/photo-quote.jpg';
   .ghost{display:inline-flex;align-items:center;gap:8px;margin-top:22px;height:48px;padding:0 20px;border-radius:12px;
     border:1.5px solid var(--violet);color:var(--violet-dark);font-weight:800;font-size:var(--fs-body);text-decoration:none;letter-spacing:-0.3px;background:#FFFFFF}
   .ghost:hover{background:var(--lavender-bg)}
-  /* P50: 세미나 링크 아래 CTA — 왼쪽 열 폭에 맞춰 왼쪽 정렬, 위 여백 14px */
+  /* P50: 세미나 링크 아래 CTA, 왼쪽 열 폭에 맞춰 왼쪽 정렬, 위 여백 14px */
   .seminar .sem-cta{margin:14px 0 0;max-width:420px}
   /* P52(72절 5 · ref127): 「주요 세미나 내용 보기」 = 아래 카톡 버튼과 같은 폭(전폭 · 최대 420) · 높이 58 · 가운데 정렬. 단락 간격 12px */
   .seminar .ghost{display:flex;justify-content:center;width:100%;max-width:420px;height:58px;box-sizing:border-box;border-radius:14px}
@@ -1310,7 +1372,7 @@ var HERO_VIDEO_POSTER = 'assets/site/photo-quote.jpg';
   .qa-q .chev{flex:none;width:22px;height:22px;margin-top:5px;color:var(--violet);transition:transform .2s ease}
   .qa-q[aria-expanded="true"] .chev{transform:rotate(180deg)}
   .qa-q[aria-expanded="true"]{background:var(--lavender-bg)}
-  /* P84(100절 · ref151): 답 앞에 Q 와 같은 규격의 「A」 박스 — 연보라 면 + 보라 글자(음영만 다르게). Q 와 같은 열에 정렬 */
+  /* P84(100절 · ref151): 답 앞에 Q 와 같은 규격의 「A」 박스, 연보라 면 + 보라 글자(음영만 다르게). Q 와 같은 열에 정렬 */
   .qa-a{display:flex;align-items:flex-start;gap:12px;padding:4px 18px 22px 18px;color:var(--ink-2);font-size:var(--fs-body);line-height:1.8;background:var(--lavender-bg)}
   .qa-a .a-mark{flex:none;display:flex;align-items:center;justify-content:center;width:30px;height:30px;margin-top:.5px;border-radius:9px;
     background:#E4DBFB;color:var(--violet-dark);font-size:15px;font-weight:900;border:1px solid rgba(91,46,224,.18)}
@@ -1682,11 +1744,11 @@ var HERO_VIDEO_POSTER = 'assets/site/photo-quote.jpg';
   /* 48절 추가 4: 강신우 · 김홍권 · 이주현 = 이중 링(바깥 보라 2px + 5px 흰 간격 + 안쪽 연보라 1.5px), 강경연 · 허도곤 = 기존 단일 링 */
   /* P60(80절 2): 이중 링만으로는 약함 → 바깥 링을 보라 → 금빛 그라데이션 3px + 아래쪽 금빛 옅은 그림자, 오른쪽 위 금빛 배지(기존 직함에서 두 글자, data-badge). 후보 비교는 README 「P60 반영 기록」 */
   /* P65(85절 2 · ref143): 금빛 그라데이션 테두리 · 광채 · 배지 걷어내고 P59 이중 링(바깥 보라 2px + 흰 간격 + 안쪽 연보라 1.5px)으로 되돌림.
-     금빛은 원 좌상단(8~12시, 둘레 약 1/3)에 월계관 인라인 SVG(.laurel) — 링 바깥 둘레를 따라 잎 12장이 링 선에 살짝 걸침, 사진은 가리지 않음 */
-  /* P73(90절 1 · 사용자 선택 R1 「보라 베레 면」): 단일 보라 2.5px 링 + 흰 간격 2.5px, P85(101절 2): 세 번째 획을 오른쪽(2시 반~5시 반)으로 당겨 안정감. P82(98절): 각 획의 봉우리·농도를 시계 방향 끝(70%)으로 옮겨 회전 방향성(위치·크기 그대로). P81(97절 2): 첫·둘째 획은 이전 자리(12~3시 / 6시 반~9시 반), 세 번째만 그 사이 3~6시 반에 같은 크기. P80(97절 · ref149): 세 획 동일 크기(폭 100° · 두께 7.4). P79(96절 2): 세 번째 면 3시 반~5시 반 · 두께 5.0(위 획과 간격 확보). P78(96절): 세 번째 면 농도 .62 → .82. P77(95절): 세 번째 면(3시 반~5시, 가늘고 짧게) — 트리니티 = 3, 대·중·소 리듬. P76(94절): 아래 면을 6시 반~9시 반 · 두께 6.4 · 농도 .7 로 진하고 길게. P75(93절): 반대편 7~9시에 더 얇고 옅은 두 번째 면(대각 균형). P74(92절): 면을 12시~3시(오른쪽 위)로 옮기고 금빛 점 삭제. 이전: 원 위쪽 10시 반~1시 반 반투명 보라 면(.orn), 12시 금빛 점. 형광펜 .laurel 삭제 */
+     금빛은 원 좌상단(8~12시, 둘레 약 1/3)에 월계관 인라인 SVG(.laurel), 링 바깥 둘레를 따라 잎 12장이 링 선에 살짝 걸침, 사진은 가리지 않음 */
+  /* P73(90절 1 · 사용자 선택 R1 「보라 베레 면」): 단일 보라 2.5px 링 + 흰 간격 2.5px, P85(101절 2): 세 번째 획을 오른쪽(2시 반~5시 반)으로 당겨 안정감. P82(98절): 각 획의 봉우리·농도를 시계 방향 끝(70%)으로 옮겨 회전 방향성(위치·크기 그대로). P81(97절 2): 첫·둘째 획은 이전 자리(12~3시 / 6시 반~9시 반), 세 번째만 그 사이 3~6시 반에 같은 크기. P80(97절 · ref149): 세 획 동일 크기(폭 100° · 두께 7.4). P79(96절 2): 세 번째 면 3시 반~5시 반 · 두께 5.0(위 획과 간격 확보). P78(96절): 세 번째 면 농도 .62 → .82. P77(95절): 세 번째 면(3시 반~5시, 가늘고 짧게), 트리니티 = 3, 대·중·소 리듬. P76(94절): 아래 면을 6시 반~9시 반 · 두께 6.4 · 농도 .7 로 진하고 길게. P75(93절): 반대편 7~9시에 더 얇고 옅은 두 번째 면(대각 균형). P74(92절): 면을 12시~3시(오른쪽 위)로 옮기고 금빛 점 삭제. 이전: 원 위쪽 10시 반~1시 반 반투명 보라 면(.orn), 12시 금빛 점. 형광펜 .laurel 삭제 */
   .person.is-lead .ring{position:relative;padding:2.5px;background:#FFFFFF;border:2.5px solid var(--violet)}
   .person.is-lead .orn{position:absolute;left:-2.5px;top:-2.5px;width:calc(100% + 5px);height:calc(100% + 5px);overflow:visible;pointer-events:none}
-  /* P67(87절 · ref146): 월계수 잎 대신 같은 자리(8 → 12시)에 형광펜으로 슥 칠한 듯한 금빛 붓 자국 — 왼쪽 아래 굵고(7) 위로 갈수록 얇게(1.4), 링 선 위에 반투명하게 겹침 */
+  /* P67(87절 · ref146): 월계수 잎 대신 같은 자리(8 → 12시)에 형광펜으로 슥 칠한 듯한 금빛 붓 자국, 왼쪽 아래 굵고(7) 위로 갈수록 얇게(1.4), 링 선 위에 반투명하게 겹침 */
   /* 모바일 84px 원: 안쪽 잎 5장을 빼고 바깥 잎 7장만(흰 간격이 좁아 안쪽 잎이 사진 테두리에 붙어 보임) */
   .person.is-lead img{border-width:3px;box-shadow:none}
   .person picture{display:block;width:100%;height:100%}
@@ -2360,7 +2422,7 @@ var HERO_VIDEO_POSTER = 'assets/site/photo-quote.jpg';
             <li>가업상속공제</li><li>가업승계증여특례</li><li>법인전환</li><li>사내근로복지기금</li><li>의료 자회사 설립</li><li>자기주식</li><li>병의원 절세</li><li>벤처투자 소득공제</li><li>투자조합</li><li>가족법인</li><li>세무조사</li><li>회계감사</li><li>투자유치</li>
           </ul>
           <!-- 공개 강의 페이지: 최신 Vol.03 부산(facts.md 6절). Vol.02 서울은 https://hq1trinity-arch.github.io/trinity-lecture-seoul/ -->
-          <a class="ghost" href="https://trinityone.co.kr/class-1013-kang/" target="_blank" rel="noopener" data-seminar="vol04">주요 세미나 내용 보기<svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M9 7h8v8"/></svg></a>
+          <a class="ghost" href="https://trinityone.co.kr/class-1125/" target="_blank" rel="noopener" data-seminar="vol05">주요 세미나 내용 보기<svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M9 7h8v8"/></svg></a>
           <!-- P50(70절): 세미나 링크 바로 아래 카톡 CTA(다른 네 곳과 같은 규격 · 문구, data-cta=seminar, 고정 바 숨김 대상) -->
           <div class="cta-block sem-cta" data-hide-sticky>
             <a class="cta" href="#" data-cta="seminar"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 3C6.5 3 2 6.6 2 11c0 2.8 1.8 5.3 4.6 6.7l-1 3.6c-.1.4.3.7.6.5l4.3-2.8c.5.1 1 .1 1.5.1 5.5 0 10-3.6 10-8S17.5 3 12 3z"/></svg>트리니티원 멤버십 알아보기</a>
